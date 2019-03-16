@@ -1,0 +1,23 @@
+LANGS['DATA_TABLE'] = { 
+    'decimal':',',
+    'thousands':'.',
+    'lengthMenu':'عرض _MENU_ سجل لكل صفحة',
+    'zeroRecords':'عذرا لا يوجد شئ',
+    'info':'اظهار الصفحة _PAGE_ من _PAGES_',
+    'infoEmpty':'لا يوجد سجلات متاحة',
+    'infoFiltered':'(تمت الفلترة من _MAX_ جميع السجلات)',
+    'search': 'بحث',
+    'noFilter': 'لا توجد فلترة',
+    'next': 'التالي',
+    'previous': 'السابق',
+    'add'            :'إضافة',
+    'edit'           : 'تعديل',
+    'row_select_warning'    : 'من فضلك اختر سطر',
+    'are_you_sure'    : 'هل انت متأكد؟',
+    'no_revert'    : 'لن تستطيع التراجع عن ذلك!',
+    'del_accepted'    : 'نعم, امسحه!',
+    'deleted'    : 'انمسحت!',
+    'your_file_deleted'    : 'لقد تم مسح ملفك.',
+    'cancel'    : 'الغاء',
+    'fixed_row_warning'    : 'عذرا , لا يمكنك تعديل او حذف هذا العنصر'
+ }

@@ -1,0 +1,266 @@
+#mainNav{
+    background-color: #3A3F44;
+}
+body{
+    background-color: #272B30;
+}
+h2, h4{
+    color: white !important;
+}
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    z-index: 999;
+    height: 61px;
+    padding-top: 12px;
+}
+
+.footer a{
+    color: black;
+}
+
+.alert{
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+}
+
+@media only screen
+and (min-device-width : 991px)
+and (max-device-width : 1366px){
+    .top-space{
+        margin-top: 103px;
+    }
+
+    .page-header{
+        margin-bottom: 75px;
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+}
+
+@media only screen
+and (max-width : 991px){
+    .top-space{
+        margin-top: 56px;
+    }
+
+    .page-header{
+        margin-bottom: 100px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+}
+
+@media only screen
+and (max-width : 758px) {
+    .footer{
+        font-size: 12px;
+    }
+    #social-media a{
+        width: 30px;
+        height: 30px;
+        font-size: 15px;
+
+    }
+    .footer .col-md-4{
+        height: 30px;
+    }
+}
+
+@media only screen
+and (min-width : 458px) {
+    .big-footer{
+        display:flex;
+    }
+    .small-footer{
+        display:none;
+    }
+}
+
+@media only screen
+and (max-width : 758px) {
+    ul.social-buttons li a {
+        line-height: 32px;
+    }
+}
+
+@media only screen
+and (max-width : 457px) {
+    .big-footer{
+        display:none;
+    }
+    .small-footer{
+        display:inline;
+    }
+    .small-footer .copyright{
+        position: absolute;
+        margin-top: -12px;
+        width: 123px;
+        left: 20px;
+    }
+    .small-footer .quicklinks{
+        position: absolute;
+        margin-top: 13px;
+        width: 123px;
+        left: 20px;
+    }
+    ul.social-buttons li a {
+        line-height: 30px;
+    }
+}
+
+td.highlight {
+    background-color: #acaeaeab !important;
+}
+
+#showHideCols{
+    float:right;
+}
+
+#showHideCols ul :hover{
+    background-color: #36304a;
+    color: white;
+    padding-bottom: 4px;
+}
+
+#showHideCols ul li, #showHideCols ul li a label{
+    cursor: pointer;
+    padding-bottom: 4px;
+}
+
+#showHideCols ul li a{
+    margin-left: 6px;
+}
+
+#showHideCols ul li a label{
+    margin-right: 90px;
+}
+
+#showHideCols_btn{
+    background-color: #36304a;
+    border-color: #36304a;
+}
+
+#showHideCols ul{
+    border-color: #36304a;
+    border-width: 2px;
+    border-radius: 10px;
+}
+
+#showHideCols_btn:hover{
+    background-color: #787483;
+}
+
+table.dataTable thead{
+    background-color: #36304a;
+    color: #fff;
+    border-radius: 10px;
+  }
+
+#example_wrapper .dataTables_scrollHead{
+    border-radius: 30px 30px 0px 0px;
+}
+
+.show>.btn-danger.dropdown-toggle:focus, .btn-danger:focus{
+    box-shadow: 0 0 0 0.2rem #fed136;
+}
+
+select{
+    cursor: pointer;
+}
+
+.bg-purple{
+    background-color: #4f4285 !important;
+}
+
+.link-back{
+    color: yellow;
+}
+.link-back:hover { 
+    color: #eaea73;
+    text-decoration: none;
+}
+
+.link-card{
+    color: black;
+}
+.link-card:hover { 
+    color: black;
+    text-decoration: none;
+}
+
+.primary-color{
+    background-color: #dedbe0;
+}
+
+.child-card-header-color{
+    background-color: #435261;
+}
+
+.child-card-header-text, .child-card-header-text:hover{
+    color:white;
+}
+
+#showHideCols_btn{
+    margin-right: 6px;
+}
+
+#btn_add{
+    margin-right: 3px;
+}
+
+#btn_edit{
+    margin-right: 4px;
+}
+
+.main-card{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 70px !important;
+}
+
+.label_above{
+    margin-left: 5px;
+  }
+
+  @media only screen
+and (min-device-width : 600px)
+and (max-device-width : 1366px){
+    .label_above{
+        display: none;
+      }
+    
+    .label_side{
+        display: inline;
+      }
+    .col-form-label{
+        width: 100px;
+    }
+}
+
+@media only screen
+and (max-width : 600px){
+    .label_above{
+        display: inline;
+        margin-left: 5px;
+      }
+    
+    .label_side{
+        display: none;
+      }
+      .col-form-label{
+        width: 0px;
+    }
+    .input-with-icon-label, .input-group-text{
+        margin-top:10px;
+      }
+}
+
+#swal2-title{
+    color: #5a5252 !important;
+}
