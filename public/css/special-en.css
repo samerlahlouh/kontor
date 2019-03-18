@@ -218,6 +218,11 @@ select{
     margin-right: 4px;
 }
 
+.extra_control_btn{
+    margin-left: 4px !important;
+    border-radius: 5px !important; 
+}
+
 .main-card{
     margin-left: 10px;
     margin-right: 10px;

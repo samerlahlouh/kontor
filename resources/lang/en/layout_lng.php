@@ -5,6 +5,7 @@ return [
     'settings'          => 'Settings',
     'about_us'          => 'About Us',
     'contact_us'        => 'Contact Us',
+    'users'             => 'Users',
     'login'             => 'Login',
     'add_user'          => 'Add User',
     'logout'            => 'Logout',

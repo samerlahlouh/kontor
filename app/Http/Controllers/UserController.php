@@ -15,21 +15,53 @@ class UserController extends Controller
     public function __construct()
     {
         $this->passValid = false;
+        $this->user_modal = new User();
     }
-    public function index()
+
+    //------------------------------------------------indexes-----------------------------------------------//
+    public function index_settings()
     {
         return view('user_settings');
     }
 
-    public function update(Request $request){
-        $this->is_validate($request);
-        $this->testPassword($request);
+    public function index_users(){
+        View::share('page_js', 'users');
+        $users = $this->user_modal->get_users_table();
+        $typesValues = $this->getEnumValues('users', 'type');
+
+        $types = array();
+        foreach ($typesValues as $typeValue) {
+            $types[$typeValue] =  __("main_lng.$typeValue");
+        }
+
+        $cols = [
+            'id',
+            'is_active_hidden',
+            __('users_lng.name'),
+            __('users_lng.email'),
+            __('users_lng.mobile'),
+            __('users_lng.type'),
+            __('users_lng.balance'),
+            __('users_lng.credit')
+        ];
+        return view('users', [  'users' => $users,
+                                'cols'  => $cols,
+                                'types' => $types
+                            ]);
+    }
+
+
+    //------------------------------------------Actions--------------------------------------------//
+    public function update_own_account(Request $request){
+        $this->update_validator($request);
+        $this->test_update_password($request);
         
         $user = User::find(Auth::user()->id);
         
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->user_name = $request->input('user_name');
+        $user->name         = $request->input('name');
+        $user->email        = $request->input('email');
+        $user->user_name    = $request->input('user_name');
+        $user->mobile       = $request->input('mobile');
         if($this->passValid)
             $user->password = Hash::make($request->input('new_password'));
 
@@ -38,7 +70,47 @@ class UserController extends Controller
         return redirect('/')->with('success', __('main_lng.done_successfully'));
     }
 
-    public function is_validate($request){
+    public function deactivate_user(Request $request){
+        $user_id = $request->input('user_id');
+
+        $user = User::find($user_id);
+        $user->is_active = false;
+        $user->save();
+    }
+
+    public function activate_user(Request $request){
+        $user_id = $request->input('user_id');
+
+        $user = User::find($user_id);
+        $user->is_active = true;
+        $user->save();
+    }
+
+    public function store(Request $request){
+        $this->create_validator($request);
+        $this->test_create_password($request);
+
+        $data = $request->all();
+        unset($data['id'], $data['_token'], $data['confirm_password']);
+
+        if(Auth::user()->type != 'admin')
+            $data['type'] = 'regular';
+
+        $data['created_by_user_id'] = Auth::user()->id;
+        User::create($data);
+
+        return redirect("/users")->with('success', __('main_lng.done_successfully'));
+    }
+
+    public function destroy($id){
+        $user = User::find($id);
+        $user->delete();
+        return redirect("/users")->with('success',  __('main_lng.done_successfully'));
+    }
+
+
+    //------------------------------------------Functions--------------------------------------------//
+    public function update_validator($request){
         $id = Auth::user()->id;
         $old_password       = $request->input('old_password');
         $new_password       = $request->input('new_password');
@@ -59,7 +131,7 @@ class UserController extends Controller
         $this->validate($request ,$rules);
     }
 
-    private function testPassword($request){
+    private function test_update_password($request){
         $old_password       = $request->input('old_password');
         $new_password       = $request->input('new_password');
         $confirm_password   = $request->input('confirm_password');
@@ -78,6 +150,32 @@ class UserController extends Controller
             throw new ValidationException($validator);
         }
         if ($this->passValid && !$isNewMatchOfConfirm) {
+            $validator->errors()->add('password', __('user_settings_lng.confirm_password_errror'));
+            throw new ValidationException($validator);
+        }
+        
+    }
+
+    protected function create_validator($request){
+         $validateData = [
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email|max:255|unique:users',
+            'user_name' => 'required|string|max:255|unique:users',
+            'password'  => 'required|string|min:6'
+        ];
+        if(Auth::user()->type == 'admin')
+            $validateData['type'] = 'required';
+        $this->validate($request, $validateData);
+    }
+
+    private function test_create_password($request){
+        $new_password       = $request->input('password');
+        $confirm_password   = $request->input('confirm_password');
+
+        $isNewMatchOfConfirm = $new_password == $confirm_password;
+
+        $validator = Validator::make([], []);
+        if (!$isNewMatchOfConfirm) {
             $validator->errors()->add('password', __('user_settings_lng.confirm_password_errror'));
             throw new ValidationException($validator);
         }

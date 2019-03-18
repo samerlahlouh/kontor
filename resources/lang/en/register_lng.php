@@ -9,7 +9,5 @@ return [
     'type'          => 'Type',
     'add'           => 'Add',
     'user_name'     => 'User Name',
-    'admin'         => 'Admin',
-    'regular'       => 'Regular',
-    'agent'         => 'Agent',
+    'mobile'        => 'Mobile'
 ];

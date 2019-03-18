@@ -9,4 +9,7 @@ return [
     'footer_txt'            => ' تم تحديثه في ',
     'done_successfully'     => 'تم بنجاح',
     'del_warning'           => 'هل أنت متأكد من أنك تريد حذف هذا العنصر المحدد؟',
+    'admin'                 => 'مدير',
+    'regular'               => 'مستخدم',
+    'agent'                 => 'وكيل'
 ];

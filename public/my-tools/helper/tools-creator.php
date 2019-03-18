@@ -172,7 +172,7 @@ function create_input_group($id='', $text='', $icon='', $kind='text', $select_da
             elseif($kind == 'select'){
                 unset($attrs['placeholder']);
                 $select_elements[0] = $text;
-                $select_elements = $select_elements + $select_data;
+                $select_elements = array_merge($select_elements, $select_data);
                 $optionsAttributes = ['0' => ['hidden', 'disabled', 'selected']];
                 echo Form::select($id, $select_elements, $defult_value, $attrs, $optionsAttributes);
             }

@@ -11,6 +11,8 @@
 |
 */
 
+use Educators\Http\Middleware\AdminAndAgent;
+
 Auth::routes();
 // Route::get('/register', 'Auth\RegisterController@index');
 
@@ -22,7 +24,14 @@ Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 //------------------------------------------------------------------------------------------------------------//
 
-//---------------------------------------------- User -----------------------------------------------------//
-Route::get('/user_settings', 'UserController@index');
-Route::post('', 'UserController@update');
+//---------------------------------------------- Current User -----------------------------------------------------//
+Route::get('/user_settings', 'UserController@index_settings');
+Route::post('', 'UserController@update_own_account');
+//---------------------------------------------------------------------------------------------------------//
+
+//---------------------------------------------- All Users -----------------------------------------------------//
+Route::resource('users', 'UserController', ['only' => ['store', 'destroy'] ])->middleware(AdminAndAgent::class);
+Route::get('/users', 'UserController@index_users')->middleware(AdminAndAgent::class);
+Route::post('deactivate_user', 'UserController@deactivate_user');
+Route::post('activate_user', 'UserController@activate_user');
 //---------------------------------------------------------------------------------------------------------//

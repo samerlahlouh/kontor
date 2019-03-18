@@ -7,6 +7,8 @@ use Educators\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Educators\Http\Middleware\AdminAndAgent;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -38,6 +40,7 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware(AdminAndAgent::class);
     }
 
         /**
@@ -82,9 +85,11 @@ class RegisterController extends Controller
         if(!isset($data['type']))
             $data['type'] = 'regular';
         return User::create([
+            'created_by_user_id' => Auth::user()->id,
             'name'      => $data['name'],
             'email'     => $data['email'],
             'user_name' => $data['user_name'],
+            'mobile'    => $data['mobile'],
             'password'  => Hash::make($data['password']),
             'type'      => $data['type']
         ]);

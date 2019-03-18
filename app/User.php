@@ -4,6 +4,8 @@ namespace Educators;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
+use Auth;
 
 class User extends Authenticatable
 {
@@ -15,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'user_name', 'password', 'type'
+        'name', 'email', 'user_name', 'password', 'type', 'created_by_user_id', 'mobile'
     ];
 
     /**
@@ -23,7 +25,25 @@ class User extends Authenticatable
      *
      * @var array
      */
+    
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function get_users_table(){
+        $users = DB::table("users")
+            ->select('id',
+                    "is_active as is_active_hidden",
+                    "name",
+                    "email",
+                    "mobile",
+                    "type",
+                    "balance",
+                    "credit")
+            ->where("created_by_user_id", Auth::user()->id)
+            ->orderBy('is_active')
+            ->get();
+
+        return $users;
+    }
 }

@@ -9,4 +9,7 @@ return [
     'footer_txt'            => ' Updated On',
     'done_successfully'     => 'Done Successfully',
     'del_warning'           => 'Are you sure you want to delete this selected element?',
+    'admin'                 => 'Admin',
+    'regular'               => 'Regular',
+    'agent'                 => 'Agent'
 ];

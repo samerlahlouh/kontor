@@ -1,4 +1,4 @@
-<?php function createTable($cols, $rows, $btns = [], $controlBtnNames = []){
+<?php function createTable($cols, $rows, $btns = [], $controlBtnNames = [], $extra_control_btns = []){
     $controlBtns = [];
     if(count($controlBtnNames)){
         $btn='';
@@ -12,6 +12,9 @@
             array_push($controlBtns, $btn);
         }
     }
+    if(count($extra_control_btns))
+        foreach ($extra_control_btns as $extra_control_btn) 
+            array_push($controlBtns, $extra_control_btn);
 ?>
 
     <div id="showHideCols" class="btn-group dropleft hide">

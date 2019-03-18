@@ -42,6 +42,18 @@
 					</div>
                     <div class="input-group form-group">
 						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-mobile"></i></span>
+						</div>
+						<input id="mobile" type="number" class="form-control{{ $errors->has('mobile') ? ' is-invalid' : '' }}" name="mobile" value="{{ old('mobile') }}" required autofocus placeholder="{{ __('register_lng.mobile') }}">
+                        
+                        @if ($errors->has('mobile'))
+                            <span class="invalid-feedback">
+                                <strong>{{ $errors->first('mobile') }}</strong>
+                            </span>
+                        @endif
+					</div>
+					<div class="input-group form-group">
+						<div class="input-group-prepend">
 							<span class="input-group-text"><i class="fas fa-user"></i></span>
 						</div>
 						<input id="user_name" type="text" class="form-control{{ $errors->has('user_name') ? ' is-invalid' : '' }}" name="user_name" value="{{ old('user_name') }}" required autofocus placeholder="{{ __('register_lng.user_name') }}">
@@ -55,12 +67,12 @@
                     @if(Auth::user()->type == 'admin')
 					<div class="input-group form-group">
 						<div class="input-group-prepend">
-							<span class="input-group-text"><i class="fas fa-user"></i></span>
+							<span class="input-group-text"><i class="fas fa-sitemap"></i></span>
 						</div>
 						<select id="type" type="text" class="form-control{{ $errors->has('type') ? ' is-invalid' : '' }}" name="type" value="{{ old('type') }}" required autofocus>
 							<option hidden disabled selected>{{ __('register_lng.type') }}</option>
-							@foreach ($types as $key => $value)
-								<option value='{{$key}}'>{{ __('register_lng.'.$key) }}</option>
+							@foreach ($types as $type)
+								<option value='{{$type}}'>{{ __('main_lng.'.$type) }}</option>
 							@endforeach
 						</select>
                         

@@ -3,17 +3,19 @@
 @section('content')
 <?php
 begin_card('fa fa-user', __('user_settings_lng.user_settings') );
-echo Form::open(['id'=>'form_edit', 'action' => 'UserController@update', 'method'=>'POST','enctype'=>'multipart/form-data']) ;
+echo Form::open(['id'=>'form_edit', 'action' => 'UserController@update_own_account', 'method'=>'POST','enctype'=>'multipart/form-data']) ;
     begin_incubated_child_card();
         begin_child_card('card_account_info', __('user_settings_lng.account_info'), 'show');
             begin_row();
                 create_input_group('name', __('user_settings_lng.name'), 'fa fa-user', 'text', [], [], Auth::user()->name);
+            next_col();
+                create_input_group('user_name', __('user_settings_lng.user_name'), 'fa fa-user', 'text', [], [], Auth::user()->user_name);
             end_row();
                 
             begin_row();
                 create_input_group('email', __('user_settings_lng.email'), 'fa fa-envelope', 'text', [], [], Auth::user()->email);
             next_col();
-                create_input_group('user_name', __('user_settings_lng.user_name'), 'fa fa-user', 'text', [], [], Auth::user()->user_name);
+                create_input_group('mobile', __('user_settings_lng.mobile'), 'fas fa-mobile', 'number', [], [], Auth::user()->mobile);
             end_row();
 
             begin_row();
