@@ -17,19 +17,23 @@
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/#contact">{{ __('layout_lng.contact_us') }}</a>
                 </li>
+                @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        schools
+                        {{ __('layout_lng.general_settings') }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/schools/1">{{ __('layout_lng.elementary') }}</a>
-                        <a class="dropdown-item" href="/schools/2">{{ __('layout_lng.middle') }}</a>
-                        <a class="dropdown-item" href="/schools/3">{{ __('layout_lng.high_school') }}</a>
+                        @if(Auth::user() && Auth::user()->type == 'admin')
+                            <a class="dropdown-item" href="/packets">{{ __('layout_lng.packets') }}</a>
+                        @endIf
+
+                            <a class="dropdown-item" href="/chargings">{{ __('layout_lng.chargings') }}</a>
                     </div>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/users">{{ __('layout_lng.users') }}</a>
                 </li>
+                @endIf
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger"></a>
                 </li>

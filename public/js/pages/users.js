@@ -10,11 +10,11 @@ $(document).ready(function(){
             var is_active = table.row($tr).data()[2];
             if(is_active == 1){
                 $(this).addClass('btn-danger');
-                $(this).html('Deactivate <i class="fa fa-user-times" aria-hidden="true"></i>');
+                $(this).html(LANGS['USERS']['deactivate']+' <i class="fa fa-user-times" aria-hidden="true"></i>');
                 $(this).attr("onclick","deactivate_user(this.parentNode.parentNode)");
             }else if(is_active == 0){
                 $(this).addClass('btn-success');
-                $(this).html('Activate <i class="fa fa-user-plus" aria-hidden="true"></i>');
+                $(this).html(LANGS['USERS']['activate']+' <i class="fa fa-user-plus" aria-hidden="true"></i>');
                 $(this).attr("onclick","activate_user(this.parentNode.parentNode)");
             }
         }

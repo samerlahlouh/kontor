@@ -11,5 +11,10 @@ return [
     'del_warning'           => 'Are you sure you want to delete this selected element?',
     'admin'                 => 'Admin',
     'regular'               => 'Regular',
-    'agent'                 => 'Agent'
+    'agent'                 => 'Agent',
+    'global'                => 'Global',
+    'private'               => 'Private',
+    'yes'                   => 'Yes',
+    'no'                    => 'No',
+    'teens'                 => 'Teens',
 ];

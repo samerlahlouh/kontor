@@ -12,6 +12,7 @@
 */
 
 use Educators\Http\Middleware\AdminAndAgent;
+use Educators\Http\Middleware\IsAdmin;
 
 Auth::routes();
 // Route::get('/register', 'Auth\RegisterController@index');
@@ -34,4 +35,9 @@ Route::resource('users', 'UserController', ['only' => ['store', 'destroy'] ])->m
 Route::get('/users', 'UserController@index_users')->middleware(AdminAndAgent::class);
 Route::post('deactivate_user', 'UserController@deactivate_user');
 Route::post('activate_user', 'UserController@activate_user');
+//---------------------------------------------------------------------------------------------------------//
+
+//---------------------------------------------- Packets -----------------------------------------------------//
+Route::resource('packets', 'PacketController', ['only' => ['index', 'store', 'destroy'] ])->middleware(IsAdmin::class);
+Route::post('/get_packet','PacketController@get_packet');
 //---------------------------------------------------------------------------------------------------------//
