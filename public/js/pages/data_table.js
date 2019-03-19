@@ -150,3 +150,18 @@ function rowMultiSelection(table){
         alert( table.rows('.selected').data().length +' row(s) selected' );
     } );
 }
+
+//-------------------------------------------------- Actions ---------------------------------------------//
+
+// Add
+// function add_row_click(fields=[]){
+//     $('#submit_add_btn').show();
+//     $('#submit_edit_btn').hide();
+
+//     fields.forEach(function(val, id) {
+//         $('#'+id).val(val);
+//     });
+    
+//     $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
+//     $("#modal_addEdit").modal("show");
+// }

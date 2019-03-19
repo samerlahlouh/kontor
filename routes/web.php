@@ -41,3 +41,8 @@ Route::post('activate_user', 'UserController@activate_user');
 Route::resource('packets', 'PacketController', ['only' => ['index', 'store', 'destroy'] ])->middleware(IsAdmin::class);
 Route::post('/get_packet','PacketController@get_packet');
 //---------------------------------------------------------------------------------------------------------//
+
+//---------------------------------------------- Chargings -----------------------------------------------------//
+Route::resource('chargings', 'ChargingController', ['only' => ['index', 'store', 'destroy'] ])->middleware(AdminAndAgent::class);
+Route::post('/get_charging','ChargingController@get_charging');
+//---------------------------------------------------------------------------------------------------------//

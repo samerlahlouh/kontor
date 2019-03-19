@@ -25,6 +25,7 @@ class CreateChargingsTable extends Migration
             $table->double('amount', 8, 2)->nullable();
             $table->dateTime('request_date')->nullable();
             $table->dateTime('response_date')->nullable();
+            $table->longText('notes')->nullable();
             $table->timestamps();
         });
     }

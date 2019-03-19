@@ -16,7 +16,7 @@ class PacketController extends Controller
     public function index()
     {
         View::share('page_js', 'packets');
-        $packets = $this->packet_modal->get_packets_table();
+        $packets = $this->packet_modal->get_packets_table(); 
         $operators = $this->getEnumValues('packets', 'operator');
         $types = $this->getEnumValues('packets', 'type');
         $is_global = [__('main_lng.private'), __('main_lng.global')];
