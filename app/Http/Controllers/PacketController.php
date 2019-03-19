@@ -19,8 +19,8 @@ class PacketController extends Controller
         $packets = $this->packet_modal->get_packets_table(); 
         $operators = $this->getEnumValues('packets', 'operator');
         $types = $this->getEnumValues('packets', 'type');
-        $is_global = [__('main_lng.private'), __('main_lng.global')];
-        $is_teens = [__('main_lng.no'), __('main_lng.yes')];
+        $is_global = ['1'=>__('main_lng.private'), '2'=>__('main_lng.global')];
+        $is_teens = ['1'=>__('main_lng.no'), '2'=>__('main_lng.yes')];
         $cols = [
             'id',
             __('packets_lng.operator'),

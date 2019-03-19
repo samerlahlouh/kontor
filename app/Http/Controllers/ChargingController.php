@@ -11,13 +11,11 @@ use Auth;
 
 class ChargingController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(){
         $this->charging_modal = new Charging();
     }
     
-    public function index()
-    {
+    public function index(){
         View::share('page_js', 'chargings');
         $chargings = $this->charging_modal->get_chargings_table();
         
@@ -55,8 +53,8 @@ class ChargingController extends Controller
                                 'select_users'      => $select_users]);
     }
 
-    public function store(Request $request)
-    {
+    //------------------------------------------Actions--------------------------------------------//
+    public function store(Request $request){
         $this->is_validate($request);
 
         $id = $request->input('id');
@@ -66,21 +64,46 @@ class ChargingController extends Controller
 
         if($id){
             $charging = Charging::find($id);
+
+            $user = User::find($newData['user_id']);
+            if($newData['status'] == 'accepted' && $charging['status'] == 'accepted')
+                $user['balance'] = $user['balance'] + ($newData['amount'] - $charging['amount']);
+            elseif($newData['status'] == 'accepted' && $charging['status'] != 'accepted')
+                $user['balance'] = $user['balance'] + $newData['amount'];
+            elseif($newData['status'] != 'accepted' && $charging['status'] == 'accepted')
+                $user['balance'] = $user['balance'] - $charging['amount'];
+
             $charging->fill($newData);
+            $user->save();
+
             $charging->save();
-        }else
+        }else{
+            if($newData['status'] == 'accepted'){
+                $user = User::find($newData['user_id']);
+                $user['balance'] = $user['balance'] + $newData['amount'];
+                $user->save();
+            }
+
             Charging::create($newData);
+        }
 
         return redirect("/chargings")->with('success', __('main_lng.done_successfully'));
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         $charging = Charging::find($id);
+
+        if($charging['status'] == 'accepted'){
+            $user = User::find($charging['user_id']);
+            $user['balance'] = $user['balance'] - $charging['amount'];
+            $user->save();
+        }
+
         $charging->delete();
         return redirect("/chargings")->with('success',  __('main_lng.done_successfully'));
     }
 
+    //------------------------------------------Functions--------------------------------------------//
     public function is_validate($request){
         $rules = array(
             'user_id'           =>'required',
@@ -88,7 +111,6 @@ class ChargingController extends Controller
             'status'            =>'required',
             'amount'            =>'required',
             'request_date'      =>'required',
-            'response_date'     =>'required',
         );
         $this->validate($request ,$rules);
     }
