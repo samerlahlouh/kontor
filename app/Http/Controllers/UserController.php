@@ -5,6 +5,7 @@ namespace Educators\Http\Controllers;
 use Illuminate\Http\Request;
 use Educators\User;
 use Educators\User_Packet;
+use Educators\Packet;
 use Auth;
 use View;
 use Validator;
@@ -129,7 +130,9 @@ class UserController extends Controller
             $data['type'] = 'regular';
 
         $data['created_by_user_id'] = Auth::user()->id;
-        User::create($data);
+        $newUser = User::create($data);
+
+        $this->creat_new_user_packets($newUser->id);
 
         return redirect("/users")->with('success', __('main_lng.done_successfully'));
     }
@@ -238,5 +241,15 @@ class UserController extends Controller
             throw new ValidationException($validator);
         }
         
+    }
+
+    private function creat_new_user_packets($user_id){
+        $packets = Packet::select('id')->get();
+        $newUserPacket = [];
+        foreach ($packets as $packet) {
+            $newUserPacket['user_id'] = $user_id;
+            $newUserPacket['packet_id'] = $packet->id;
+            User_Packet::create($newUserPacket);
+        }
     }
 }

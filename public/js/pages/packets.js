@@ -10,6 +10,7 @@ function add_click(){
     $('#submit_edit_btn').hide();
 
     $('#id').val('');
+    $('#name').val('');
     $('#operator').val(0);
     $('#sms').val('');
     $('#minutes').val('');
@@ -42,6 +43,7 @@ function edit_click(table){
                 $('#submit_add_btn').hide();
 
                 $('#id').val(packet['id']);
+                $('#name').val(packet['name']);
                 $('#operator').val(packet['operator']);
                 $('#sms').val(packet['sms']);
                 $('#minutes').val(packet['minutes']);

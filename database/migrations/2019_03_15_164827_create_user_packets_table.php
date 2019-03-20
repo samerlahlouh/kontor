@@ -24,8 +24,8 @@ class CreateUserPacketsTable extends Migration
             $table->foreign('packet_id')->references('id')->on('packets')
                     ->onDelete('cascade')->onUpdate('cascade');
                     
-            $table->double('admin_price', 8, 2)->nullable();
-            $table->double('user_price', 8, 2)->nullable();
+            $table->double('admin_price', 8, 2)->nullable()->default('0');
+            $table->double('user_price', 8, 2)->nullable()->default('0');
             $table->boolean('is_available')->nullable()->default(true);
             $table->timestamps();
         });

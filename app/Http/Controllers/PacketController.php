@@ -4,6 +4,8 @@ namespace Educators\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Educators\Packet;
+use Educators\User;
+use Educators\User_Packet;
 use View;
 
 class PacketController extends Controller
@@ -21,6 +23,7 @@ class PacketController extends Controller
         $is_teens = ['1'=>__('main_lng.no'), '2'=>__('main_lng.yes')];
         $cols = [
             'id',
+            __('packets_lng.name'),
             __('packets_lng.operator'),
             __('packets_lng.sms'),
             __('packets_lng.minutes'),
@@ -40,8 +43,7 @@ class PacketController extends Controller
     }
 
    
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $this->is_validate($request);
 
         $id = $request->input('id');
@@ -55,8 +57,10 @@ class PacketController extends Controller
             $packet = Packet::find($id);
             $packet->fill($data);
             $packet->save();
-        }else
-        Packet::create($data);
+        }else{
+            $newPacket = Packet::create($data);
+            $this->creat_new_user_packets($newPacket->id);
+        }
 
         return redirect("/packets")->with('success', __('main_lng.done_successfully'));
     }
@@ -87,5 +91,16 @@ class PacketController extends Controller
         $id = $request->id;
         $packet = Packet::where('id', $id)->get()[0];
         return response()->json($packet); 
+    }
+
+    private function creat_new_user_packets($packet_id){
+        $users = User::where('type', '<>' , 'admin')->select('id')->get();
+        $newUserPacket = [];
+        foreach ($users as $user) {
+            $newUserPacket['user_id'] = $user->id;
+            $newUserPacket['packet_id'] = $packet_id;
+            $newUserPacket['is_available'] = false;
+            User_Packet::create($newUserPacket);
+        }
     }
 }

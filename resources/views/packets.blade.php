@@ -33,6 +33,9 @@ begin_modal('modal_addEdit');
         echo Form::hidden ('id', '', ['id'=>'id']);
 
         begin_row();
+            create_input_group('name', __('packets_lng.name'), 'fa fa-user', 'text');
+        end_row();
+        begin_row();
             create_input_group('operator', __('packets_lng.operator'), 'fa fa-user', 'select', $operators);
         end_row();
         begin_row();
