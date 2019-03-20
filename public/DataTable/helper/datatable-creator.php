@@ -1,4 +1,4 @@
-<?php function createTable($cols, $rows, $btns = [], $controlBtnNames = [], $extra_control_btns = []){
+<?php function createTable($cols, $rows, $btns = [], $controlBtnNames = [], $extra_columns = [], $extra_columns_values = [], $extra_control_btns = []){
     $controlBtns = [];
     if(count($controlBtnNames)){
         $btn='';
@@ -39,7 +39,7 @@
     </div>
         
     <div>
-        <table id="example" class="table table-bordered row-border hover" style="width:100%;" data-btns-num="<?=sizeof($btns)?>" data-cols-num="<?=sizeof($cols)+1?>">
+        <table id="example" class="table table-bordered row-border hover" style="width:100%;" data-btns-num="<?=sizeof($btns) + sizeof($extra_columns)?>" data-cols-num="<?=sizeof($cols)+1?>">
             <thead>
                 <tr>
                     <th>#</th>
@@ -57,11 +57,15 @@
                         <th></th>
                     <?php }?>
                     
+                    <?php foreach ($extra_columns as $extra_column) {?>
+                        <th style="text-align:center;"><?=$extra_column['title']?></th>
+                    <?php }?>
+                    
                 </tr>
             </thead>
             <tbody>
 
-                <?php foreach ($rows as $row) {?>
+                <?php foreach ($rows as $rowKey=>$row) {?>
                     <tr>
                         <td></td>
 
@@ -76,6 +80,18 @@
                         <?php foreach ($btns as $btn) {?>
                             <td  style="text-align:center; padding-right: 4px ; padding-left: 4px;">
                                 <?php echo $btn; ?>
+                            </td>
+                        <?php }?>
+
+                        <?php foreach ($extra_columns as $columnKey => $extra_column) {?>
+                            <td  style="text-align:center; padding-right: 4px ; padding-left: 4px;">
+                                <?php 
+                                if($extra_column['type'] == 'checkbox')
+                                    echo create_checkbox("checkbox_$rowKey",
+                                                            $extra_column['text'], 
+                                                            $extra_column['class'],
+                                                            isset($extra_columns_values[$columnKey][$rowKey]) ? $extra_columns_values[$columnKey][$rowKey] : '');
+                                ?>
                             </td>
                         <?php }?>
 
@@ -96,6 +112,10 @@
                     }?>
 
                     <?php foreach ($btns as $btn) {?>
+                        <th></th>
+                    <?php }?>
+
+                    <?php foreach ($extra_columns as $extra_column) {?>
                         <th></th>
                     <?php }?>
 

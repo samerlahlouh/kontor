@@ -186,6 +186,15 @@ function create_input_group($id='', $text='', $icon='', $kind='text', $select_da
  //---------------------------------- Create row -------------------------------------//
 function line(){?>
     <hr/>
-<?php }?>
+<?php }
 
+//---------------------------------- Create checkbox -------------------------------------//
+function create_checkbox($id='checkbx', $text='', $class='', $default_value=''){ 
+    if($default_value == 1)
+        $default_value = 'checked';
+    return "<div class='custom-control custom-checkbox'>
+                <input type='checkbox' class='custom-control-input $class $default_value' name='$id' id='$id' $default_value>
+                <label class='custom-control-label' for='$id'>$text</label>
+            </div>";
+ }?>
  

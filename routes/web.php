@@ -35,6 +35,10 @@ Route::resource('users', 'UserController', ['only' => ['store', 'destroy'] ])->m
 Route::get('/users', 'UserController@index_users')->middleware(AdminAndAgent::class);
 Route::post('deactivate_user', 'UserController@deactivate_user');
 Route::post('activate_user', 'UserController@activate_user');
+
+// User packets
+Route::get('/user_packets/{user_id}', 'UserController@index_user_packets')->middleware(AdminAndAgent::class);
+Route::post('/store_user_packets','UserController@store_user_packets')->middleware(AdminAndAgent::class);
 //---------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Packets -----------------------------------------------------//

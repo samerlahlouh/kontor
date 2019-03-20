@@ -11,5 +11,15 @@ return [
     'password'          => 'كلمة السر',
     'confirm_password'  => 'التأكيد',
     'deactivate'        => 'تعطيل',
-    'activate'          => 'تفعيل'
+    'activate'          => 'تفعيل',
+    'packets'           => 'الباقات',
+    'packet_name'       => 'الباقة',
+    'packet_price'      => 'سعر الشراء',
+    'admin_price'       => 'سعر المبيع',
+    'is_available'      => 'الاتاحية',
+    'available'         => 'متاحة',
+    'unavailable'       => 'غير متاحة',
+    'check_rows'        => 'اختيار الاسطر',
+    'check'             => 'اختيار',
+    'user_packets'     => 'باقات المستخدم'
 ];

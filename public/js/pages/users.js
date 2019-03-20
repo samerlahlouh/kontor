@@ -81,3 +81,9 @@ function activate_user($tr){
     });
     document.location.reload();
 }
+
+function show_packets($tr){
+    var $table = $('table.table').DataTable();
+    var user_id = $table.row($tr).data()[1];
+    window.location.href = '/user_packets/'+user_id;
+}

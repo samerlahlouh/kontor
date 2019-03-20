@@ -4,6 +4,7 @@ namespace Educators\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Educators\User;
+use Educators\User_Packet;
 use Auth;
 use View;
 use Validator;
@@ -16,11 +17,11 @@ class UserController extends Controller
     {
         $this->passValid = false;
         $this->user_modal = new User();
+        $this->user_packet = new User_Packet();
     }
 
     //------------------------------------------------indexes-----------------------------------------------//
-    public function index_settings()
-    {
+    public function index_settings(){
         return view('user_settings');
     }
 
@@ -48,6 +49,37 @@ class UserController extends Controller
                                 'cols'  => $cols,
                                 'types' => $types
                             ]);
+    }
+
+    public function index_user_packets($user_id){
+        View::share('page_js', 'user_packets');
+        $user_packets = $this->user_packet->get_user_packets_table($user_id);
+
+        $cols = [
+            'id',
+            'packet_id',
+            __('users_lng.packet_name'),
+            __('users_lng.packet_price'),
+            __('users_lng.admin_price'),
+            __('users_lng.is_available')
+        ];
+
+        $is_available_select = ['1'=>__('main_lng.no'), '2'=>__('main_lng.yes')];
+        $extra_columns = [
+            [
+                'type'  =>  'checkbox',
+                'title' =>  __('users_lng.check_rows'),
+                'text'  =>  __('users_lng.check'),
+                'class' =>  'checked-row'
+            ]
+        ];
+
+        return view('user_packets', [
+                                        'user_packets'          => $user_packets,
+                                        'cols'                  => $cols,
+                                        'is_available_select'   => $is_available_select,
+                                        'extra_columns'         => $extra_columns
+        ]);
     }
 
 
@@ -100,6 +132,33 @@ class UserController extends Controller
         User::create($data);
 
         return redirect("/users")->with('success', __('main_lng.done_successfully'));
+    }
+
+    public function store_user_packets(Request $request){
+        
+        $ids = $request->input('ids');
+        $ids = substr($ids, 1);
+        $idsArr = explode('_', $ids);
+
+        $admin_price = $request->input('admin_price');
+        $is_available = $request->input('is_available');
+        $data = [];
+        if(isset($admin_price))
+            $data['admin_price'] = $request->input('admin_price');
+        if(isset($is_available)){
+            $data['is_available'] = $request->input('is_available');
+            $data['is_available'] -= 1; 
+        }
+        
+        $user_packet;
+        foreach ($idsArr as $id) {
+            $user_packet = User_Packet::find($id);
+            $user_packet->fill($data);
+            $user_packet->save();
+        }
+        $user_id = $user_packet->user_id;
+        
+        return redirect("/user_packets/$user_id")->with('success', __('main_lng.done_successfully'));
     }
 
     public function destroy($id){

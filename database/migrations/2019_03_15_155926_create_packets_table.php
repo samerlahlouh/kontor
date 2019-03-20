@@ -15,6 +15,7 @@ class CreatePacketsTable extends Migration
     {
         Schema::create('packets', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('name')->nullable();
             $table->enum('operator', ['turkcell', 'vodafone'])->nullable();
             $table->unsignedInteger('sms')->nullable();
             $table->unsignedInteger('minutes')->nullable();

@@ -5,8 +5,27 @@
 <?php
 $btns = [
     create_button('', '', 'btn activator'),
-    // create_button('',  __('users_lng.activate'), 'btn btn-success', '', 'fa fa-user-plus', '', 'onclick="activate_user(this.parentNode.parentNode)"')
+    create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
+
 ];
+
+$extra_columns = [
+    // [
+    //     'type'=>'checkbox',
+    //     'title'=>'title',
+    //     'text'=>'text',
+    //     'class'=>'class'
+    // ]
+];
+
+$extra_columns_values = [
+    // [
+    //     '1',
+    //     '1',
+    //     '0'
+    // ]
+];
+// __('users_lng.packets')
 ?>
 
 <div class="page-header">
@@ -18,7 +37,7 @@ $btns = [
     </div>
         <!-- Start body -->
         <div class="panel-body">
-            {{createTable($cols, $users, $btns, ['add', 'del']) }}
+                {{ createTable($cols, $users, $btns, ['add', 'del'], $extra_columns, $extra_columns_values) }}
         </div>
         <!-- End body -->
     </div>

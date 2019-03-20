@@ -6,6 +6,7 @@
 
 $(document).ready(function(){
     events();
+    change_checkbox_value();
 });
 
 function events(){
@@ -22,4 +23,13 @@ function changeLang(lng){   // This function for change website's language
         data: {lang: lng},
         dataType: 'JSON'
     });
+}
+
+function change_checkbox_value(){
+    $(':checkbox').click(function() {
+        if($(this).hasClass('checked'))
+          $(this).removeClass('checked')
+        else
+          $(this).addClass('checked')
+      });
 }

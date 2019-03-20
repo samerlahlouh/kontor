@@ -17,4 +17,5 @@ return [
     'yes'                   => 'Yes',
     'no'                    => 'No',
     'teens'                 => 'Teens',
+    'check'                 => 'Check',
 ];

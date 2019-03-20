@@ -8,13 +8,11 @@ use View;
 
 class PacketController extends Controller
 {
-    public function __construct()
-    {
+    public function __construct(){
         $this->packet_modal = new Packet();
     }
 
-    public function index()
-    {
+    public function index(){
         View::share('page_js', 'packets');
         $packets = $this->packet_modal->get_packets_table(); 
         $operators = $this->getEnumValues('packets', 'operator');

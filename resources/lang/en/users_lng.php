@@ -11,5 +11,15 @@ return [
     'password'          => 'Password',
     'confirm_password'  => 'Confirm',
     'deactivate'        => 'Deactivate',
-    'activate'          => 'Activate'
+    'activate'          => 'Activate',
+    'packets'           => 'Packets',
+    'packet_name'       => 'Packet',
+    'packet_price'      => 'Purchasing Price',
+    'admin_price'       => 'Selling Price',
+    'is_available'      => 'Availability',
+    'available'         => 'Available',
+    'unavailable'       => 'Unavailable',
+    'check_rows'        => 'Check Rows',
+    'check'             => 'Check',
+    'user_packets'     => 'User Packets'
 ];

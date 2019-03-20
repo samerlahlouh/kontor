@@ -26,6 +26,7 @@ class CreateUserPacketsTable extends Migration
                     
             $table->double('admin_price', 8, 2)->nullable();
             $table->double('user_price', 8, 2)->nullable();
+            $table->boolean('is_available')->nullable()->default(true);
             $table->timestamps();
         });
     }
