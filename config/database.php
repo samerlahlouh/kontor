@@ -39,26 +39,26 @@ return [
             'prefix' => '',
         ],
 
-        'mysql' => [
-                'host' =>  '127.0.0.1',
+        // 'mysql' => [
+        //         'host' =>  '127.0.0.1',
+        //         'driver' => 'mysql',
+        //         'database' => 'surat_kontor',
+        //         'username' => 'root',
+        //         'password' => '',
+        //         'charset' => 'utf8',
+        //         'collation' => 'utf8_unicode_ci',
+        //         'prefix' => '',
                 'driver' => 'mysql',
-                'database' => 'surat_kontor',
-                'username' => 'root',
-                'password' => '',
-                'charset' => 'utf8',
-                'collation' => 'utf8_unicode_ci',
+                'host' =>  'us-cdbr-iron-east-03.cleardb.net',
+                
+                'database' => 'heroku_302a0087085450f',
+                'username' => 'b27b1058c6f81a',
+                'password' => '1c273e12',
+                
+                'charset' => 'utf8mb4',
+                'collation' => 'utf8mb4_unicode_ci',
                 'prefix' => '',
-                // 'driver' => 'mysql',
-                // 'host' =>  'us-cdbr-iron-east-03.cleardb.net',
-                
-                // 'database' => 'heroku_302a0087085450f',
-                // 'username' => 'b27b1058c6f81a',
-                // 'password' => '1c273e12',
-                
-                // 'charset' => 'utf8mb4',
-                // 'collation' => 'utf8mb4_unicode_ci',
-                // 'prefix' => '',
-                // 'strict' => false,
+                'strict' => false,
         ],
 
         'pgsql' => [
