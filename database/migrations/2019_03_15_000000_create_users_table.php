@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->unsignedInteger('created_by_user_id')->nullable()->default('1');
+            $table->unsignedInteger('created_by_user_id')->nullable();
             $table->foreign('created_by_user_id')->references('id')->on('users')
                     ->onDelete('cascade')->onUpdate('cascade');
 

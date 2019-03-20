@@ -3,6 +3,7 @@
 namespace Educators\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 use View;
 
 class AppServiceProvider extends ServiceProvider
@@ -14,6 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(190);
+        
         $website_lang = app()->getLocale();
         $lang_file_ext = $website_lang=='ar'? '-rtl': '';
         View::share('lang_file_ext', $lang_file_ext);
