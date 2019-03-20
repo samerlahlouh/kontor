@@ -19,7 +19,6 @@ return [
     'is_available'      => 'الاتاحية',
     'available'         => 'متاحة',
     'unavailable'       => 'غير متاحة',
-    'check_rows'        => 'اختيار الاسطر',
-    'check'             => 'اختيار',
+    'select'            => 'اختر',
     'user_packets'     => 'باقات المستخدم'
 ];

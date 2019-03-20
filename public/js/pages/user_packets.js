@@ -11,7 +11,7 @@ function edit_click(table){
         $('.checked-row').each(function(){
             if($(this).hasClass('checked')){
                 tr = $(this).parent().parent().parent();
-                userPacketId = table.row(tr).data()[1];
+                userPacketId = table.row(tr).data()[2];
                 userPacketIds += '_' +userPacketId;
             }
         })

@@ -19,12 +19,15 @@ $(document).ready(function(){
 //DataTable init
 function tableInit(){
     var buttonsNum = $('table.table').data('btns-num');
+    var extraColumnsNum = $('table.table').data('extra-columns-num');
     var colsNum = $('table.table').data('cols-num');
     var table = $('table.table').DataTable( {
         initComplete: function () {
             this.api().columns().every( function () {
                 var column = this;
-                if (column[0][0] != 0 && column[0][0] != 1 && (column[0][0] < colsNum  || !buttonsNum)){
+                
+                // column[0][0] is the index that walks on columns for make filter boxes (selects)
+                if (column[0][0] != 0 && column[0][0] != 1 && (column[0][0] >  2 && column[0][0] > extraColumnsNum + 2) && (column[0][0] < colsNum  || !buttonsNum)){
                     var select = $('<select class="custom-select"><option value="">' + LANGS['DATA_TABLE']['noFilter'] + '</option></select>')
                         .appendTo( $(column.footer()).empty() )
                         .on( 'change', function () {

@@ -19,7 +19,6 @@ return [
     'is_available'      => 'Availability',
     'available'         => 'Available',
     'unavailable'       => 'Unavailable',
-    'check_rows'        => 'Check Rows',
-    'check'             => 'Check',
+    'select'            => 'Select',
     'user_packets'     => 'User Packets'
 ];

@@ -68,8 +68,8 @@ class UserController extends Controller
         $extra_columns = [
             [
                 'type'  =>  'checkbox',
-                'title' =>  __('users_lng.check_rows'),
-                'text'  =>  __('users_lng.check'),
+                'title' =>  __('users_lng.select'),
+                'text'  =>  '-',
                 'class' =>  'checked-row'
             ]
         ];
@@ -135,7 +135,6 @@ class UserController extends Controller
     }
 
     public function store_user_packets(Request $request){
-        
         $ids = $request->input('ids');
         $ids = substr($ids, 1);
         $idsArr = explode('_', $ids);

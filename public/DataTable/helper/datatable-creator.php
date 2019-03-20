@@ -39,10 +39,14 @@
     </div>
         
     <div>
-        <table id="example" class="table table-bordered row-border hover" style="width:100%;" data-btns-num="<?=sizeof($btns) + sizeof($extra_columns)?>" data-cols-num="<?=sizeof($cols)+1?>">
+        <table id="example" class="table table-bordered row-border hover" style="width:100%;" data-btns-num="<?=sizeof($btns)?>" data-extra-columns-num="<?=sizeof($extra_columns)?>" data-cols-num="<?=sizeof($cols)+1?>">
             <thead>
                 <tr>
                     <th>#</th>
+                    
+                    <?php foreach ($extra_columns as $extra_column) {?>
+                        <th style="text-align:center;"><?=$extra_column['title']?></th>
+                    <?php }?>
                     
                     <?php for ($i=0; $i < sizeof($cols) ; $i++) {
                         if($cols[$i] == 'id' || !strcmp(substr($cols[$i],-3) ,'_id') || !strcmp(substr($cols[$i],-7) ,'_hidden')){?>
@@ -57,10 +61,6 @@
                         <th></th>
                     <?php }?>
                     
-                    <?php foreach ($extra_columns as $extra_column) {?>
-                        <th style="text-align:center;"><?=$extra_column['title']?></th>
-                    <?php }?>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -68,6 +68,18 @@
                 <?php foreach ($rows as $rowKey=>$row) {?>
                     <tr>
                         <td></td>
+
+                        <?php foreach ($extra_columns as $columnKey => $extra_column) {?>
+                            <td  style="text-align:center; padding-right: 4px ; padding-left: 4px;">
+                                <?php 
+                                if($extra_column['type'] == 'checkbox')
+                                    echo create_checkbox("checkbox_$rowKey",
+                                                            $extra_column['text'], 
+                                                            $extra_column['class'],
+                                                            isset($extra_columns_values[$columnKey][$rowKey]) ? $extra_columns_values[$columnKey][$rowKey] : '');
+                                ?>
+                            </td>
+                        <?php }?>
 
                         <?php foreach ($row as $key => $col) {
                             if($key=='id' || !strcmp(substr($key,-3) ,'_id') || !strcmp(substr($key,-7) ,'_hidden')){?>
@@ -80,18 +92,6 @@
                         <?php foreach ($btns as $btn) {?>
                             <td  style="text-align:center; padding-right: 4px ; padding-left: 4px;">
                                 <?php echo $btn; ?>
-                            </td>
-                        <?php }?>
-
-                        <?php foreach ($extra_columns as $columnKey => $extra_column) {?>
-                            <td  style="text-align:center; padding-right: 4px ; padding-left: 4px;">
-                                <?php 
-                                if($extra_column['type'] == 'checkbox')
-                                    echo create_checkbox("checkbox_$rowKey",
-                                                            $extra_column['text'], 
-                                                            $extra_column['class'],
-                                                            isset($extra_columns_values[$columnKey][$rowKey]) ? $extra_columns_values[$columnKey][$rowKey] : '');
-                                ?>
                             </td>
                         <?php }?>
 
