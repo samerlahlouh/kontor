@@ -6,19 +6,20 @@ use Illuminate\Http\Request;
 use Educators\Packet;
 use Educators\User;
 use Educators\User_Packet;
+use Auth;
 use View;
 
 class PacketController extends Controller
 {
     public function __construct(){
-        $this->packet_modal = new Packet();
+        $this->packet_model = new Packet();
         $this->user_packet_model = new User_Packet();
     }
 
     //------------------------------------------------indexes-----------------------------------------------//
     public function index(){
         View::share('page_js', 'packets');
-        $packets = $this->packet_modal->get_packets_table(); 
+        $packets = $this->packet_model->get_packets_table(); 
 
         $operators = $this->getEnumValues('packets', 'operator');
         $types = $this->getEnumValues('packets', 'type');
@@ -78,6 +79,33 @@ class PacketController extends Controller
                                     ]);
     }
 
+    public function index_regular_packets(){
+        View::share('page_js', 'packet_users');
+        $regular_packets = $this->packet_model->get_regular_packets_table(Auth::user()->id);
+
+        $cols = [
+            'id',
+            __('packets_lng.packet_name'),
+            __('packets_lng.purchasing_price'),
+            __('packets_lng.selling_price'),
+        ];
+
+        $extra_columns = [
+            [
+                'type'  =>  'checkbox',
+                'title' =>  __('packets_lng.select'),
+                'text'  =>  '-',
+                'class' =>  'checked-row'
+            ]
+        ];
+
+        return view('regular_packets', [
+                                        'regular_packets'   => $regular_packets,
+                                        'cols'              => $cols,
+                                        'extra_columns'     => $extra_columns,
+                                    ]);
+    }
+
 
     //------------------------------------------ Actions --------------------------------------------//
     public function store(Request $request){
@@ -130,6 +158,26 @@ class PacketController extends Controller
         return redirect("/packet_users/$packet_id")->with('success', __('main_lng.done_successfully'));
     }
 
+    public function store_regular_packets(Request $request){
+        $this->is_regular_validate($request);
+
+        $ids = $request->input('ids');
+        $ids = substr($ids, 1);
+        $idsArr = explode('_', $ids);
+
+        $user_price = $request->input('user_price');
+        $data['user_price'] = $request->input('user_price');
+            
+        $user_packet;
+        foreach ($idsArr as $id) {
+            $user_packet = User_Packet::find($id);
+            $user_packet->fill($data);
+            $user_packet->save();
+        }
+        
+        return redirect("/regular_packets")->with('success', __('main_lng.done_successfully'));
+    }
+
     public function destroy($id){
         $packet = Packet::find($id);
         $packet->delete();
@@ -147,6 +195,13 @@ class PacketController extends Controller
             'type'      =>'required',
             'is_global' =>'required',
             'is_teens'  =>'required',
+        );
+        $this->validate($request ,$rules);
+    }
+
+    public function is_regular_validate($request){
+        $rules = array(
+            'user_price'  =>'required',
         );
         $this->validate($request ,$rules);
     }

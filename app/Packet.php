@@ -46,4 +46,19 @@ class Packet extends Model
             
         return $packets;
     }
+
+    public function get_regular_packets_table($user_id){
+        $packets = DB::table("user_packets")
+            ->leftJoin('packets', 'packets.id', '=', 'user_packets.packet_id')
+            ->select('user_packets.id',
+                    "packets.name as packet_name",
+                    "user_packets.admin_price as purchasing_price",
+                    "user_packets.user_price as selling_price"
+                    )
+            ->where("user_packets.user_id", $user_id)
+            ->where("user_packets.is_available", 1)
+            ->get();
+
+        return $packets;
+    }
 }

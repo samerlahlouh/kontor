@@ -17,6 +17,14 @@
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/#contact">{{ __('layout_lng.contact_us') }}</a>
                 </li>
+                @if(Auth::user() && Auth::user()->type == 'regular')
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/regular_packets">{{ __('layout_lng.packets') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/regular_chargings">{{ __('layout_lng.chargings') }}</a>
+                </li>
+                @endIf
                 @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

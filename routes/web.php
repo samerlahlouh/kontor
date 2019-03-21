@@ -13,6 +13,7 @@
 
 use Educators\Http\Middleware\AdminAndAgent;
 use Educators\Http\Middleware\IsAdmin;
+use Educators\Http\Middleware\Regular;
 
 Auth::routes();
 // Route::get('/register', 'Auth\RegisterController@index');
@@ -48,6 +49,11 @@ Route::post('/get_packet','PacketController@get_packet');
 // Packet users
 Route::get('/packet_users/{packet_id}', 'PacketController@index_packet_users')->middleware(AdminAndAgent::class);
 Route::post('/store_packet_users','PacketController@store_packet_users')->middleware(AdminAndAgent::class);
+
+// Regular user
+Route::get('/regular_packets', 'PacketController@index_regular_packets')->middleware(Regular::class);
+Route::post('/store_regular_packets','PacketController@store_regular_packets')->middleware(Regular::class);
+
 //---------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Chargings -----------------------------------------------------//

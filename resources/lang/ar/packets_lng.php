@@ -18,6 +18,9 @@ return [
     'admin_price'   => 'سعر المبيع',
     'is_available'  => 'الإتاحية',
     'select'        => 'اختر',
-    'packet_users'  => 'مستخدمين الباقة'
+    'packet_users'  => 'مستخدمين الباقة',
+    'packet_name'   => 'اسم الباقة',
+    'purchasing_price'=> 'سعر الشراء',
+    'selling_price' => 'سعر المبيع'
 
 ];
