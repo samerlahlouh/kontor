@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Educators\Http\Middleware\AdminAndAgent;
+use Educators\Packet;
+use Educators\User_Packet;
 use Auth;
 
 class RegisterController extends Controller
@@ -84,14 +86,28 @@ class RegisterController extends Controller
     {
         if(!isset($data['type']))
             $data['type'] = 'regular';
-        return User::create([
-            'created_by_user_id' => Auth::user()->id,
-            'name'      => $data['name'],
-            'email'     => $data['email'],
-            'user_name' => $data['user_name'],
-            'mobile'    => $data['mobile'],
-            'password'  => Hash::make($data['password']),
-            'type'      => $data['type']
-        ]);
+
+        $newUser = User::create([
+                        'created_by_user_id' => Auth::user()->id,
+                        'name'      => $data['name'],
+                        'email'     => $data['email'],
+                        'user_name' => $data['user_name'],
+                        'mobile'    => $data['mobile'],
+                        'password'  => Hash::make($data['password']),
+                        'type'      => $data['type']
+                    ]);
+        $this->creat_new_user_packets($newUser->id);
+        return $newUser;
+    }
+
+    private function creat_new_user_packets($user_id){
+        $packets = Packet::select('id')->get();
+        $newUserPacket = [];
+        foreach ($packets as $packet) {
+            $newUserPacket['user_id'] = $user_id;
+            $newUserPacket['packet_id'] = $packet->id;
+            $newUserPacket['is_available'] = false;
+            User_Packet::create($newUserPacket);
+        }
     }
 }

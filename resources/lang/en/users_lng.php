@@ -15,7 +15,7 @@ return [
     'packets'           => 'Packets',
     'packet_name'       => 'Packet',
     'packet_price'      => 'Purchasing Price',
-    'admin_price'       => 'Selling Price',
+    'selling_price'     => 'Selling Price',
     'is_available'      => 'Availability',
     'available'         => 'Available',
     'unavailable'       => 'Unavailable',

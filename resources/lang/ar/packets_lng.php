@@ -12,5 +12,12 @@ return [
     'is_teens'      => 'هل هو شبابي',
     'packets'       => 'الباقات',
     'name'          => 'الاسم',
+    'users'         => 'المستخدمين',
+    'user'          => 'المستخدم',
+    'packet_price'  => 'سعر الشراء',
+    'admin_price'   => 'سعر المبيع',
+    'is_available'  => 'الإتاحية',
+    'select'        => 'اختر',
+    'packet_users'  => 'مستخدمين الباقة'
 
 ];

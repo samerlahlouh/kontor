@@ -23,7 +23,7 @@
                         {{ __('layout_lng.general_settings') }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        @if(Auth::user() && Auth::user()->type == 'admin')
+                        @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                             <a class="dropdown-item" href="/packets">{{ __('layout_lng.packets') }}</a>
                         @endIf
 

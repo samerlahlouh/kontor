@@ -82,3 +82,9 @@ function del_click(table){
         })
     }
 }
+
+function show_packet_users($tr){
+    var $table = $('table.table').DataTable();
+    var packet_id = $table.row($tr).data()[1];
+    window.location.href = '/packet_users/'+packet_id;
+}

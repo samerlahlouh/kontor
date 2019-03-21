@@ -4,6 +4,8 @@ namespace Educators;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Educators\User_Packet;
+use Auth;
 
 class Packet extends Model
 {
@@ -13,7 +15,7 @@ class Packet extends Model
     ];
 
     public function get_packets_table(){
-        $packets = DB::table("packets")
+        $allPackets = DB::table("packets")
             ->select('id',
                     "name",
                     "operator",
@@ -27,6 +29,21 @@ class Packet extends Model
                     )
             ->get();
 
+        $user_id = Auth::user()->id;
+        $user_type = Auth::user()->type;
+        $packets = [];
+        
+        if($user_type != 'admin'){
+            foreach ($allPackets as $packet) {
+                $user_packet = User_Packet::where('packet_id', $packet->id)->where('user_id', $user_id)->get()[0];
+                if($user_packet['is_available']){
+                    $packet->price = $user_packet['admin_price'];
+                    array_push($packets, $packet);
+                }
+            }
+        }else
+            $packets = $allPackets;
+            
         return $packets;
     }
 }

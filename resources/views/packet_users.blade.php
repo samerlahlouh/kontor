@@ -6,12 +6,12 @@
  <!-- START panel-->
  <div id="panelDemo9" class="panel panel-info">
     <div class="panel-heading bg-purple">
-        <a class='link-back' href='/users'>{{ $userName }}</a> ->
-         {{__("users_lng.user_packets") }}
+        <a class='link-back' href='/packets'>{{ $packet_name }}</a> ->
+         {{__("packets_lng.packet_users") }}
     </div>
         <!-- Start body -->
         <div class="panel-body">
-                {{createTable($cols, $user_packets, [], ['edit'], $extra_columns) }}
+                {{createTable($cols, $packet_users, [], ['edit'], $extra_columns) }}
         </div>
         <!-- End body -->
     </div>
@@ -20,14 +20,14 @@
 
 <?php 
 begin_modal('modal_addEdit');
-    echo Form::open(['id'=>'form_addEdit', 'action' => ['UserController@store_user_packets'], 'method'=>'POST','enctype'=>'multipart/form-data']);
+    echo Form::open(['id'=>'form_addEdit', 'action' => ['PacketController@store_packet_users'], 'method'=>'POST','enctype'=>'multipart/form-data']);
         echo Form::hidden ('ids', '', ['id'=>'ids']);
 
         begin_row();
-            create_input_group('admin_price', __('users_lng.selling_price'), 'fa fa-money', 'number');
+            create_input_group('admin_price', __('packets_lng.admin_price'), 'fa fa-money', 'number');
         end_row();
        begin_row();
-            create_input_group('is_available', __('users_lng.is_available'), 'fa fa-sitemap', 'select', $is_available_select);
+            create_input_group('is_available', __('packets_lng.is_available'), 'fa fa-sitemap', 'select', $is_available_select);
         end_row();
     
     echo Form::close();

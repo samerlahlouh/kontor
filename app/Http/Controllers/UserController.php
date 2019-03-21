@@ -17,8 +17,8 @@ class UserController extends Controller
     public function __construct()
     {
         $this->passValid = false;
-        $this->user_modal = new User();
-        $this->user_packet = new User_Packet();
+        $this->user_model = new User();
+        $this->user_packet_model = new User_Packet();
     }
 
     //------------------------------------------------indexes-----------------------------------------------//
@@ -28,7 +28,7 @@ class UserController extends Controller
 
     public function index_users(){
         View::share('page_js', 'users');
-        $users = $this->user_modal->get_users_table();
+        $users = $this->user_model->get_users_table();
         $typesValues = $this->getEnumValues('users', 'type');
 
         $types = array();
@@ -54,14 +54,15 @@ class UserController extends Controller
 
     public function index_user_packets($user_id){
         View::share('page_js', 'user_packets');
-        $user_packets = $this->user_packet->get_user_packets_table($user_id);
-
+        $user_packets = $this->user_packet_model->get_user_packets_table($user_id);
+        // dd($user_packets);
+        
         $cols = [
             'id',
             'packet_id',
             __('users_lng.packet_name'),
             __('users_lng.packet_price'),
-            __('users_lng.admin_price'),
+            __('users_lng.selling_price'),
             __('users_lng.is_available')
         ];
 
@@ -74,13 +75,15 @@ class UserController extends Controller
                 'class' =>  'checked-row'
             ]
         ];
+        $userName =  User::where('id', $user_id)->get()[0]['name'];
 
         return view('user_packets', [
                                         'user_packets'          => $user_packets,
                                         'cols'                  => $cols,
                                         'is_available_select'   => $is_available_select,
-                                        'extra_columns'         => $extra_columns
-        ]);
+                                        'extra_columns'         => $extra_columns,
+                                        'userName'              => $userName
+                                    ]);
     }
 
 
@@ -130,6 +133,7 @@ class UserController extends Controller
             $data['type'] = 'regular';
 
         $data['created_by_user_id'] = Auth::user()->id;
+        $data['password'] = Hash::make($data['password']);
         $newUser = User::create($data);
 
         $this->creat_new_user_packets($newUser->id);
@@ -150,6 +154,8 @@ class UserController extends Controller
         if(isset($is_available)){
             $data['is_available'] = $request->input('is_available');
             $data['is_available'] -= 1; 
+
+            $this->set_is_available_for_children_of_agent($idsArr, $data['is_available']);
         }
         
         $user_packet;
@@ -249,7 +255,26 @@ class UserController extends Controller
         foreach ($packets as $packet) {
             $newUserPacket['user_id'] = $user_id;
             $newUserPacket['packet_id'] = $packet->id;
+            $newUserPacket['is_available'] = false;
             User_Packet::create($newUserPacket);
+        }
+    }
+
+    private function set_is_available_for_children_of_agent($ids, $is_available){
+        if(!$is_available){
+            foreach ($ids as $id) {
+                $user_packet = User_Packet::find($id);
+                $user = User::find($user_packet->user_id);
+                if($user->type == 'agent'){
+                    $children_users = User::where('created_by_user_id', $user->id)->get();
+                    foreach ($children_users as $children_user) {
+                        $user_packet_for_child_id = User_Packet::where('user_id', $children_user['id'])->where('packet_id', $user_packet->packet_id)->get()[0]['id'];
+                        $up = User_Packet::find($user_packet_for_child_id);
+                        $up->is_available = $is_available;
+                        $up->save();
+                    }
+                }
+            }
         }
     }
 }

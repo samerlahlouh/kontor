@@ -12,5 +12,13 @@ return [
     'is_teens'      => 'Is Teens',
     'packets'       => 'Packets',
     'name'          => 'Name',
+    'users'         => 'Users',
+
+    'user'          => 'User',
+    'packet_price'  => 'Purchasing Price',
+    'admin_price'   => 'Selling Price',
+    'is_available'  => 'Availability',
+    'select'        => 'Select',
+    'packet_users'  => 'Packet Users'
 
 ];

@@ -6,7 +6,6 @@
 $btns = [
     create_button('', '', 'btn activator'),
     create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
-
 ];
 
 $extra_columns = [

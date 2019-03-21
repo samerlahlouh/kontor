@@ -4,8 +4,12 @@
 
 <?php
 $btns = [
-    // create_button('',  __('packets_lng.activate'), 'btn btn-success', '', 'fa fa-user-plus', '', 'onclick="activate_user(this.parentNode.parentNode)"')
+    create_button('', __('packets_lng.users'), 'btn btn-primary', '', 'fas fa-user', '', 'onclick="show_packet_users(this.parentNode.parentNode)"')
 ];
+
+$controlBtns = [];
+if(Auth::user()->type == 'admin')
+    $controlBtns = ['add', 'edit', 'del'];
 ?>
 
 <div class="page-header">
@@ -17,7 +21,7 @@ $btns = [
     </div>
         <!-- Start body -->
         <div class="panel-body">
-            {{createTable($cols, $packets, $btns, ['add', 'edit', 'del']) }}
+            {{createTable($cols, $packets, $btns, $controlBtns) }}
         </div>
         <!-- End body -->
     </div>
