@@ -20,9 +20,11 @@ class CreateChargingsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')
                     ->onDelete('cascade')->onUpdate('cascade');
                     
-            $table->enum('type', ['eft', 'cash', 'credit'])->nullable();
+            $table->enum('type', ['eft', 'cash', 'credit', 'pay_off'])->nullable();
             $table->enum('status', ['in_waiting', 'accepted', 'rejected'])->nullable();
             $table->double('amount', 8, 2)->nullable();
+            $table->double('balance_before', 8, 2)->nullable()->default('0');
+            $table->double('balance_after', 8, 2)->nullable()->default('0');
             $table->dateTime('request_date')->nullable();
             $table->dateTime('response_date')->nullable();
             $table->longText('notes')->nullable();

@@ -39,7 +39,7 @@
     </div>
         
     <div>
-        <table id="example" class="table table-bordered row-border hover" style="width:100%;" data-btns-num="<?=sizeof($btns)?>" data-extra-columns-num="<?=sizeof($extra_columns)?>" data-cols-num="<?=sizeof($cols)+1?>">
+        <table id="example" class="table table-bordered row-border hover" style="width:100%;" data-btns-num="<?=sizeof($btns)?>" data-extra-columns-num="<?=sizeof($extra_columns)?>" data-cols-num="<?=sizeof($cols)+1+sizeof($extra_columns)?>">
             <thead>
                 <tr>
                     <th>#</th>
@@ -103,6 +103,11 @@
                 <tr>
 
                     <th></th>
+
+                    <?php foreach ($extra_columns as $extra_column) {?>
+                        <th></th>
+                    <?php }?>
+
                     <?php for ($i=0; $i < sizeof($cols) ; $i++) {?>
                         <?php if ($cols[$i] != 'id' && strcmp(substr($cols[$i],-3) ,'_id') && strcmp(substr($cols[$i],-7) ,'_hidden')) {?>
                                 <th></th>
@@ -112,10 +117,6 @@
                     }?>
 
                     <?php foreach ($btns as $btn) {?>
-                        <th></th>
-                    <?php }?>
-
-                    <?php foreach ($extra_columns as $extra_column) {?>
                         <th></th>
                     <?php }?>
 

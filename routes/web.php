@@ -34,8 +34,8 @@ Route::post('', 'UserController@update_own_account');
 //---------------------------------------------- All Users -----------------------------------------------------//
 Route::resource('users', 'UserController', ['only' => ['store', 'destroy'] ])->middleware(AdminAndAgent::class);
 Route::get('/users', 'UserController@index_users')->middleware(AdminAndAgent::class);
-Route::post('deactivate_user', 'UserController@deactivate_user');
-Route::post('activate_user', 'UserController@activate_user');
+Route::post('deactivate_user', 'UserController@deactivate_user')->middleware(AdminAndAgent::class);
+Route::post('activate_user', 'UserController@activate_user')->middleware(AdminAndAgent::class);
 
 // User packets
 Route::get('/user_packets/{user_id}', 'UserController@index_user_packets')->middleware(AdminAndAgent::class);
@@ -44,7 +44,7 @@ Route::post('/store_user_packets','UserController@store_user_packets')->middlewa
 
 //---------------------------------------------- Packets -----------------------------------------------------//
 Route::resource('packets', 'PacketController', ['only' => ['index', 'store', 'destroy'] ])->middleware(AdminAndAgent::class);
-Route::post('/get_packet','PacketController@get_packet');
+Route::post('/get_packet','PacketController@get_packet')->middleware(AdminAndAgent::class);
 
 // Packet users
 Route::get('/packet_users/{packet_id}', 'PacketController@index_packet_users')->middleware(AdminAndAgent::class);
@@ -57,6 +57,12 @@ Route::post('/store_regular_packets','PacketController@store_regular_packets')->
 //---------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Chargings -----------------------------------------------------//
-Route::resource('chargings', 'ChargingController', ['only' => ['index', 'store', 'destroy'] ])->middleware(AdminAndAgent::class);
-Route::post('/get_charging','ChargingController@get_charging');
+Route::resource('chargings', 'ChargingController', ['only' => ['index', 'store', 'destroy'] ])->middleware(IsAdmin::class);
+Route::post('/get_charging','ChargingController@get_charging')->middleware(IsAdmin::class);
+Route::post('/update','ChargingController@update')->middleware(IsAdmin::class);
+
+// Regular user
+Route::get('/regular_chargings', 'ChargingController@index_regular_chargings')->middleware(Regular::class);
+Route::post('/delete_charging','ChargingController@delete_charging')->middleware(Regular::class);
+Route::post('/store_regular_charing','ChargingController@store_regular_charing')->middleware(Regular::class);
 //---------------------------------------------------------------------------------------------------------//

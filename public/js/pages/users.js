@@ -5,7 +5,6 @@ $(document).ready(function(){
 
     //Activate and Deactivate button format
     $('.activator').each(function(){
-        if(true){
             var $tr = $(this).parent().parent()
             var is_active = table.row($tr).data()[2];
             if(is_active == 1){
@@ -17,7 +16,6 @@ $(document).ready(function(){
                 $(this).html(LANGS['USERS']['activate']+' <i class="fa fa-user-plus" aria-hidden="true"></i>');
                 $(this).attr("onclick","activate_user(this.parentNode.parentNode)");
             }
-        }
     });
 });
 

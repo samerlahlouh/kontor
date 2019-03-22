@@ -80,7 +80,7 @@ class PacketController extends Controller
     }
 
     public function index_regular_packets(){
-        View::share('page_js', 'packet_users');
+        View::share('page_js', 'regular_packets');
         $regular_packets = $this->packet_model->get_regular_packets_table(Auth::user()->id);
 
         $cols = [

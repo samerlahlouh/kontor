@@ -27,7 +27,7 @@ function tableInit(){
                 var column = this;
                 
                 // column[0][0] is the index that walks on columns for make filter boxes (selects)
-                if (column[0][0] != 0 && column[0][0] != 1 && (column[0][0] >  2 && column[0][0] > extraColumnsNum + 2) && (column[0][0] < colsNum  || !buttonsNum)){
+                if (column[0][0] != 0 && column[0][0] != 1 && column[0][0] > extraColumnsNum + 1 && (column[0][0] < colsNum  || !buttonsNum)){
                     var select = $('<select class="custom-select"><option value="">' + LANGS['DATA_TABLE']['noFilter'] + '</option></select>')
                         .appendTo( $(column.footer()).empty() )
                         .on( 'change', function () {

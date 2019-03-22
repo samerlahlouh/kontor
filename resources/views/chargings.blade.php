@@ -18,8 +18,8 @@
 </div>
 
 <?php 
-begin_modal('modal_addEdit');
-    echo Form::open(['id'=>'form_addEdit', 'action' => ['ChargingController@store'], 'method'=>'POST','enctype'=>'multipart/form-data']);
+begin_modal('modal_add');
+    echo Form::open(['id'=>'form_add', 'action' => ['ChargingController@store'], 'method'=>'POST','enctype'=>'multipart/form-data']);
         echo Form::hidden ('id', '', ['id'=>'id']);
 
         begin_row();
@@ -45,7 +45,24 @@ begin_modal('modal_addEdit');
         end_row();
     
     echo Form::close();
-end_modal(['close', 'add', 'edit'], 'form_addEdit');
+end_modal(['close', 'add'], 'form_add');
+
+begin_modal('modal_edit');
+    echo Form::open(['id'=>'form_edit', 'action' => ['ChargingController@update'], 'method'=>'POST','enctype'=>'multipart/form-data']);
+        echo Form::hidden ('id', '', ['id'=>'id']);
+
+        begin_row();
+            create_input_group('request_date', __('chargings_lng.request_date'), 'fa fa-calendar-o', 'date');
+        end_row();
+        begin_row();
+            create_input_group('response_date', __('chargings_lng.response_date'), 'fa fa-calendar-o', 'date');
+        end_row();
+        begin_row();
+            create_input_group('notes', __('chargings_lng.notes'), 'fa fa-commenting', 'textarea');
+        end_row();
+    
+    echo Form::close();
+end_modal(['close', 'edit'], 'form_edit');
 
 echo Form::open(['id'=>'form_del', 'action' => ['ChargingController@destroy', 0], 'method'=>'POST','enctype'=>'multipart/form-data']);
     echo Form::hidden('_method' ,'DELETE');

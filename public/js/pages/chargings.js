@@ -3,12 +3,25 @@ $(document).ready(function(){
     $('#btn_add').on( 'click', function(){add_click();});
     $('#btn_edit').on( 'click', function(){edit_click(table);});
     $('#btn_del').on( 'click', function(){del_click(table);});
+
+    $( "#type" ).change(function() {
+        var type_value = $(this).val();
+        if(type_value == 'pay_off'){
+            $('#status').parent().parent().parent().hide();
+            $('#status').val('accepted');
+        }else
+            $('#status').parent().parent().parent().show();
+            
+      });
 });
 
 function add_click(){
     $('#submit_add_btn').show();
     $('#submit_edit_btn').hide();
+    $('#status').parent().parent().parent().show();
 
+    $("#user_id").removeAttr('disabled');
+    $("#type").removeAttr('disabled');
     $('#id').val('');
     $('#user_id').val(0);
     $('#type').val(0);
@@ -18,8 +31,8 @@ function add_click(){
     $('#response_date').val('');
     $('#notes').val('');
     
-    $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
-    $("#modal_addEdit").modal("show");
+    $('#modal_addLabel').text(LANGS['DATA_TABLE']['add']);
+    $("#modal_add").modal("show");
 }
 
 function edit_click(table){
@@ -37,20 +50,13 @@ function edit_click(table){
             data: {id: id},
             dataType: 'JSON',
             success: function (charging) { 
-                $('#submit_edit_btn').show();
-                $('#submit_add_btn').hide();
+                $('#modal_edit #id').val(charging['id']);
+                $('#modal_edit #request_date').val(charging['request_date']);
+                $('#modal_edit #response_date').val(charging['response_date']);
+                $('#modal_edit #notes').val(charging['notes']);
 
-                $('#id').val(charging['id']);
-                $('#user_id').val(charging['user_id']);
-                $('#type').val(charging['type']);
-                $('#status').val(charging['status']);
-                $('#amount').val(charging['amount']);
-                $('#request_date').val(charging['request_date']);
-                $('#response_date').val(charging['response_date']);
-                $('#notes').val(charging['notes']);
-
-                $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);
-                $("#modal_addEdit").modal("show");
+                $('#modal_editLabel').text(LANGS['DATA_TABLE']['edit']);
+                $("#modal_edit").modal("show");
             }
         });
     }

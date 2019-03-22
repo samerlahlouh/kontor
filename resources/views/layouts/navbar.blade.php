@@ -25,23 +25,29 @@
                     <a class="nav-link js-scroll-trigger" href="/regular_chargings">{{ __('layout_lng.chargings') }}</a>
                 </li>
                 @endIf
-                @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
+                @if(Auth::user() && (Auth::user()->type == 'admin'))
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ __('layout_lng.general_settings') }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                             <a class="dropdown-item" href="/packets">{{ __('layout_lng.packets') }}</a>
-                        @endIf
-
                             <a class="dropdown-item" href="/chargings">{{ __('layout_lng.chargings') }}</a>
                     </div>
                 </li>
+                @endIf
+                @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/users">{{ __('layout_lng.users') }}</a>
                 </li>
                 @endIf
+
+                @if(Auth::user() && (Auth::user()->type == 'agent'))
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/packets">{{ __('layout_lng.packets') }}</a>
+                </li>
+                @endIf
+
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger"></a>
                 </li>
