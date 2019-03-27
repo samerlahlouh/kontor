@@ -78,7 +78,7 @@ class HomeController extends Controller
 
         // Format variables for send
         $packets = $this->get_packets_for_checkbox();
-        dd('s');
+        //dd('s');
         return view('home.admin.index', ['checking_orders'                  => $checking_orders,
                                                 'checking_orders_cols'      => $checking_orders_cols,
                                                 'checking_transfers'        => $checking_transfers,

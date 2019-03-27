@@ -36,15 +36,7 @@
                 echo create_button('', __('home_lng.teen_packet'), 'btn btn-primary', '', 'fa fa-square', '', 'onclick="select_teen_packet()"');
             end_row();
 
-            begin_row();
             
-            foreach ($packets as $key => $packet) {?>
-                <div id="{{$key}}_packets" class="operator_packets" style="display: none;">
-                    <?php create_checkbox_group('packet_ids', $packet['names'], $packet['ids'], 'packet', [], '', $packet['is_teens']);?>
-                </div>
-            <?php 
-            }
-            end_row();
             
             echo Form::close();
     end_modal(['close', 'add'], 'form_send_result');
