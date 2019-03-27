@@ -45,9 +45,9 @@ begin_modal('modal_transfer');
 end_modal(['close', 'add'], 'form_transfer');
 ?>
 
-@include('home\regular\checking_orders')
+@include('home.regular.checking_orders')
 
-@include('home\regular\checked_orders')
+@include('home.regular.checked_orders')
 
 
 @endsection
