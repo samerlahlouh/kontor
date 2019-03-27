@@ -16,30 +16,6 @@
             @include('home\admin\chargings')
         <?php end_child_card();
     end_incubated_child_card();
-        
-    begin_modal('modal_send_result');
-        echo Form::open(['id'=>'form_send_result', 'action' => ['HomeController@send_result_to_user'], 'method'=>'POST','enctype'=>'multipart/form-data']);
-            echo Form::hidden ('id', '', ['id'=>'id']);
-
-            begin_row();
-                create_input_group('customer_name', __('home_lng.customer_name'), 'fa fa-user', 'text', [], ['disabled']);
-            end_row();
-            begin_row();
-                create_input_group('mobile', __('home_lng.mobile'), 'fa fa-hashtag', 'text', [], ['disabled']);
-            end_row();
-
-            begin_row();
-                echo create_button('', __('home_lng.select_all'), 'btn btn-primary', '', 'fa fa-check-square', '', 'onclick="select_all()"');
-            next_col();
-                echo create_button('', __('home_lng.unselect_all'), 'btn btn-primary', '', 'fa fa-square-o', '', 'onclick="unselect_all()"');
-            next_col();
-                echo create_button('', __('home_lng.teen_packet'), 'btn btn-primary', '', 'fa fa-square', '', 'onclick="select_teen_packet()"');
-            end_row();
-
-            
-            
-            echo Form::close();
-    end_modal(['close', 'add'], 'form_send_result');
 ?>
 </div>
 @endsection
