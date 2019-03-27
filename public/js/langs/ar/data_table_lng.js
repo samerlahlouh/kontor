@@ -19,5 +19,6 @@ LANGS['DATA_TABLE'] = {
     'deleted'    : 'انمسحت!',
     'your_file_deleted'    : 'لقد تم مسح ملفك.',
     'cancel'    : 'الغاء',
-    'fixed_row_warning'    : 'عذرا , لا يمكنك تعديل او حذف هذا العنصر'
+    'fixed_row_warning'    : 'عذرا , لا يمكنك تعديل او حذف هذا العنصر',
+    'protected_element_warning'    : 'هذا العنصر محمي لايمكنك حذفه او تعديله.'
  }

@@ -119,12 +119,16 @@ class PacketController extends Controller
         $data['is_teens'] -= 1;
 
         if($id){
+            unset($data['is_available_for_all']);
             $packet = Packet::find($id);
             $packet->fill($data);
             $packet->save();
         }else{
             $newPacket = Packet::create($data);
-            $this->creat_new_user_packets($newPacket->id);
+
+            $is_available_for_all = $request->input('is_available_for_all');
+            $is_available_for_all = $is_available_for_all?true:false;
+            $this->creat_new_user_packets($newPacket->id, $is_available_for_all);
         }
 
         return redirect("/packets")->with('success', __('main_lng.done_successfully'));
@@ -213,13 +217,13 @@ class PacketController extends Controller
         return response()->json($packet); 
     }
 
-    private function creat_new_user_packets($packet_id){
+    private function creat_new_user_packets($packet_id, $is_available_for_all){
         $users = User::where('type', '<>' , 'admin')->select('id')->get();
         $newUserPacket = [];
         foreach ($users as $user) {
             $newUserPacket['user_id'] = $user->id;
             $newUserPacket['packet_id'] = $packet_id;
-            $newUserPacket['is_available'] = false;
+            $newUserPacket['is_available'] = $is_available_for_all;
             User_Packet::create($newUserPacket);
         }
     }

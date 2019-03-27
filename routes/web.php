@@ -16,7 +16,6 @@ use Educators\Http\Middleware\IsAdmin;
 use Educators\Http\Middleware\Regular;
 
 Auth::routes();
-// Route::get('/register', 'Auth\RegisterController@index');
 
 Route::post('/change_lang','Controller@change_lang');
 Route::post('/getDataTableLanguageFile', 'Controller@getDataTableLanguageFile');
@@ -24,6 +23,19 @@ Route::post('/getDataTableLanguageFile', 'Controller@getDataTableLanguageFile');
 //----------------------------------------------Home Page-----------------------------------------------------//
 Route::get('/', 'HomeController@index');
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Regular
+Route::post('/check_number','HomeController@check_number')->middleware(Regular::class);
+Route::post('/transfer_packet','HomeController@transfer_packet')->middleware(Regular::class);
+Route::post('/get_packets_by_operator_and_type','HomeController@get_packets_by_operator_and_type')->middleware(Regular::class);
+Route::post('/cancel_order_by_id','HomeController@cancel_order_by_id')->middleware(Regular::class);
+Route::post('/make_packet_in_transfer_status','HomeController@make_packet_in_transfer_status')->middleware(Regular::class);
+
+// Admin
+Route::post('/change_order_status_by_id','HomeController@change_order_status_by_id')->middleware(IsAdmin::class);
+Route::post('/change_charging_status_by_id','HomeController@change_charging_status_by_id')->middleware(IsAdmin::class);
+Route::post('/send_result_to_user','HomeController@send_result_to_user')->middleware(IsAdmin::class);
+Route::post('/get_unavailable_packets_by_user','HomeController@get_unavailable_packets_by_user')->middleware(IsAdmin::class);
 //------------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Current User -----------------------------------------------------//
@@ -65,4 +77,20 @@ Route::post('/update','ChargingController@update')->middleware(IsAdmin::class);
 Route::get('/regular_chargings', 'ChargingController@index_regular_chargings')->middleware(Regular::class);
 Route::post('/delete_charging','ChargingController@delete_charging')->middleware(Regular::class);
 Route::post('/store_regular_charing','ChargingController@store_regular_charing')->middleware(Regular::class);
+//---------------------------------------------------------------------------------------------------------//
+
+//----------------------------------------------- Orders --------------------------------------------------//
+Route::get('/regular_orders', 'OrderController@index');
+//---------------------------------------------------------------------------------------------------------//
+
+//----------------------------------------------- Operators --------------------------------------------------//
+Route::get('/operators', 'OperatorController@index');
+Route::post('/store','OperatorController@store')->middleware(IsAdmin::class);
+Route::delete('/operators/{operator}', 'OperatorController@destroy')->middleware(IsAdmin::class);
+//---------------------------------------------------------------------------------------------------------//
+
+//----------------------------------------------- Packets Types --------------------------------------------------//
+Route::get('/packets_types', 'PacketTypeController@index');
+Route::post('/packet_type_store','PacketTypeController@store')->middleware(IsAdmin::class);
+Route::delete('/packets_types/{type}', 'PacketTypeController@destroy')->middleware(IsAdmin::class);
 //---------------------------------------------------------------------------------------------------------//

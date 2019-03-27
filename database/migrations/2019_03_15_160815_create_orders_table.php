@@ -25,11 +25,12 @@ class CreateOrdersTable extends Migration
                     ->onDelete('cascade')->onUpdate('cascade');
                     
             $table->enum('status', ['check_pending', 'selecting_packet', 'in_review', 'in_progress', 'rejected', 'completed', 'canceled'])->nullable();
-            $table->string('mobile')->unique();
+            $table->string('mobile')->nullable();
+            $table->string('operator')->nullable();
             $table->double('operator_price', 8, 2)->nullable();
             $table->double('admin_price', 8, 2)->nullable();
             $table->double('user_price', 8, 2)->nullable();
-            $table->string('customer_name')->unique();
+            $table->string('customer_name');
             $table->enum('type', ['charge', 'transfer'])->nullable();
             $table->timestamps();
         });

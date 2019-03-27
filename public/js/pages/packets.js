@@ -11,16 +11,18 @@ function add_click(){
 
     $('#id').val('');
     $('#name').val('');
-    $('#operator').val(0);
+    $('#operator').val('turkcell');
     $('#sms').val('');
     $('#minutes').val('');
     $('#internet').val('');
     $('#type').val(0);
     $('#price').val('');
-    $('#is_global').val(0);
-    $('#is_teens').val(0);
+    $('#is_global').val(2);
+    $('#is_teens').val(1);
+    $( "#is_available_for_all" ).prop( "checked", true );
     
     $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
+    $('.row_is_available_for_all').show();
     $("#modal_addEdit").modal("show");
 }
 
@@ -54,6 +56,7 @@ function edit_click(table){
                 $('#is_teens').val(packet['is_teens']+1);
 
                 $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);
+                $('.row_is_available_for_all').hide();
                 $("#modal_addEdit").modal("show");
             }
         });

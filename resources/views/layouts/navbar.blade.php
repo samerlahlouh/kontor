@@ -2,12 +2,31 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="/#page-top">{{ __('layout_lng.edu_logo') }}</a>
+        @if(Auth::user() && Auth::user()->type == 'regular')
+        <div>
+            <div class="row-">
+                <div class="col">
+                    <h6 class="balance">
+                        {{ __('layout_lng.balance') }}
+                        <span>{{ Auth::user()->balance }}</span>
+                    </h6>
+                </div>
+                <div class="col">
+                    <h6  class="credit">
+                        {{ __('layout_lng.credit') }}
+                        <span>{{ Auth::user()->credit }}</span>
+                    </h6>
+                </div>
+            </div>
+        </div>
+        @endIf
         <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             Menu
             <i class="fa fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav text-uppercase ml-auto">
+                @if(!Auth::user())
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/#services">{{ __('layout_lng.services') }}</a>
                 </li>
@@ -17,6 +36,8 @@
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/#contact">{{ __('layout_lng.contact_us') }}</a>
                 </li>
+                @endIf
+
                 @if(Auth::user() && Auth::user()->type == 'regular')
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/regular_packets">{{ __('layout_lng.packets') }}</a>
@@ -24,18 +45,36 @@
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/regular_chargings">{{ __('layout_lng.chargings') }}</a>
                 </li>
-                @endIf
-                @if(Auth::user() && (Auth::user()->type == 'admin'))
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ __('layout_lng.general_settings') }}
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="/packets">{{ __('layout_lng.packets') }}</a>
-                            <a class="dropdown-item" href="/chargings">{{ __('layout_lng.chargings') }}</a>
-                    </div>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/regular_orders">{{ __('layout_lng.orders') }}</a>
                 </li>
                 @endIf
+
+                @if(Auth::user() && (Auth::user()->type == 'admin'))
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="packetsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('layout_lng.packets') }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="packetsDropdown">
+                        <a class="dropdown-item" href="/packets">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                            {{ __('layout_lng.settings') }}
+                        </a>
+                        <a class="dropdown-item" href="/operators">
+                            <i class="fa fa-building" aria-hidden="true"></i>
+                            {{ __('layout_lng.operators') }}
+                        </a>
+                        <a class="dropdown-item" href="/packets_types">
+                                <i class="fa fa-sitemap" aria-hidden="true"></i>
+                                {{ __('layout_lng.types') }}
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/chargings">{{ __('layout_lng.chargings') }}</a>
+                </li>
+                @endIf
+
                 @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/users">{{ __('layout_lng.users') }}</a>

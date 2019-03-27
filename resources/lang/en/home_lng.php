@@ -1,5 +1,6 @@
 <?php
 return [
+    // Home when is not user
     'welcome' =>'Welcome to Educators website',
     'intro' => 'Here you can choose your future as student.',
     'more' => 'Tell Me More',
@@ -42,5 +43,51 @@ return [
     'name_required' => 'Please enter your name.',
     'email_required' => 'Please enter your email.',
     'phone_required' => 'Please enter your phone number.',
-    'message_required' => 'Please enter a message.'
+    'message_required' => 'Please enter a message.',
+
+    // Home when is regular
+    'mobile'                => 'Mobile',
+    'status'                => 'Status',
+    'request_date'          => 'Requset Date',
+    'checking_orders'       => 'Checking Orders',
+    'checked_orders'        => 'Checking Transfers',
+    'number_processes'      => 'Number Processes',
+    'number'                => 'Number',
+    'check_number'          => 'Check Number',
+    'transfer'              => 'Transfer',
+    'customer_name'         => 'Customer',
+    'operator'              => 'Operator',
+    'type'                  => 'Type',
+    'packet'                => 'Packet',
+    'purchasing_price'      => 'Purchasing Price',
+    'selling_price'         => 'Selling Price',
+    'profit'                => 'Profit',
+    'check_pending'         => 'Check Pending',
+    'selecting_packet'      => 'Selecting Packet',
+    'in_review'             => 'In Review',
+    'in_progress'           => 'In Progress',
+    'rejected'              => 'Rejected',
+    'completed'             => 'Completed',
+    'canceled'              => 'Canceled',
+    'select_packet'         => 'Select Packet',
+    'offers'                => 'Offers',
+    'all_packets'           => 'All Packets',
+    'operator'              => 'Operator',
+
+    // Home when is admin
+    'name_of_user'          => 'User',
+    'user'                  => "User",
+    'amount'                => "Amount",
+    'balance_before'        => "Balance Before",
+    'balance_after'         => "Balance After",
+    'notes'                 => "Notes",
+    'chargings'             => "Chargings",
+    'send_result'           => "Send Result",
+    'reject'                => "Reject",
+    'checking_transfers'    => 'Checking Transfers',
+    'select_all'            => 'Select All',
+    'unselect_all'          => 'Unselect All',
+    'teen_packet'           => 'Teen Packets',
+    'accept'                => 'Accept',
+    'transfer_done'         => 'Done'
 ];

@@ -12,7 +12,7 @@ $btns = [
  <!-- START panel-->
  <div id="panelDemo9" class="panel panel-info">
     <div class="panel-heading bg-purple">
-         {{__("chargings_lng.packets") }}
+         {{__("chargings_lng.chargings") }}
     </div>
         <!-- Start body -->
         <div class="panel-body">

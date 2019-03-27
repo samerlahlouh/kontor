@@ -61,4 +61,26 @@ class Packet extends Model
 
         return $packets;
     }
+
+    public function get_packets_by_operator_and_type($operator, $type='', $is_global='none'){
+        $packets = DB::table("packets")
+            ->leftJoin('user_packets', function($join)
+                         {
+                            $user_id = Auth::user()->id;
+                            $join->on('user_packets.packet_id', '=', 'packets.id');
+                            $join->on('user_packets.user_id', '=', DB::raw("'$user_id'"));
+                         })
+            ->select('packets.id',
+                    DB::raw("CONCAT(packets.name,' (',user_packets.user_price, ' TL)') as name")
+                    )
+            ->where("packets.operator", $operator);
+        
+        if($type)
+           $packets->where("packets.type", $type);
+
+        if($is_global != 'none')
+           $packets->where("packets.is_global", $is_global);
+
+        return $packets->get();
+    }
 }

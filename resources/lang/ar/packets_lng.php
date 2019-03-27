@@ -21,6 +21,7 @@ return [
     'packet_users'  => 'مستخدمين الباقة',
     'packet_name'   => 'اسم الباقة',
     'purchasing_price'=> 'سعر الشراء',
-    'selling_price' => 'سعر المبيع'
+    'selling_price' => 'سعر المبيع',
+    'is_available_for_all' => 'هل هي متاحة للجميع'
 
 ];

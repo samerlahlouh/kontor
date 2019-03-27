@@ -131,7 +131,7 @@ class ChargingController extends Controller
         $newData['status'] = 'in_waiting';
         $newData['balance_before'] = $user->balance;
         $newData['balance_after'] = $user->balance + $newData['amount'];
-        $newData['request_date'] = Carbon::now();;
+        $newData['request_date'] = Carbon::now();
 
         Charging::create($newData);
 

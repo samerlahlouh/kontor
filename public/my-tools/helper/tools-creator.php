@@ -27,7 +27,7 @@ function begin_card($icon='', $title='', $headerBtns=[]){?>
 }
 function end_card($footer_text='', $controlBtnNames=[], $targetformId='', $footer_btns = [], $footer_text_style=''){?>
     </div>
-    <?php if($footer_text || $controlBtnNames){?>
+    <?php if($footer_text || $controlBtnNames || $footer_btns){?>
         <div class='card-footer small text-muted' style="<?=$footer_text_style?>">
             <?php
                 if (strtotime($footer_text))
@@ -130,8 +130,8 @@ function end_modal($controlBtnNames='', $targetformId=''){?>
 <?php }
 
 //---------------------------------- Create row -------------------------------------//
-function begin_row($col_style="", $col_kind='col-md'){?>
-   <div class="row">
+function begin_row($col_style="", $col_kind='col-md', $row_class=''){?>
+   <div class="row <?=$row_class?>">
         <div class="<?=$col_kind?>" style="<?=$col_style?>">
 <?php
 }
@@ -147,7 +147,7 @@ function end_row(){?>
 }
 
 //---------------------------------- Create input group -------------------------------------//
-function create_input_group($id='', $text='', $icon='', $kind='text', $select_data=[], $private_attrs=[], $defult_value=''){
+function create_input_group($id='', $text='', $icon='', $kind='text', $input_data=[], $private_attrs=[], $defult_value=''){
     $attrs = ['id'=>$id, 'class'=>'form-control input-with-icon-label', 'placeholder'=>$text];
     $attrs = array_merge($attrs, $private_attrs);
 
@@ -171,9 +171,14 @@ function create_input_group($id='', $text='', $icon='', $kind='text', $select_da
                 echo Form::textarea($id, $defult_value , $attrs);
             elseif($kind == 'select'){
                 unset($attrs['placeholder']);
-                $select_elements = $select_data;
-                $select_elements['0'] = $text;
-                $optionsAttributes = ['0' => ['hidden', 'disabled', 'selected']];
+                $select_elements = $input_data;
+                
+                $optionsAttributes = [];
+                if($defult_value == ''){
+                    $select_elements['0'] = $text;
+                    $optionsAttributes = ['0' => ['hidden', 'disabled', 'selected']];
+                }
+                
                 echo Form::select($id, $select_elements, $defult_value, $attrs, $optionsAttributes);
             }
 
@@ -196,5 +201,22 @@ function create_checkbox($id='checkbx', $text='', $class='', $default_value=''){
                 <input type='checkbox' class='custom-control-input $class $default_value' name='$id' id='$id' $default_value>
                 <label class='custom-control-label' for='$id'>$text</label>
             </div>";
+ }
+
+//---------------------------------- Create checkbox -------------------------------------//
+function create_checkbox_group($name='checkbxGroup', $texts=[], $values=[], $class='', $default_values=[], $private_attrs='', $classes=[]){ 
+    foreach ($values as $key => $value) {
+        $default_value = '';
+        if(isset($default_values[$key]) && $default_values[$key] == 1)
+            $default_value = 'checked';
+        $checkbox_element =  "<div id='checkbox_div_$value' class='form-group checkbox_div'>
+                                <div class='custom-control custom-checkbox'>
+                                <input id='checkbox_$value' type='checkbox' class='custom-control-input $class teen_is_".$classes[$key]."' $default_value name='".$name."[]' value='$value' $private_attrs>
+                                <label class='custom-control-label' for='checkbox_$value'>".(isset($texts[$key])?$texts[$key]:'')."</label>
+                                </div>
+                            </div>";
+        echo $checkbox_element;
+    }
  }?>
+
  

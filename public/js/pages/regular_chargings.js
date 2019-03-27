@@ -1,15 +1,7 @@
 $(document).ready(function(){
     var table = $('table.table').DataTable();
     $('#btn_add').on( 'click', function(){add_click();});
-
-    //Cancel button format
-    $('.cancel-btn').each(function(){
-        var $tr = $(this).parent().parent()
-        var is_accepted = table.row($tr).data()[2] == 'accepted'?true:false;
-        if(is_accepted){
-            $(this).hide();
-        }
-    });
+    $('.cancel-btn').each(function(){hide_cancel_btn($(this))});
 });
 
 function add_click(){
@@ -37,4 +29,12 @@ function charging_cancel($tr){
         dataType: 'JSON'
     });
     window.location.href = '/regular_chargings';
+}
+
+function hide_cancel_btn(btn){
+    var $tr = btn.parent().parent();
+    var status = btn.parent().parent().children("td:eq(2)").text();
+    if(status != 'in_waiting'){
+        btn.hide();
+    }
 }

@@ -13,7 +13,7 @@ return [
     'regular'               => 'Regular',
     'agent'                 => 'Agent',
     'global'                => 'Global',
-    'private'               => 'Private',
+    'private'               => 'Private (Offer)',
     'yes'                   => 'Yes',
     'no'                    => 'No',
     'teens'                 => 'Teens',

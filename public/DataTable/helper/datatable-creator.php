@@ -18,7 +18,7 @@
 ?>
 
     <div id="showHideCols" class="btn-group dropleft hide">
-        <button id="showHideCols_btn" type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+        <button id="showHideCols_btn" type="button" class="btn btn-danger dropdown-toggle showHideCols_btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
         <ul class="dropdown-menu">
             <?php for ($i=0; $i < sizeof($cols) ; $i++) {
                  if ($cols[$i] != 'id' && strcmp(substr($cols[$i],-3) ,'_id') && strcmp(substr($cols[$i],-7) ,'_hidden')) {?>
@@ -77,6 +77,9 @@
                                                             $extra_column['text'], 
                                                             $extra_column['class'],
                                                             isset($extra_columns_values[$columnKey][$rowKey]) ? $extra_columns_values[$columnKey][$rowKey] : '');
+
+                                elseif($extra_column['type'] == 'custom')
+                                    echo $extra_column['html'][$rowKey];
                                 ?>
                             </td>
                         <?php }?>

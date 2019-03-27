@@ -326,3 +326,22 @@ and (max-width : 600px){
 .close{
     margin-left: 0px !important;
 }
+
+.balance{
+    color: white;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 3px;
+    background-color: #d6ab10;
+    padding-bottom: 2px;
+    margin-bottom: 3px;
+}
+
+.credit{
+    color: red;
+    padding-left: 7px;
+    padding-right: 7px;
+    border-radius: 3px;
+    background-color: #d6ab10;
+    padding-bottom: 2px;
+}

@@ -68,4 +68,28 @@ class Charging extends Model
 
         return $packets;
     }
+
+    public function get_admin_chargings_table($status){
+        $chargings = DB::table("chargings")
+            ->leftJoin('users', 'users.id', '=', 'chargings.user_id')
+            ->select('chargings.id',
+                    "users.name as user",
+                    DB::raw("(CASE chargings.type 
+                                WHEN 'eft' THEN '".__('chargings_lng.eft')."' 
+                                WHEN 'cash' THEN '".__('chargings_lng.cash')."' 
+                                WHEN 'credit' THEN '".__('chargings_lng.credit')."'
+                                WHEN 'pay_off' THEN '".__('chargings_lng.pay_off')."'
+                            END) AS type"),
+                    "chargings.amount",
+                    "chargings.balance_before",
+                    "chargings.balance_after",
+                    'chargings.notes',
+                    DB::raw('DATE(`chargings`.`request_date`) as request_date')
+                    );
+
+        if($status)
+            $chargings->whereIn("chargings.status", $status);
+
+        return $chargings->get();
+    }
 }

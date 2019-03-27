@@ -19,5 +19,6 @@ LANGS['DATA_TABLE'] = {
     'deleted'    : 'Deleted!',
     'your_file_deleted'    : 'Your file has been deleted.',
     'cancel'    : 'Cancel',
-    'fixed_row_warning'    : 'Sorry, you can not edit or delete this item'
+    'fixed_row_warning'    : 'Sorry, you can not edit or delete this item',
+    'protected_element_warning'    : 'This element is protected you can\'t edit or delete this element'
  }
