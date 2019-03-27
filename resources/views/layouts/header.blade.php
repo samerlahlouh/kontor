@@ -53,10 +53,14 @@
         <!-- Tooltip style -->
         <link href="{{ asset('my-tools/tooltips/css.css') }}" rel="stylesheet">
 
+        <!--__________________________________Loading Page Style__________________________________-->
+        <link href="{{ asset('my-tools/loading-page/css/style.css') }}" rel="stylesheet">
+
         <!--__________________________________Special Style__________________________________-->
         <link href="{{ asset('css/special-'.app()->getLocale().'.css') }}" rel="stylesheet">
         
     </head>
     <body id="page-top">
+        <div class="loading">Loading&#8230;</div>
         <input type="hidden" id="is_guest" value="{{ Auth::guest() }}">
     

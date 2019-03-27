@@ -117,6 +117,12 @@
 
     <!--___________________________________Special java script____________________________________-->
     <script src="{{ asset('js/pages/layout.js') }}" ></script>
+    
+    <script>
+        $(window).load(function () {
+            $('.loading').hide();
+        });
+    </script>
 
 </body>
 </html>
