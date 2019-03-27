@@ -180,6 +180,7 @@ class ChargingController extends Controller
         );
         $this->validate($request ,$rules);
     }
+    
 
     public function edit_is_validate($request){
         $rules = array(
