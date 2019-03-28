@@ -142,7 +142,7 @@ class HomeController extends Controller
         $select_operators = $this->getEnumValues('packets', 'operator');
         $select_types = $this->getEnumValues('packets', 'type');
 
-        return view('home\regular\regular_home', ['checking_orders'     => $checking_orders,
+        return view('home.regular.regular_home', ['checking_orders'     => $checking_orders,
                                                 'checking_orders_cols'  => $checking_orders_cols,
                                                 'checked_orders'        => $checked_orders,
                                                 'checked_orders_cols'   => $checked_orders_cols,
