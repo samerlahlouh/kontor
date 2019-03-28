@@ -5,6 +5,7 @@ namespace Educators\Http\Controllers;
 use Illuminate\Http\Request;
 use Educators\Order;
 use Educators\Packet;
+use Educators\User;
 use Educators\User_Packet;
 use Educators\Charging;
 use Educators\Offer;
@@ -46,6 +47,7 @@ class HomeController extends Controller
             __('home_lng.request_date'),
             'operator_hidden',
             'user_id',
+            __('home_lng.message'),
         ];
 
         // Format checking transfers table
@@ -105,6 +107,7 @@ class HomeController extends Controller
             __('home_lng.mobile'),
             __('home_lng.status'),
             __('home_lng.request_date'),
+            __('home_lng.message'),
         ];
 
         $selects_html = $this->get_packet_select_html($checking_orders);
@@ -162,6 +165,7 @@ class HomeController extends Controller
         $number         = $request->number;
         $customer_name  = $request->customer_name;
         $operator       = $request->operator;
+        $message        = $request->message;
 
         $newData['user_id']         = Auth::user()->id;
         $newData['mobile']          = $number;
@@ -169,6 +173,7 @@ class HomeController extends Controller
         $newData['status']          = 'check_pending';
         $newData['customer_name']   = $customer_name;
         $newData['created_at']      = Carbon::now();
+        $newData['message']         = $message;
         Order::create($newData);
     }
 
@@ -240,6 +245,12 @@ class HomeController extends Controller
         $order = Order::find($order_id);
         $order->status = $status;
         $order->save();
+
+        if($status == 'completed'){
+            $user = User::find($order->user_id);
+            $user->balance -= $order->admin_price;   
+            $user->save();
+        }
         
         return;
     }
@@ -276,7 +287,6 @@ class HomeController extends Controller
     public function get_unavailable_packets_by_user(Request $request){
         $user_id = $request->user_id;
         $packets = User_Packet::where('user_id', $user_id)->where('is_available', false)->select('packet_id')->get();
-        // dd($packets);
         return response()->json($packets);
     }
 //------------------------------------------------ Functions ---------------------------------------------//

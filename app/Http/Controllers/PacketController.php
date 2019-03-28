@@ -35,7 +35,7 @@ class PacketController extends Controller
             __('packets_lng.type'),
             __('packets_lng.price'),
             __('packets_lng.is_global'),
-            __('packets_lng.is_teens'),
+            __('packets_lng.is_teens')
         ];
 
         return view('packets', ['packets' => $packets,
@@ -128,7 +128,7 @@ class PacketController extends Controller
 
             $is_available_for_all = $request->input('is_available_for_all');
             $is_available_for_all = $is_available_for_all?true:false;
-            $this->creat_new_user_packets($newPacket->id, $is_available_for_all);
+            $this->creat_new_user_packets($newPacket->id, $is_available_for_all, $newPacket->price);
         }
 
         return redirect("/packets")->with('success', __('main_lng.done_successfully'));
@@ -193,12 +193,10 @@ class PacketController extends Controller
     public function is_validate($request){
         $rules = array(
             'operator'  =>'required',
-            'sms'       =>'required',
-            'minutes'   =>'required',
-            'internet'  =>'required',
             'type'      =>'required',
             'is_global' =>'required',
             'is_teens'  =>'required',
+            'price'     =>'required',
         );
         $this->validate($request ,$rules);
     }
@@ -217,13 +215,15 @@ class PacketController extends Controller
         return response()->json($packet); 
     }
 
-    private function creat_new_user_packets($packet_id, $is_available_for_all){
+    private function creat_new_user_packets($packet_id, $is_available_for_all, $packet_operator_price){
         $users = User::where('type', '<>' , 'admin')->select('id')->get();
         $newUserPacket = [];
         foreach ($users as $user) {
             $newUserPacket['user_id'] = $user->id;
             $newUserPacket['packet_id'] = $packet_id;
             $newUserPacket['is_available'] = $is_available_for_all;
+            $newUserPacket['admin_price'] = $packet_operator_price + 3;
+            $newUserPacket['user_price'] = $packet_operator_price + 5;
             User_Packet::create($newUserPacket);
         }
     }
@@ -244,5 +244,12 @@ class PacketController extends Controller
                 }
             }
         }
+    }
+
+    public function get_notes_of_packet(Request $request)
+    {
+        $packet_id = $request->packet_id;
+        $notes = Packet::where('id', $packet_id)->get()[0]['notes'];
+        return response()->json($notes); 
     }
 }

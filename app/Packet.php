@@ -11,7 +11,7 @@ class Packet extends Model
 {
     protected $table = 'packets';
     protected $fillable = [
-        'operator', 'sms', 'minutes', 'internet', 'type', 'price', 'is_global', 'is_teens', 'name'
+        'operator', 'sms', 'minutes', 'internet', 'type', 'price', 'is_global', 'is_teens', 'name', 'notes'
     ];
 
     public function get_packets_table(){

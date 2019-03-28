@@ -22,6 +22,7 @@ return [
     'packet_name'   => 'Packet Users',
     'purchasing_price'=> 'Purchasing Price',
     'selling_price' => 'Selling Price',
+    'notes'         => 'Notes',
     'is_available_for_all' => 'Is Available For All'
 
 ];

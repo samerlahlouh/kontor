@@ -72,6 +72,7 @@ return [
     'offers'                => 'العروض',
     'all_packets'           => 'كل الباقات',
     'operator'              => 'الشركة',
+    'message'               => 'رسالة',
 
     // Home when is admin
     'name_of_user'          => 'المستخدم',

@@ -19,6 +19,7 @@ function add_click(){
     $('#price').val('');
     $('#is_global').val(2);
     $('#is_teens').val(1);
+    $('#notes').val('');
     $( "#is_available_for_all" ).prop( "checked", true );
     
     $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
@@ -54,6 +55,7 @@ function edit_click(table){
                 $('#price').val(packet['price']);
                 $('#is_global').val(packet['is_global']+1);
                 $('#is_teens').val(packet['is_teens']+1);
+                $('#notes').val(packet['notes']);
 
                 $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);
                 $('.row_is_available_for_all').hide();
@@ -90,4 +92,34 @@ function show_packet_users($tr){
     var $table = $('table.table').DataTable();
     var packet_id = $table.row($tr).data()[1];
     window.location.href = '/packet_users/'+packet_id;
+}
+
+function show_notes($tr){
+    var $table = $('table.table').DataTable();
+    var packet_id = $table.row($tr).data()[1];
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_notes_of_packet',
+        type: 'POST',
+        data: {packet_id: packet_id},
+        dataType: 'JSON',
+        success: function (notes) { 
+            $.sweetModal({
+                title: {
+                    tab1: {
+                        label: LANGS['PACKETS']['notes'],
+                        icon: '<i class="fa fa-list-alt" aria-hidden="true"></i>'
+                    }
+                },
+            
+                content: {
+                    tab1: notes
+                },
+                theme: $.sweetModal.THEME_DARK
+            });
+        }
+    });
 }

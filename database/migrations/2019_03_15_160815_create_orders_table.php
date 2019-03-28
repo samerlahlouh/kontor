@@ -30,7 +30,7 @@ class CreateOrdersTable extends Migration
             $table->double('operator_price', 8, 2)->nullable();
             $table->double('admin_price', 8, 2)->nullable();
             $table->double('user_price', 8, 2)->nullable();
-            $table->string('customer_name');
+            $table->string('customer_name')->nullable();
             $table->enum('type', ['charge', 'transfer'])->nullable();
             $table->timestamps();
         });

@@ -22,6 +22,7 @@ return [
     'packet_name'   => 'اسم الباقة',
     'purchasing_price'=> 'سعر الشراء',
     'selling_price' => 'سعر المبيع',
+    'notes'         => 'ملاحظات',
     'is_available_for_all' => 'هل هي متاحة للجميع'
 
 ];

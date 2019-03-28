@@ -1,7 +1,7 @@
 $(document).ready(function(){
     $('.showHideCols_btn').hide();
-    $('#btn_transfer').on( 'click', function(){add_click();});
-    $( "#operator" ).change(function() {operator_select_changed($(this));});
+    // $('#btn_transfer').on( 'click', function(){add_click();});
+    // $( "#operator" ).change(function() {operator_select_changed($(this));});
     $( "#type" ).change(function() {type_select_changed($(this));});
 
     $('.transfer').each(function(){ hide_transfer_btns($(this)); });
@@ -10,28 +10,45 @@ $(document).ready(function(){
 });
 
 function add_click(){
-    if($('#number').val() == '' || $('#customer_name').val() == ''){
+    if($('#number').val() == '')
         Swal(LANGS['HOME']['fill_blanks_warning']);
-    }else if($('#number').val().length < 10){
+    else if($('#number').val().length < 10)
         Swal(LANGS['HOME']['number_correctly_warning']);
-    }else{
-        $('#operator').val(0);
-        $('#type').val(0);
-        $('#packet').val(0);
-        $('#mobile').val($('#number').val());
-        $('#customer').val($('#customer_name').val());
+    else{
+        var operator = $('#selected_operator').val();
 
-        $("#type").attr('disabled','disabled');
-        $("#packet").attr('disabled','disabled');
-        
-        $('#modal_transferLabel').text(LANGS['HOME']['transfer_packet']);
-        $('#submit_add_btn').val(LANGS['HOME']['transfer']);
-        $("#modal_transfer").modal("show");
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+             },
+            url: '/get_packets_by_operator_and_type',
+            type: 'POST',
+            data: {operator: operator},
+            dataType: 'JSON',
+            success: function (packets) { 
+                var output = [];
+                output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['packet'] +'</option>');
+                $.each(packets, function(key, value){
+                    output.push('<option value="'+ key +'">'+ value +'</option>');
+                });
+                $('#packet').html(output.join(''));
+
+                $('#operator').val(operator);
+                $('#type').val(0);
+                $('#packet').val(0);
+                $('#mobile').val($('#number').val());
+                $('#customer').val($('#customer_name').val());
+
+                $('#modal_transferLabel').text(LANGS['HOME']['transfer_packet']);
+                $('#submit_add_btn').val(LANGS['HOME']['transfer']);
+                $("#modal_transfer").modal("show");
+            }
+        });
     }
 }
 
 function check_number(){
-    if($('#number').val() == '' || !$('#selected_operator').val() || $('#customer_name').val() ==''){
+    if($('#number').val() == '' || !$('#selected_operator').val()){
         Swal(LANGS['HOME']['fill_blanks_warning']);
     }else if($('#number').val().length < 10){
         Swal(LANGS['HOME']['number_correctly_warning']);
@@ -39,6 +56,7 @@ function check_number(){
         number          = $('#number').val();
         customer_name   = $('#customer_name').val();
         operator        = $('#selected_operator').val();
+        message         = $('#message').val();
             
         $.ajax({
             headers: {
@@ -48,39 +66,13 @@ function check_number(){
             type: 'POST',
             data: {number:      number,
                 customer_name:  customer_name,
-                operator:       operator},
-            dataType: 'JSON',
-            success: function (charging) { 
-            }
+                operator:       operator,
+                message:        message},
+            dataType: 'JSON'
         });
         
         window.location.href = '/home';
     }
-}
-
-function operator_select_changed($operator_select){
-    $("#type").removeAttr('disabled');
-    $("#packet").removeAttr('disabled');
-    $('#type').val(0);
-    $('#packet').val(0);
-    var operator = $operator_select.val();
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-         },
-        url: '/get_packets_by_operator_and_type',
-        type: 'POST',
-        data: {operator: operator},
-        dataType: 'JSON',
-        success: function (packets) { 
-            var output = [];
-            output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['packet'] +'</option>');
-            $.each(packets, function(key, value){
-                output.push('<option value="'+ key +'">'+ value +'</option>');
-            });
-            $('#packet').html(output.join(''));
-        }
-    });
 }
 
 function type_select_changed($type_select){

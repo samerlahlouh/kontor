@@ -73,6 +73,7 @@ return [
     'offers'                => 'Offers',
     'all_packets'           => 'All Packets',
     'operator'              => 'Operator',
+    'message'               => 'Message',
 
     // Home when is admin
     'name_of_user'          => 'User',

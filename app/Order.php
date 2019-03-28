@@ -10,7 +10,7 @@ class Order extends Model
 {
     protected $table = 'orders';
     protected $fillable = [
-        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at'
+        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message'
     ];
 
     public function get_regular_orders_with_all_fields_table($user_id){
@@ -58,7 +58,8 @@ class Order extends Model
                                 WHEN 'completed' THEN '".__('home_lng.completed')."'
                                 WHEN 'canceled' THEN '".__('home_lng.canceled')."' 
                             END) AS status"),
-                    "created_at as request_date"
+                    "created_at as request_date",
+                    "message"
                     )
             ->where("user_id", $user_id)
             ->whereIn("status", $status);
@@ -114,7 +115,8 @@ class Order extends Model
                     "orders.mobile",
                     "orders.created_at as request_date",
                     'orders.operator as operator_hidden',
-                    'users.id as user_id'
+                    'users.id as user_id',
+                    'orders.message'
             );
 
         if($status)

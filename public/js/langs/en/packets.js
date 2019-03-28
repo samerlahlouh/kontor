@@ -1,0 +1,3 @@
+LANGS['PACKETS'] = { 
+    'notes'   :'Notes',
+ }

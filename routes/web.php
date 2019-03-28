@@ -39,8 +39,8 @@ Route::post('/get_unavailable_packets_by_user','HomeController@get_unavailable_p
 //------------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Current User -----------------------------------------------------//
-Route::get('/user_settings', 'UserController@index_settings');
-Route::post('', 'UserController@update_own_account');
+Route::get('/user_settings', 'UserController@index_settings')->middleware('auth');
+Route::post('', 'UserController@update_own_account')->middleware('auth');
 //---------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- All Users -----------------------------------------------------//
@@ -57,6 +57,7 @@ Route::post('/store_user_packets','UserController@store_user_packets')->middlewa
 //---------------------------------------------- Packets -----------------------------------------------------//
 Route::resource('packets', 'PacketController', ['only' => ['index', 'store', 'destroy'] ])->middleware(AdminAndAgent::class);
 Route::post('/get_packet','PacketController@get_packet')->middleware(AdminAndAgent::class);
+Route::post('/get_notes_of_packet','PacketController@get_notes_of_packet')->middleware(AdminAndAgent::class);
 
 // Packet users
 Route::get('/packet_users/{packet_id}', 'PacketController@index_packet_users')->middleware(AdminAndAgent::class);
@@ -80,17 +81,17 @@ Route::post('/store_regular_charing','ChargingController@store_regular_charing')
 //---------------------------------------------------------------------------------------------------------//
 
 //----------------------------------------------- Orders --------------------------------------------------//
-Route::get('/regular_orders', 'OrderController@index');
+Route::get('/regular_orders', 'OrderController@index')->middleware(Regular::class);
 //---------------------------------------------------------------------------------------------------------//
 
 //----------------------------------------------- Operators --------------------------------------------------//
-Route::get('/operators', 'OperatorController@index');
+Route::get('/operators', 'OperatorController@index')->middleware(IsAdmin::class);
 Route::post('/store','OperatorController@store')->middleware(IsAdmin::class);
 Route::delete('/operators/{operator}', 'OperatorController@destroy')->middleware(IsAdmin::class);
 //---------------------------------------------------------------------------------------------------------//
 
 //----------------------------------------------- Packets Types --------------------------------------------------//
-Route::get('/packets_types', 'PacketTypeController@index');
+Route::get('/packets_types', 'PacketTypeController@index')->middleware(IsAdmin::class);
 Route::post('/packet_type_store','PacketTypeController@store')->middleware(IsAdmin::class);
 Route::delete('/packets_types/{type}', 'PacketTypeController@destroy')->middleware(IsAdmin::class);
 //---------------------------------------------------------------------------------------------------------//
