@@ -31,6 +31,8 @@ class User extends Authenticatable
     ];
 
     public function get_users_table(){
+        $user_type = Auth::user()->type;
+
         $users = DB::table("users")
             ->select('id',
                     "is_active as is_active_hidden",
@@ -39,11 +41,13 @@ class User extends Authenticatable
                     "mobile",
                     "type",
                     "balance",
-                    "credit")
-            ->where("created_by_user_id", Auth::user()->id)
-            ->orderBy('is_active')
-            ->get();
+                    "credit");
 
-        return $users;
+        if($user_type == 'agent')
+            $users->where("created_by_user_id", Auth::user()->id);
+
+        $users->orderBy('is_active');
+
+        return $users->get();
     }
 }

@@ -24,3 +24,33 @@ function edit_click(table){
         $("#modal_addEdit").modal("show");
     }
 }
+
+function show_notes($tr){
+    var $table = $('table.table').DataTable();
+    var packet_id = $table.row($tr).data()[6];
+
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_notes_of_packet',
+        type: 'POST',
+        data: {packet_id: packet_id},
+        dataType: 'JSON',
+        success: function (notes) { 
+            $.sweetModal({
+                title: {
+                    tab1: {
+                        label: LANGS['PACKETS']['notes'],
+                        icon: '<i class="fa fa-list-alt" aria-hidden="true"></i>'
+                    }
+                },
+            
+                content: {
+                    tab1: notes
+                },
+                theme: $.sweetModal.THEME_DARK
+            });
+        }
+    });
+}

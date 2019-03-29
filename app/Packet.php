@@ -53,7 +53,8 @@ class Packet extends Model
             ->select('user_packets.id',
                     "packets.name as packet_name",
                     "user_packets.admin_price as purchasing_price",
-                    "user_packets.user_price as selling_price"
+                    "user_packets.user_price as selling_price",
+                    'packets.id as packet_id'
                     )
             ->where("user_packets.user_id", $user_id)
             ->where("user_packets.is_available", 1)

@@ -55,15 +55,14 @@ class UserController extends Controller
     public function index_user_packets($user_id){
         View::share('page_js', 'user_packets');
         $user_packets = $this->user_packet_model->get_user_packets_table($user_id);
-        // dd($user_packets);
         
         $cols = [
             'id',
             'packet_id',
-            __('users_lng.packet_name'),
-            __('users_lng.packet_price'),
-            __('users_lng.selling_price'),
-            __('users_lng.is_available')
+            __('regular_packets_lng.packet_name'),
+            __('regular_packets_lng.packet_price'),
+            __('regular_packets_lng.selling_price'),
+            __('regular_packets_lng.is_available')
         ];
 
         $is_available_select = ['1'=>__('main_lng.no'), '2'=>__('main_lng.yes')];
@@ -155,12 +154,19 @@ class UserController extends Controller
             $data['is_available'] = $request->input('is_available');
             $data['is_available'] -= 1; 
 
-            $this->set_is_available_for_children_of_agent($idsArr, $data['is_available']);
+            // $this->set_is_available_for_children_of_agent($idsArr, $data['is_available']);
         }
         
         $user_packet;
         foreach ($idsArr as $id) {
             $user_packet = User_Packet::find($id);
+
+            // $user_will_be_updated_id = $user_packet->user_id;
+            // $user_parent_type = $this->user_model->get_user_parent_type($user_will_be_updated_id);
+            // if($user_parent_type == 'agent'){
+            //     break;
+            // }
+
             $user_packet->fill($data);
             $user_packet->save();
         }
@@ -250,12 +256,14 @@ class UserController extends Controller
     }
 
     private function creat_new_user_packets($user_id){
-        $packets = Packet::select('id')->get();
+        $packets = Packet::select('id', 'price')->get();
         $newUserPacket = [];
         foreach ($packets as $packet) {
             $newUserPacket['user_id'] = $user_id;
             $newUserPacket['packet_id'] = $packet->id;
-            $newUserPacket['is_available'] = false;
+            $newUserPacket['is_available'] = true;
+            $newUserPacket['admin_price'] = $packet->price + 3;
+            $newUserPacket['user_price'] = $packet->price + 5;
             User_Packet::create($newUserPacket);
         }
     }

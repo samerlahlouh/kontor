@@ -14,6 +14,7 @@ class PacketController extends Controller
     public function __construct(){
         $this->packet_model = new Packet();
         $this->user_packet_model = new User_Packet();
+        $this->user_model = new User();
     }
 
     //------------------------------------------------indexes-----------------------------------------------//
@@ -88,6 +89,7 @@ class PacketController extends Controller
             __('packets_lng.packet_name'),
             __('packets_lng.purchasing_price'),
             __('packets_lng.selling_price'),
+            'packet_id',
         ];
 
         $extra_columns = [
@@ -216,7 +218,7 @@ class PacketController extends Controller
     }
 
     private function creat_new_user_packets($packet_id, $is_available_for_all, $packet_operator_price){
-        $users = User::where('type', '<>' , 'admin')->select('id')->get();
+        $users = User::where('type', 'agent')->select('id')->get();
         $newUserPacket = [];
         foreach ($users as $user) {
             $newUserPacket['user_id'] = $user->id;
@@ -224,6 +226,17 @@ class PacketController extends Controller
             $newUserPacket['is_available'] = $is_available_for_all;
             $newUserPacket['admin_price'] = $packet_operator_price + 3;
             $newUserPacket['user_price'] = $packet_operator_price + 5;
+            User_Packet::create($newUserPacket);
+        }
+
+        $users = User::where('type', 'regular')->select('id')->get();
+        $newUserPacket = [];
+        foreach ($users as $user) {
+            $newUserPacket['user_id'] = $user->id;
+            $newUserPacket['packet_id'] = $packet_id;
+            $newUserPacket['is_available'] = $is_available_for_all;
+            $newUserPacket['admin_price'] = $packet_operator_price + 5;
+            $newUserPacket['user_price'] = $packet_operator_price + 7;
             User_Packet::create($newUserPacket);
         }
     }

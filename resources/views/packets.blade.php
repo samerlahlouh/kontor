@@ -8,6 +8,8 @@ $btns = [
     create_button('', __('packets_lng.notes'), 'btn btn-success', '', 'fa fa-info-circle', '', 'onclick="show_notes(this.parentNode.parentNode)"')
 ];
 
+
+
 $controlBtns = [];
 if(Auth::user()->type == 'admin')
     $controlBtns = ['add', 'edit', 'del'];

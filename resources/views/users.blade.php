@@ -2,10 +2,18 @@
 
 @section('content')
 <?php
-$btns = [
-    create_button('', '', 'btn activator'),
-    create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
-];
+$btns = [];
+if(Auth::user()->type == 'admin'){
+    $btns = [
+        create_button('', '', 'btn activator'),
+        create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
+    ];
+}elseif(Auth::user()->type == 'agent'){
+    $btns = [
+        create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
+    ];
+}
+
 
 $extra_columns = [
     // [
