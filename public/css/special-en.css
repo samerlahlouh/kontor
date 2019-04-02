@@ -30,8 +30,7 @@ h2, h4{
 }
 
 @media only screen
-and (min-device-width : 991px)
-and (max-device-width : 1366px){
+and (min-device-width : 991px){
     .top-space{
         margin-top: 103px;
     }
@@ -289,8 +288,4 @@ and (max-width : 600px){
 
 .sweet-modal-overlay.dark-modal .sweet-modal-box .sweet-modal-close a.sweet-modal-close-link{
     background-image: url("../img/white-cross.png")!important;
-}
-
-.top-space {
-    margin-top: 103px;
 }
