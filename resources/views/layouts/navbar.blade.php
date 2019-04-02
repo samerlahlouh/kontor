@@ -50,7 +50,30 @@
                 </li>
                 @endIf
 
-
+                @if(Auth::user() && (Auth::user()->type == 'admin'))
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="packetsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('layout_lng.packets') }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="packetsDropdown">
+                        <a class="dropdown-item" href="/packets">
+                            <i class="fa fa-cog" aria-hidden="true"></i>
+                            {{ __('layout_lng.settings') }}
+                        </a>
+                        <a class="dropdown-item" href="/operators">
+                            <i class="fa fa-building" aria-hidden="true"></i>
+                            {{ __('layout_lng.operators') }}
+                        </a>
+                        <a class="dropdown-item" href="/packets_types">
+                                <i class="fa fa-sitemap" aria-hidden="true"></i>
+                                {{ __('layout_lng.types') }}
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/chargings">{{ __('layout_lng.chargings') }}</a>
+                </li>
+                @endIf
 
                 @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
                 <li class="nav-item">
