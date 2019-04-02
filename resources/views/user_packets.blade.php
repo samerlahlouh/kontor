@@ -26,12 +26,10 @@ begin_modal('modal_addEdit');
         begin_row();
             create_input_group('admin_price', __('users_lng.selling_price'), 'fa fa-money', 'number');
         end_row();
-        if(Auth::user()->type == 'admin'){
-            begin_row();
-                create_input_group('is_available', __('users_lng.is_available'), 'fa fa-sitemap', 'select', $is_available_select);
-            end_row();
-        }
-    
+        begin_row();
+            create_input_group('is_available', __('users_lng.is_available'), 'fa fa-sitemap', 'select', $is_available_select);
+        end_row();
+
     echo Form::close();
 end_modal(['close', 'add', 'edit'], 'form_addEdit');
 ?>

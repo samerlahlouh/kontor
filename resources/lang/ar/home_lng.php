@@ -73,6 +73,7 @@ return [
     'all_packets'           => 'كل الباقات',
     'operator'              => 'الشركة',
     'message'               => 'رسالة',
+    'balance_is_not_enough_warning'        => 'رصيدك لايكفي لاتمام هذه العملية',
 
     // Home when is admin
     'name_of_user'          => 'المستخدم',

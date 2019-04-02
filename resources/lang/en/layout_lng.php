@@ -9,6 +9,8 @@ return [
     'general_settings'  => 'General Settings',
     'packets'           => 'Packets',
     'chargings'         => 'Chargings',
+    'my_chargings'      => 'My Chargings',
+    'transfer'          => 'Transfer',
     'operators'         => 'Operators',
     'balance'           => 'Balance',
     'credit'            => 'Credit',

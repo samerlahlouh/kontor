@@ -22,7 +22,7 @@ function send_result($tr){
         data: {user_id: user_id},
         dataType: 'JSON',
         success: function (packet_ids) { 
-            
+            console.log('s');
             var order_id = $tr.getElementsByTagName('td')[1].textContent;
             var customer_name = $tr.getElementsByTagName('td')[3].textContent;
             var mobile = $tr.getElementsByTagName('td')[4].textContent;
@@ -73,10 +73,14 @@ function change_charging_status($tr, status){
         type: 'POST',
         data: {charging_id: charging_id,
                 status:     status},
-        dataType: 'JSON'
+        dataType: 'JSON',
+        success: function (data) {
+            if(data['is_fail'])
+                Swal(data['message']);
+            else
+                window.location.href = '/home';
+        }
     });
-
-    window.location.href = '/home';
 }
 
 function select_all(){

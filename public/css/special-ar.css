@@ -66,6 +66,7 @@ and (max-device-width : 1366px){
     }
 
     .page-header{
+
         margin-bottom: 75px;
         margin-left: 25px;
         margin-right: 25px;
@@ -287,8 +288,7 @@ select{
   }
 
   @media only screen
-and (min-device-width : 600px)
-and (max-device-width : 1366px){
+and (min-device-width : 600px){
     .label_above{
         display: none;
       }
@@ -348,4 +348,8 @@ and (max-width : 600px){
 
 .sweet-modal-overlay.dark-modal .sweet-modal-box .sweet-modal-close a.sweet-modal-close-link{
     background-image: url("../img/white-cross.png")!important;
+}
+
+.top-space {
+    margin-top: 103px;
 }

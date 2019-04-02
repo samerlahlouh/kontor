@@ -4,6 +4,7 @@ namespace Educators\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\ChargingStoreRequest;
 use Educators\Charging;
 use Educators\User;
 use View;
@@ -25,7 +26,7 @@ class ChargingController extends Controller
         $select_types       = [];
         $select_statuses    = [];
 
-        $users = User::select("id", 'name')->get();
+        $users = User::select("id", 'name')->where('created_by_user_id', Auth::user()->id)->get();
         foreach ($users as $user)
             $select_users[$user['id']] = $user["name"];
 
@@ -61,7 +62,7 @@ class ChargingController extends Controller
         View::share('page_js', 'regular_chargings');
         $regular_chargings = $this->charging_model->get_regular_chargings_table(Auth::user()->id);
 
-        $select_types       = [];
+        $select_types = [];
         $types = $this->getEnumValues('chargings', 'type');
         unset($types['pay_off']);
         foreach ($types as $type)
@@ -89,31 +90,41 @@ class ChargingController extends Controller
 
     //------------------------------------------Actions--------------------------------------------//
     public function store(Request $request){
+        $current_user = Auth::user();
         $newData = $request->all();
         $this->add_is_validate($request);
         unset($newData['id'], $newData['_token']);
         $user = User::find($newData['user_id']);
 
         if($newData['type'] != 'pay_off'){
-            $newData['balance_before'] = $user['balance'];
+            $newData['balance_before'] = $user->balance;
             $newData['balance_after'] = $newData['balance_before'] + $newData['amount'];
 
             if($newData['status'] == 'accepted'){
-                $user['balance'] = $user['balance'] + $newData['amount'];
+                $user->balance += $newData['amount'];
                 if($newData['type'] == 'credit')
-                    $user['credit'] = $user['credit'] + $newData['amount'];
-            }
+                    $user->credit += $newData['amount'];
 
-            $user->save();
+                if($current_user->type == 'agent')
+                    $current_user->balance -= $newData['amount'];
+            }
         }else{
             $newData['status'] = 'accepted';
-            $newData['balance_before'] = $user['balance'];
-            $newData['balance_after'] = $user['balance'];
+            $newData['balance_before'] = $user->balance;
+            $newData['balance_after'] = $user->balance;
 
-            $user['credit'] = $user['credit'] - $newData['amount'];
-            $user->save();
+            $user->credit -= $newData['amount'];
+
+            if($current_user->type == 'agent')
+                $current_user->balance += $newData['amount'];
         }
 
+        if($current_user->balance < 0){
+            return redirect("/chargings")->with('error', __('chargings_lng.balance_is_not_enough_warning'));
+        }
+
+        $current_user->save();
+        $user->save();
         Charging::create($newData);
 
         return redirect("/chargings")->with('success', __('main_lng.done_successfully'));
@@ -152,19 +163,28 @@ class ChargingController extends Controller
     }
 
     public function destroy($id){
+        $current_user = Auth::user();
         $charging = Charging::find($id);
-        $user = User::find($charging['user_id']);
-        if($charging['status'] == 'accepted'){
-            $user = User::find($charging['user_id']);
-            $user['balance'] = $user['balance'] - $charging['amount'];
-            $user->save();
+        $user = User::find($charging->user_id);
+        if($charging->status == 'accepted') {
+            if ($charging->type != 'pay_off') {
+                $user->balance -= $charging->amount;
+                if ($charging->type == 'credit')
+                    $user->credit -= $charging->amount;
+
+                if($current_user->type == 'agent')
+                    $current_user->balance += $charging->amount;
+            }else{
+                $user->credit += $charging->amount;
+
+                if($current_user->type == 'agent')
+                    $current_user->balance -= $charging->amount;
+            }
+
         }
 
-        if($charging['type'] == 'pay_off'){
-            $user['credit'] = $user['credit'] + $charging['amount'];
-            $user->save();
-        }
-
+        $current_user->save();
+        $user->save();
         $charging->delete();
         return redirect("/chargings")->with('success',  __('main_lng.done_successfully'));
     }
@@ -175,7 +195,7 @@ class ChargingController extends Controller
             'user_id'           =>'required',
             'type'              =>'required',
             'status'            =>'required',
-            'amount'            =>'required',
+            'amount'            =>'required|not_in:0',
             'request_date'      =>'required',
         );
         $this->validate($request ,$rules);

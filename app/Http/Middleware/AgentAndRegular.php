@@ -5,7 +5,7 @@ namespace Educators\Http\Middleware;
 use Closure;
 use Auth;
 
-class IsAdmin
+class AgentAndRegular
 {
     /**
      * Handle an incoming request.
@@ -16,10 +16,9 @@ class IsAdmin
      */
     public function handle($request, Closure $next)
     {
-         if (Auth::user() &&  Auth::user()->type == 'admin') {
-                return $next($request);
-         }
-
-        return redirect('/home');
+        if (Auth::user() && (Auth::user()->type == 'agent' || Auth::user()->type == 'regular')) {
+            return $next($request);
+        }
+        return redirect('\home');
     }
 }

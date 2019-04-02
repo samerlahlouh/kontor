@@ -1,6 +1,6 @@
 <?php
 return [
-    'submitting_again' => ' Submitting Again.',
-    'oh' => 'Oh!',
-    'done' => 'Done!',
+    'submitting_again'  => ', Please try to submit again.',
+    'oh'                => 'Oh!',
+    'done'              => 'Done!',
 ];

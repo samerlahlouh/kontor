@@ -153,7 +153,7 @@ class PacketController extends Controller
             $this->set_is_available_for_children_of_agent($idsArr, $data['is_available']);
         }
         
-        $user_packet;
+        $user_packet = '';
         foreach ($idsArr as $id) {
             $user_packet = User_Packet::find($id);
             $user_packet->fill($data);

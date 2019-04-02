@@ -2,7 +2,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
     <div class="container">
         <a class="navbar-brand js-scroll-trigger" href="/#page-top">{{ __('layout_lng.edu_logo') }}</a>
-        @if(Auth::user() && Auth::user()->type == 'regular')
+        @if(Auth::user() && (Auth::user()->type == 'regular' || Auth::user()->type == 'agent'))
         <div>
             <div class="row-">
                 <div class="col">
@@ -84,6 +84,27 @@
                 @if(Auth::user() && (Auth::user()->type == 'agent'))
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/packets">{{ __('layout_lng.packets') }}</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="agentChargingsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ __('layout_lng.chargings') }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="agentChargingsDropdown">
+                        <a class="dropdown-item" href="/regular_chargings">
+                            <i class="fa fa-money" aria-hidden="true"></i>
+                            {{ __('layout_lng.my_chargings') }}
+                        </a>
+                        <a class="dropdown-item" href="/chargings">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            {{ __('layout_lng.users') }}
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/regular_orders">{{ __('layout_lng.orders') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/agent_transfer">{{ __('layout_lng.transfer') }}</a>
                 </li>
                 @endIf
 

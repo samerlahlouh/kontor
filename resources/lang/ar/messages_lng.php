@@ -1,6 +1,6 @@
 <?php
 return [
-    'submitting_again'  => ' أعد الإدخال ثانيةً',
+    'submitting_again'  => ', من فضلك أعد الإدخال ثانيةً.',
     'oh'                => 'اوبس!',
     'done'              => 'تم!',
 ];

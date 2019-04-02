@@ -25,7 +25,7 @@ class HomeController extends Controller
 
 //-------------------------------------------------- Indexes -----------------------------------------------//
     public function index(){
-        if (Auth::user() && Auth::user()->type == 'admin')
+        if (Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
             return $this->index_admin();
         elseif (Auth::user() && Auth::user()->type == 'regular')
             return $this->index_regular();
@@ -35,7 +35,6 @@ class HomeController extends Controller
 
     private function index_admin(){
         View::share('page_js', 'admin_home');
-        // $user_id = Auth::user()->id;
 
         // Format checking orders table
         $checking_orders = $this->order_model->get_admin_orders_table(['check_pending']); 
@@ -175,10 +174,17 @@ class HomeController extends Controller
         $newData['created_at']      = Carbon::now();
         $newData['message']         = $message;
         Order::create($newData);
+
+        $toPage = 'home';
+        if(Auth::user()->type == 'agent')
+            $toPage = 'agent_transfer';
+        return response()->json($toPage);
     }
 
     public function transfer_packet(Request $request){
+
         $this->is_regular_transfer_validate($request);
+        $user = Auth::user();
         $user_id = Auth::user()->id;
 
         $newData['user_id'] = $user_id;
@@ -193,15 +199,30 @@ class HomeController extends Controller
         $newData['mobile'] = $request->input('mobile');
         $newData['customer_name'] = $request->input('customer');
 
+        if($user->balance < $newData['admin_price'])
+            return redirect("/home")->with('error', __('home_lng.balance_is_not_enough_warning'));
+
+        $user->balance -= $newData['admin_price'];
+
+        $user->save();
+
+        $toPage = 'home';
+        if(Auth::user()->type == 'agent')
+            $toPage = 'agent_transfer';
+
         Order::create($newData);
 
-        return redirect("/home");
+        return redirect("/$toPage");
     }
 
     public function get_packets_by_operator_and_type(Request $request){
         $operator = $request->operator;
         $type = $request->type;
-        $packets = $this->packet_model->get_packets_by_operator_and_type($operator, $type)->toArray();
+
+        $is_global = 'none';
+        if(isset($request->is_global))
+            $is_global = $request->is_global;
+        $packets = $this->packet_model->get_packets_by_operator_and_type($operator, $type, $is_global)->toArray();
 
         $select_packets = [];
         foreach ($packets as $packet)
@@ -211,15 +232,26 @@ class HomeController extends Controller
     }
 
     public function cancel_order_by_id(Request $request){
+        $user = Auth::user();
         $order_id = $request->order_id;
 
         $order = Order::find($order_id);
+
+        if($order->selected_packet_id != '')
+            $user->balance += $order->admin_price;
+
+        $user->save();
         $order->delete();
-        
-        return;
+
+        $toPage = 'home';
+        if(Auth::user()->type == 'agent')
+            $toPage = 'agent_transfer';
+
+        return response()->json($toPage);
     }
 
     public function make_packet_in_transfer_status(Request $request){
+        $user = Auth::user();
         $user_id = Auth::user()->id;
         $order_id = $request->order_id;
         $selected_packet_id = $request->selected_packet_id;
@@ -232,9 +264,27 @@ class HomeController extends Controller
         $order->operator_price = $packet->price;
         $order->admin_price = $user_packets->admin_price;
         $order->user_price = $user_packets->user_price;
-        $order->save();
-        
-        return;
+
+        $is_fail = false;
+        $message = '';
+        if($user->balance < $order->admin_price){
+            $is_fail = true;
+            $message = __('home_lng.balance_is_not_enough_warning');
+        }else{
+            $user->balance -= $order->admin_price;
+
+            $user->save();
+            $order->save();
+        }
+
+        $toPage = 'home';
+        if(Auth::user()->type == 'agent')
+            $toPage = 'agent_transfer';
+
+        $data['is_fail'] = $is_fail;
+        $data['message'] = $message;
+        $data['toPage'] = $toPage;
+        return response()->json($data);
     }
 
     // Admin
@@ -244,26 +294,48 @@ class HomeController extends Controller
 
         $order = Order::find($order_id);
         $order->status = $status;
-        $order->save();
 
-        if($status == 'completed'){
+        if($order->selected_packet_id != '' && $status == 'rejected'){
             $user = User::find($order->user_id);
-            $user->balance -= $order->admin_price;   
+            $user->balance += $order->admin_price;
             $user->save();
         }
+
+        $order->save();
         
         return;
     }
 
     public function change_charging_status_by_id(Request $request){
+        $current_user = Auth::user();
+        $is_fail = false;
+        $message = '';
+
         $charging_id    = $request->charging_id;
         $status         = $request->status;
 
         $charging = Charging::find($charging_id);
+
+        $user = User::find($charging->user_id);
+        if($status == 'accepted'){
+            $current_user->balance -= $charging->amount;
+            $user->balance += $charging->amount;
+        }
+
         $charging->status = $status;
-        $charging->save();
-        
-        return;
+
+        if($status == 'accepted' && $current_user->type == 'agent' && $current_user->balance < $charging->amount){
+            $is_fail = true;
+            $message = __('home_lng.balance_is_not_enough_warning');
+        }else{
+            $current_user->save();
+            $user->save();
+            $charging->save();
+        }
+
+        $res_data['is_fail'] = $is_fail;
+        $res_data['message'] = $message;
+        return response()->json($res_data);
     }
 
     public function send_result_to_user(Request $request){
@@ -335,7 +407,6 @@ class HomeController extends Controller
 
     private function is_regular_transfer_validate($request){
         $rules = array(
-            'operator'  =>'required',
             'packet'    =>'required',
         );
         $this->validate($request ,$rules);

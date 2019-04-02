@@ -1,7 +1,5 @@
 $(document).ready(function(){
     $('.showHideCols_btn').hide();
-    // $('#btn_transfer').on( 'click', function(){add_click();});
-    // $( "#operator" ).change(function() {operator_select_changed($(this));});
     $( "#type" ).change(function() {type_select_changed($(this));});
 
     $('.transfer').each(function(){ hide_transfer_btns($(this)); });
@@ -23,7 +21,9 @@ function add_click(){
              },
             url: '/get_packets_by_operator_and_type',
             type: 'POST',
-            data: {operator: operator},
+            data: {
+                    operator    : operator,
+                    is_global   : 1},
             dataType: 'JSON',
             success: function (packets) { 
                 var output = [];
@@ -68,16 +68,19 @@ function check_number(){
                 customer_name:  customer_name,
                 operator:       operator,
                 message:        message},
-            dataType: 'JSON'
+            dataType: 'JSON',
+            success: function (to_page) {
+                window.location.href = '/'+to_page;
+            }
         });
         
-        window.location.href = '/home';
+
     }
 }
 
 function type_select_changed($type_select){
     $('#packet').val(0);
-    var operator = $('#operator').val();
+    var operator = $('#selected_operator').val();
     var type = $type_select.val();
     $.ajax({
         headers: {
@@ -88,7 +91,7 @@ function type_select_changed($type_select){
         data: {operator : operator,
                 type    : type},
         dataType: 'JSON',
-        success: function (packets) { 
+        success: function (packets) {
             var output = [];
             output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['packet'] +'</option>');
             $.each(packets, function(key, value){
@@ -99,8 +102,7 @@ function type_select_changed($type_select){
     });
 }
 
-function maxLengthCheck(object)
-  {
+function maxLengthCheck(object){
     if (object.value.length > object.maxLength)
       object.value = object.value.slice(0, object.maxLength)
 }
@@ -115,10 +117,11 @@ function cancel_order($tr, id_index){
         url: '/cancel_order_by_id',
         type: 'POST',
         data: {order_id: order_id},
-        dataType: 'JSON'
+        dataType: 'JSON',
+        success: function (toPage) {
+            window.location.href = '/'+toPage;
+        }
     });
-
-    window.location.href = '/home';
 }
 
 function hide_transfer_btns(transfer_btn){
@@ -141,10 +144,14 @@ function make_packet_in_transfer_status($tr){
         type: 'POST',
         data: {order_id: order_id,
                 selected_packet_id: selected_packet_id},
-        dataType: 'JSON'
+        dataType: 'JSON',
+        success: function(data) {
+            if(data['is_fail'])
+                Swal(data['message']);
+            else
+                window.location.href = '/'+data['toPage'];
+        }
     });
-
-    window.location.href = '/home';
 }
 
 function hide_cancel_btns(cancel_btn){

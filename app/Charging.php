@@ -36,6 +36,7 @@ class Charging extends Model
                     DB::raw('DATE(`chargings`.`response_date`) as response_date'),
                     'chargings.notes'
                     )
+            ->where("users.created_by_user_id", Auth::user()->id)
             ->get();
 
         return $chargings;
@@ -85,7 +86,8 @@ class Charging extends Model
                     "chargings.balance_after",
                     'chargings.notes',
                     DB::raw('DATE(`chargings`.`request_date`) as request_date')
-                    );
+                    )
+            ->where("users.created_by_user_id", Auth::user()->id);
 
         if($status)
             $chargings->whereIn("chargings.status", $status);

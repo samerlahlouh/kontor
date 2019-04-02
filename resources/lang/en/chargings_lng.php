@@ -20,5 +20,6 @@ return [
     'accepted'      => 'Accepted',
     'rejected'      => 'Rejected',
     'cancel'        => 'Cancel',
+    'balance_is_not_enough_warning'        => 'Your balance is not enough to complete this process',
 
 ];

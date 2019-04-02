@@ -74,6 +74,7 @@ return [
     'all_packets'           => 'All Packets',
     'operator'              => 'Operator',
     'message'               => 'Message',
+    'balance_is_not_enough_warning'        => 'Your balance is not enough to complete this process',
 
     // Home when is admin
     'name_of_user'          => 'User',

@@ -41,10 +41,8 @@ class User extends Authenticatable
                     "mobile",
                     "type",
                     "balance",
-                    "credit");
-
-        if($user_type == 'agent')
-            $users->where("created_by_user_id", Auth::user()->id);
+                    "credit")
+            ->where("created_by_user_id", Auth::user()->id);
 
         $users->orderBy('is_active');
 

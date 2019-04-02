@@ -5,6 +5,7 @@ namespace Educators;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Auth;
 
 class Order extends Model
 {
@@ -117,7 +118,8 @@ class Order extends Model
                     'orders.operator as operator_hidden',
                     'users.id as user_id',
                     'orders.message'
-            );
+            )
+            ->where("users.created_by_user_id", Auth::user()->id);
 
         if($status)
             $orders->whereIn("status", $status);
@@ -147,7 +149,8 @@ class Order extends Model
                                 WHEN 'completed' THEN '".__('home_lng.completed')."'
                                 WHEN 'canceled' THEN '".__('home_lng.canceled')."' 
                             END) AS status")
-                    );
+                    )
+            ->where("users.created_by_user_id", Auth::user()->id);
 
         if($status)
             $orders->whereIn("status", $status);

@@ -68,10 +68,8 @@ class User_Packet extends Model
                     "user_packets.admin_price as selling_price",
                     DB::raw("(CASE WHEN is_available = 1 THEN '".__('users_lng.available')."' ELSE '".__('users_lng.unavailable')."' END) AS is_available")
                     )
-            ->where("user_packets.packet_id", $packet_id);
-
-        if($user_type == 'agent')
-            $packet_users->where("users.created_by_user_id", Auth::user()->id);
+            ->where("user_packets.packet_id", $packet_id)
+            ->where("users.created_by_user_id", Auth::user()->id);
 
         return $packet_users->get();
     }

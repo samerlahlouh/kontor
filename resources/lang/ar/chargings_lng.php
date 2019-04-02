@@ -20,5 +20,6 @@ return [
     'accepted'      => 'تم القبول',
     'rejected'      => 'تم الرفض',
     'cancel'        => 'الغاء',
+    'balance_is_not_enough_warning'        => 'رصيدك لايكفي لاتمام هذه العملية',
 
 ];
