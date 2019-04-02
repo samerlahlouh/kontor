@@ -111,6 +111,8 @@ class UserController extends Controller
         $user = User::find($user_id);
         $user->is_active = false;
         $user->save();
+
+        return response()->json();
     }
 
     public function activate_user(Request $request){
@@ -119,6 +121,8 @@ class UserController extends Controller
         $user = User::find($user_id);
         $user->is_active = true;
         $user->save();
+
+        return response()->json();
     }
 
     public function store(Request $request){

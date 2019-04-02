@@ -60,9 +60,11 @@ function deactivate_user($tr){
         url: '/deactivate_user',
         type: 'POST',
         data: {user_id: user_id},
-        dataType: 'JSON'
+        dataType: 'JSON',
+        success: function(){
+            document.location.reload();
+        }
     });
-    document.location.reload();
 }
 
 function activate_user($tr){
@@ -75,9 +77,11 @@ function activate_user($tr){
         url: '/activate_user',
         type: 'POST',
         data: {user_id: user_id},
-        dataType: 'JSON'
+        dataType: 'JSON',
+        success: function(){
+            document.location.reload();
+        }
     });
-    document.location.reload();
 }
 
 function show_packets($tr){
