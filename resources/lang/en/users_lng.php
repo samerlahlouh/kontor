@@ -20,5 +20,7 @@ return [
     'available'         => 'Available',
     'unavailable'       => 'Unavailable',
     'select'            => 'Select',
-    'user_packets'     => 'User Packets'
+    'user_packets'      => 'User Packets',
+    'group'             => 'Group',
+    'synchronize'       => 'Synchronize'
 ];

@@ -10,7 +10,7 @@ class User_Packet extends Model
 {
     protected $table = 'user_packets';
     protected $fillable = [
-        'user_id', 'packet_id', 'admin_price', 'user_price', 'is_available'
+        'user_id', 'packet_id', 'admin_price', 'user_price', 'is_available', 'group_id'
     ];
     
     public function get_user_packets_table($user_id){
@@ -45,6 +45,25 @@ class User_Packet extends Model
             $user_packets = $all_user_packets;
 
         return $user_packets;
+    }
+
+    public function get_group_packets_table($group_id){
+        $group_packets = DB::table("user_packets")
+            ->leftJoin('packets', 'packets.id', '=', 'user_packets.packet_id')
+            ->select('user_packets.id',
+                        "packets.id as packet_id",
+                        "packets.name as packet_name",
+                        "packets.operator",
+                        "packets.type as packet_type",
+                        DB::raw("(CASE WHEN packets.is_global = 1 THEN '".__('main_lng.global')."' ELSE '".__('main_lng.private')."' END) AS is_global"),
+                        "packets.price as purchasing_price",
+                        "user_packets.admin_price as selling_price",
+                        DB::raw("(CASE WHEN is_available = 1 THEN '".__('groups_lng.available')."' ELSE '".__('groups_lng.unavailable')."' END) AS is_available")
+                    )
+                    ->where("user_packets.group_id", $group_id)
+                    ->get();
+
+        return $group_packets;
     }
 
     public function get_packet_users_table($packet_id){

@@ -50,11 +50,11 @@ return [
 //                'prefix' => '',
                  'driver' => 'mysql',
                  'host' =>  'us-cdbr-iron-east-03.cleardb.net',
-                
+
                  'database' => 'heroku_302a0087085450f',
                  'username' => 'b27b1058c6f81a',
                  'password' => '1c273e12',
-                
+
                  'charset' => 'utf8mb4',
                  'collation' => 'utf8mb4_unicode_ci',
                  'prefix' => '',

@@ -9,6 +9,7 @@ return [
     'general_settings'  => 'إعدادات عامة',
     'packets'           => 'الباقات',
     'transfer'          => 'تحويل رصيد',
+    'groups'            => 'المجموعات',
     'chargings'         => 'الشحنات المالية',
     'my_chargings'      => 'شحناتي الخاصة',
     'operators'         => 'الشركات',

@@ -83,7 +83,8 @@
     <script src="{{ asset('js/langs/'.app()->getLocale().'/data_table_lng.js') }}" ></script>
     <script src="{{ asset('js/langs/'.app()->getLocale().'/home_lng.js') }}" ></script>
     <script src="{{ asset('js/langs/'.app()->getLocale().'/users_lng.js') }}" ></script>
-    <script src="{{ asset('js/langs/'.app()->getLocale().'/packets.js') }}" ></script>
+    <script src="{{ asset('js/langs/'.app()->getLocale().'/packets_lng.js') }}" ></script>
+    <script src="{{ asset('js/langs/'.app()->getLocale().'/groups_lng.js') }}" ></script>
 
     <!-- Bootstrap core JavaScript -->
     <script src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

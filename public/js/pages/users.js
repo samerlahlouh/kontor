@@ -89,3 +89,33 @@ function show_packets($tr){
     var user_id = $table.row($tr).data()[1];
     window.location.href = '/user_packets/'+user_id;
 }
+
+function synchronize_user($tr){
+    swal({
+        title: LANGS['GROUPS']['are_you_sure'],
+        text: LANGS['GROUPS']['no_revert'],
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        cancelButtonText: LANGS['GROUPS']['cancel'],
+        confirmButtonText: LANGS['GROUPS']['del_accepted']
+    }).then(function(result) {
+        if (result.value) {
+            var table = $('table.table').DataTable();
+            var user_id = table.rows('.selected').data()[0][1];
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                url: '/synchronize_user',
+                type: 'POST',
+                data: {user_id: user_id},
+                dataType: 'JSON',
+                success: function(){
+                    document.location.reload();
+                }
+            });
+        }
+    })
+}

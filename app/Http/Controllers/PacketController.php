@@ -174,7 +174,7 @@ class PacketController extends Controller
         $user_price = $request->input('user_price');
         $data['user_price'] = $request->input('user_price');
             
-        $user_packet;
+        $user_packet= '';
         foreach ($idsArr as $id) {
             $user_packet = User_Packet::find($id);
             $user_packet->fill($data);

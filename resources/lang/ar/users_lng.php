@@ -20,5 +20,7 @@ return [
     'available'         => 'متاحة',
     'unavailable'       => 'غير متاحة',
     'select'            => 'اختر',
-    'user_packets'     => 'باقات المستخدم'
+    'user_packets'     => 'باقات المستخدم',
+    'group'             => 'المجموعة',
+    'synchronize'       => 'مزامنة'
 ];

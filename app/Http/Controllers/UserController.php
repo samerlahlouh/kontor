@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Educators\User;
 use Educators\User_Packet;
 use Educators\Packet;
+use Educators\Group;
 use Auth;
 use View;
 use Validator;
@@ -36,6 +37,11 @@ class UserController extends Controller
             $types[$typeValue] =  __("main_lng.$typeValue");
         }
 
+        $groups = Group::select("id", 'name')->get();
+        $select_groups = [];
+        foreach ($groups as $group)
+            $select_groups[$group['id']] = $group["name"];
+
         $cols = [
             'id',
             'is_active_hidden',
@@ -46,10 +52,11 @@ class UserController extends Controller
             __('users_lng.balance'),
             __('users_lng.credit')
         ];
-        return view('users', [  'users' => $users,
-                                'cols'  => $cols,
-                                'types' => $types
-                            ]);
+        return view('users', ['users'         => $users,
+                                    'cols'          => $cols,
+                                    'types'         => $types,
+                                    'select_groups' => $select_groups
+                                    ]);
     }
 
     public function index_user_packets($user_id){
@@ -139,7 +146,9 @@ class UserController extends Controller
         $data['password'] = Hash::make($data['password']);
         $newUser = User::create($data);
 
-        $this->creat_new_user_packets($newUser->id);
+        $group_id = $newUser->group_id;
+
+        $this->creat_new_user_packets($newUser->id, $group_id);
 
         return redirect("/users")->with('success', __('main_lng.done_successfully'));
     }
@@ -176,6 +185,15 @@ class UserController extends Controller
         $user = User::find($id);
         $user->delete();
         return redirect("/users")->with('success',  __('main_lng.done_successfully'));
+    }
+
+    public function synchronize_user(Request $request){
+        $user_id = $request->input('user_id');
+        $group_id = User::select('group_id')->where('id', $user_id)->get()[0]['group_id'];
+
+        $this->update_user_packet($group_id, $user_id);
+
+        return response()->json();
     }
 
 
@@ -252,7 +270,7 @@ class UserController extends Controller
         
     }
 
-    private function creat_new_user_packets($user_id){
+    private function creat_new_user_packets($user_id, $group_id=''){
         $current_user = Auth::user();
         $packets = Packet::select('id', 'price')->get();
         $newUserPacket = [];
@@ -267,9 +285,19 @@ class UserController extends Controller
                 $newUserPacket['admin_price'] = $current_user_packet['admin_price'] + 3;
                 $newUserPacket['user_price'] = $current_user_packet['admin_price'] + 5;
             }else{
-                $newUserPacket['is_available'] = true;
-                $newUserPacket['admin_price'] = $packet->price + 3;
-                $newUserPacket['user_price'] = $packet->price + 5;
+                $new_is_available = true;
+                $new_admin_price  = $packet->price + 3;
+                $new_user_price   = $packet->price + 5;
+                if($group_id){
+                    $group_packet = User_Packet::select('admin_price', 'user_price', 'is_available')->where('group_id', $group_id)->where('packet_id', $packet->id)->get()[0];
+                    $new_is_available = $group_packet['is_available'];
+                    $new_admin_price  = $group_packet['admin_price'];
+                    $new_user_price   = $group_packet['user_price'];
+                }
+
+                $newUserPacket['is_available'] = $new_is_available;
+                $newUserPacket['admin_price'] =  $new_admin_price;
+                $newUserPacket['user_price'] =   $new_user_price;
             }
             User_Packet::create($newUserPacket);
         }
@@ -290,6 +318,22 @@ class UserController extends Controller
                     }
                 }
             }
+        }
+    }
+
+    // Update user packets based on group packets
+    private  function update_user_packet($group_id, $user_id){
+        $group_packets = User_Packet::where('group_id', $group_id)->get();
+        foreach ($group_packets as $group_packet){
+            $user_packet = User_Packet::where('user_id', $user_id)
+                ->where('packet_id', $group_packet['packet_id']);
+            $user_packet->update([
+                'admin_price'   => $group_packet['admin_price'],
+                'user_price'    => $group_packet['user_price'],
+                'is_available'  => $group_packet['is_available']
+            ]);
+            $user_packet = $user_packet->get()[0];
+            $this->set_is_available_for_children_of_agent($user_packet['id'], $user_packet['is_available']);
         }
     }
 }

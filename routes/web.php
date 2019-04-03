@@ -50,6 +50,7 @@ Route::resource('users', 'UserController', ['only' => ['store', 'destroy'] ])->m
 Route::get('/users', 'UserController@index_users')->middleware(AdminAndAgent::class);
 Route::post('deactivate_user', 'UserController@deactivate_user')->middleware(AdminAndAgent::class);
 Route::post('activate_user', 'UserController@activate_user')->middleware(AdminAndAgent::class);
+Route::post('synchronize_user', 'UserController@synchronize_user')->middleware(IsAdmin::class);
 
 // User packets
 Route::get('/user_packets/{user_id}', 'UserController@index_user_packets')->middleware(AdminAndAgent::class);
@@ -101,3 +102,16 @@ Route::delete('/packets_types/{type}', 'PacketTypeController@destroy')->middlewa
 //----------------------------------------------- Packets Types --------------------------------------------------//
 Route::get('/agent_transfer', 'UserTransfer@index')->middleware(IsAgent::class);
 //---------------------------------------------------------------------------------------------------------//
+
+//----------------------------------------------- Groups --------------------------------------------------//
+Route::resource('groups', 'GroupController', ['only' => ['index', 'store', 'destroy'] ])->middleware(IsAdmin::class);
+
+// Group packets
+Route::get('/group_packets/{group_id}', 'GroupController@index_group_packets')->middleware(IsAdmin::class);
+Route::post('/store_group_packets','GroupController@store_group_packets')->middleware(IsAdmin::class);
+Route::get('/group_users/{group_id}', 'GroupController@index_group_users')->middleware(IsAdmin::class);
+Route::post('/store_group_user','GroupController@store_group_user')->middleware(IsAdmin::class);
+Route::delete('/group_users/{user_id}','GroupController@destroy_group_user')->middleware(IsAdmin::class);
+Route::post('synchronize_users', 'GroupController@synchronize_users')->middleware(IsAdmin::class);
+//---------------------------------------------------------------------------------------------------------//
+

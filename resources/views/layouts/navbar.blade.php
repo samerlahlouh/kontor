@@ -73,6 +73,9 @@
                 <li class="nav-item">
                     <a class="nav-link js-scroll-trigger" href="/chargings">{{ __('layout_lng.chargings') }}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link js-scroll-trigger" href="/groups">{{ __('layout_lng.groups') }}</a>
+                </li>
                 @endIf
 
                 @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))

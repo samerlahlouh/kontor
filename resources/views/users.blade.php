@@ -3,6 +3,7 @@
 @section('content')
 <?php
 $btns = [
+    create_button('', __('users_lng.synchronize'), 'btn btn-success', '', 'fa fa-retweet', '', 'onclick="synchronize_user(this.parentNode.parentNode)"'),
     create_button('', '', 'btn activator'),
     create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
 ];
@@ -62,7 +63,10 @@ begin_modal('modal_addEdit');
         end_row();
         if(Auth::user()->type == 'admin'){
             begin_row();
-                create_input_group('type', __('users_lng.type'), 'fa fa-sitemap', 'select', $types);
+            create_input_group('type', __('users_lng.type'), 'fa fa-sitemap', 'select', $types);
+            end_row();
+            begin_row();
+            create_input_group('group_id', __('users_lng.group'), 'fa fa-users', 'select', $select_groups);
             end_row();
         }
         begin_row();

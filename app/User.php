@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'user_name', 'password', 'type', 'created_by_user_id', 'mobile'
+        'name', 'email', 'user_name', 'password', 'type', 'created_by_user_id', 'mobile', 'group_id'
     ];
 
     /**
@@ -30,7 +30,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function get_users_table(){
+    public function get_users_table($group_id=''){
         $user_type = Auth::user()->type;
 
         $users = DB::table("users")
@@ -43,6 +43,9 @@ class User extends Authenticatable
                     "balance",
                     "credit")
             ->where("created_by_user_id", Auth::user()->id);
+
+        if($group_id)
+            $users->where("group_id", $group_id);
 
         $users->orderBy('is_active');
 

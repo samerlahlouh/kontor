@@ -51,11 +51,11 @@ class ChargingController extends Controller
             __('chargings_lng.notes'),
         ];
 
-        return view('chargings', ['chargings'       => $chargings,
-                                'cols'              => $cols,
-                                'select_types'      => $select_types,
-                                'select_statuses'   => $select_statuses,
-                                'select_users'      => $select_users]);
+        return view('chargings', ['chargings'         => $chargings,
+                                        'cols'              => $cols,
+                                        'select_types'      => $select_types,
+                                        'select_statuses'   => $select_statuses,
+                                        'select_users'      => $select_users]);
     }
 
     public function index_regular_chargings(){

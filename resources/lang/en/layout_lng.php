@@ -11,6 +11,7 @@ return [
     'chargings'         => 'Chargings',
     'my_chargings'      => 'My Chargings',
     'transfer'          => 'Transfer',
+    'groups'            => 'Groups',
     'operators'         => 'Operators',
     'balance'           => 'Balance',
     'credit'            => 'Credit',
