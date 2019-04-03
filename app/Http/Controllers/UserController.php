@@ -29,7 +29,7 @@ class UserController extends Controller
 
     public function index_users(){
         View::share('page_js', 'users');
-        $users = $this->user_model->get_users_table();
+        $users = $this->user_model->get_users_table_with_extra_column();
         $typesValues = $this->getEnumValues('users', 'type');
 
         $types = array();
@@ -49,6 +49,7 @@ class UserController extends Controller
             __('users_lng.email'),
             __('users_lng.mobile'),
             __('users_lng.type'),
+            __('users_lng.group_name'),
             __('users_lng.balance'),
             __('users_lng.credit')
         ];

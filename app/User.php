@@ -51,4 +51,28 @@ class User extends Authenticatable
 
         return $users->get();
     }
+
+    public function get_users_table_with_extra_column($group_id=''){
+        $user_type = Auth::user()->type;
+
+        $users = DB::table("users")
+            ->leftJoin('groups', 'groups.id', '=', 'users.group_id')
+            ->select('users.id',
+                "users.is_active as is_active_hidden",
+                "users.name",
+                "users.email",
+                "users.mobile",
+                "users.type",
+                "groups.name as group_name",
+                "users.balance",
+                "users.credit")
+            ->where("users.created_by_user_id", Auth::user()->id);
+
+        if($group_id)
+            $users->where("group_id", $group_id);
+
+        $users->orderBy('is_active');
+
+        return $users->get();
+    }
 }

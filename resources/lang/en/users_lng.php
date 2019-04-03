@@ -22,5 +22,6 @@ return [
     'select'            => 'Select',
     'user_packets'      => 'User Packets',
     'group'             => 'Group',
-    'synchronize'       => 'Synchronize'
+    'synchronize'       => 'Synchronize',
+    'group_name'        => 'group'
 ];
