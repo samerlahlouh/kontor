@@ -25,7 +25,7 @@ class HomeController extends Controller
 
 //-------------------------------------------------- Indexes -----------------------------------------------//
     public function index(){
-        if (Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
+       if (Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
             return $this->index_admin();
         elseif (Auth::user() && Auth::user()->type == 'regular')
             return $this->index_regular();
@@ -34,6 +34,7 @@ class HomeController extends Controller
     }
 
     private function index_admin(){
+        $user = Auth::user();
         View::share('page_js', 'admin_home');
 
         // Format checking orders table
@@ -49,36 +50,44 @@ class HomeController extends Controller
             __('home_lng.message'),
         ];
 
-        // Format checking transfers table
-        $checking_transfers = $this->order_model->get_admin_orders_with_extra_culomns_table(['in_review', 'in_progress'])->toArray(); 
-        $checking_transfers_cols = [
-            'id',
-            'status_hidden',
-            __('home_lng.name_of_user'),
-            __('home_lng.mobile'),
-            __('home_lng.packet'),
-            __('home_lng.purchasing_price'),
-            __('home_lng.selling_price'),
-            __('home_lng.profit'),
-            __('home_lng.request_date'),
-            __('home_lng.status'),
-        ];
+        $checking_transfers = [];
+        $checking_transfers_cols = [];
+        $chargings = [];
+        $chargings_cols = [];
+        $packets = [];
+        if($user->type == 'admin'){
+            // Format checking transfers table
+            $checking_transfers = $this->order_model->get_admin_orders_with_extra_culomns_table(['in_review', 'in_progress'])->toArray();
+            $checking_transfers_cols = [
+                'id',
+                'status_hidden',
+                __('home_lng.name_of_user'),
+                __('home_lng.mobile'),
+                __('home_lng.packet'),
+                __('home_lng.purchasing_price'),
+                __('home_lng.selling_price'),
+                __('home_lng.profit'),
+                __('home_lng.request_date'),
+                __('home_lng.status'),
+            ];
 
-        // Format chargings table
-        $chargings = $this->charging_model->get_admin_chargings_table(['in_waiting'])->toArray(); 
-        $chargings_cols = [
-            'id',
-            __('home_lng.user'),
-            __('home_lng.type'),
-            __('home_lng.amount'),
-            __('home_lng.balance_before'),
-            __('home_lng.balance_after'),
-            __('home_lng.notes'),
-            __('home_lng.request_date'),
-        ];
+            // Format chargings table
+            $chargings = $this->charging_model->get_admin_chargings_table(['in_waiting'])->toArray();
+            $chargings_cols = [
+                'id',
+                __('home_lng.user'),
+                __('home_lng.type'),
+                __('home_lng.amount'),
+                __('home_lng.balance_before'),
+                __('home_lng.balance_after'),
+                __('home_lng.notes'),
+                __('home_lng.request_date'),
+            ];
 
-        // Format variables for send
-        $packets = $this->get_packets_for_checkbox();
+            // Format variables for send
+            $packets = $this->get_packets_for_checkbox();
+        }
+
 
         return view('home.admin.index', ['checking_orders'                  => $checking_orders,
                                                 'checking_orders_cols'      => $checking_orders_cols,
@@ -173,7 +182,9 @@ class HomeController extends Controller
         $newData['customer_name']   = $customer_name;
         $newData['created_at']      = Carbon::now();
         $newData['message']         = $message;
-        Order::create($newData);
+        $createdDate = Order::create($newData);
+
+        $this->create_or_update_parent_order($createdDate['id'], $newData);
 
         $toPage = 'home';
         if(Auth::user()->type == 'agent')
@@ -210,7 +221,9 @@ class HomeController extends Controller
         if(Auth::user()->type == 'agent')
             $toPage = 'agent_transfer';
 
-        Order::create($newData);
+        $createdDate = Order::create($newData);
+
+        $this->create_parent_order_by_transfer_status($createdDate['id'], $newData);
 
         return redirect("/$toPage");
     }
@@ -234,14 +247,31 @@ class HomeController extends Controller
     public function cancel_order_by_id(Request $request){
         $user = Auth::user();
         $order_id = $request->order_id;
+        $parent_user = User::find($user->created_by_user_id);
 
         $order = Order::find($order_id);
 
-        if($order->selected_packet_id != '')
+        if($order->selected_packet_id != ''){
             $user->balance += $order->admin_price;
 
+            if($parent_user->type == 'agent'){
+                $parent_order_id = Order::where('original_order_id', $order_id)->get()[0]['id'];
+                $parent_order = Order::find($parent_order_id);
+                if($parent_order->selected_packet_id != '')
+                    $parent_user->balance += $parent_order->admin_price;
+            }
+        }
+
+
+        if($parent_user->type == 'agent'){
+            $parent_order_id = Order::where('original_order_id', $order_id)->get()[0]['id'];
+            $parent_order = Order::find($parent_order_id);
+            $parent_order->delete();
+        }
         $user->save();
+        $parent_user->save();
         $order->delete();
+
 
         $toPage = 'home';
         if(Auth::user()->type == 'agent')
@@ -287,22 +317,79 @@ class HomeController extends Controller
         return response()->json($data);
     }
 
+    public function make_packet_in_transfer_status_for_regular(Request $request){
+        $user = Auth::user();
+        $child_order_id = $request->order_id;
+
+        $parent_order = Order::where('original_order_id', $child_order_id)->get()[0];
+        $child_order = Order::where('id', $child_order_id)->get()[0];
+
+        $order_id = $parent_order['id'];
+        $selected_packet_id = $child_order['selected_packet_id'];
+
+        $packet = Packet::find($selected_packet_id);
+        $user_packets = User_Packet::where('user_id', $user->id)->where('packet_id', $selected_packet_id)->select('admin_price', 'user_price')->get()[0];
+
+        $order = Order::find($order_id);
+        $order->selected_packet_id = $selected_packet_id;
+        $order->status = 'in_review';
+        $order->operator_price = $packet->price;
+        $order->admin_price = $user_packets->admin_price;
+        $order->user_price = $user_packets->user_price;
+
+        $is_fail = false;
+        $message = '';
+        if($user->balance < $order->admin_price){
+            $is_fail = true;
+            $message = __('home_lng.balance_is_not_enough_warning');
+        }else{
+            $user->balance -= $order->admin_price;
+
+            $user->save();
+            $order->save();
+        }
+
+        $toPage = 'home';
+        $data['is_fail'] = $is_fail;
+        $data['message'] = $message;
+        $data['toPage'] = $toPage;
+        return response()->json($data);
+    }
+
     // Admin
     public function change_order_status_by_id(Request $request){
         $order_id = $request->order_id;
         $status = $request->status;
 
         $order = Order::find($order_id);
+
+        $user_in_order = User::select('type')->where('id', $order->user_id)->get()[0];
+        if($user_in_order['type'] == 'agent' && $order->original_order_id != null){
+            $child_order = Order::find($order->original_order_id);
+            $child_order->status = $status;
+            $child_order->save();
+        }
         $order->status = $status;
 
         if($order->selected_packet_id != '' && $status == 'rejected'){
             $user = User::find($order->user_id);
             $user->balance += $order->admin_price;
             $user->save();
-        }
 
+            if($user_in_order['type'] == 'agent' && $order->original_order_id != null){
+                $child_order = Order::find($order->original_order_id);
+                $child_user = User::find($child_order->user_id);
+                $child_user->balance += $child_order->admin_price;
+                $child_user->save();
+            }
+
+            if(Auth::user()->type == 'agent'){
+                $parent_order_id = Order::select('id')->where('original_order_id', $order_id)->get()[0]['id'];
+                $parent_order = Order::find($parent_order_id);
+                $parent_order->delete();
+            }
+        }
         $order->save();
-        
         return;
     }
 
@@ -352,6 +439,7 @@ class HomeController extends Controller
         $order = Order::find($order_id);
         $order->status = 'selecting_packet';
         $order->save();
+        $this->send_result_to_parent_order($order->id, ['status'=>'selecting_packet']);
         
         return redirect("/home");
     }
@@ -432,5 +520,54 @@ class HomeController extends Controller
             $packets[$operator]['is_teens'] = $is_teens;
         }
         return $packets;
+    }
+
+    // Test if user' parent user is agent for making order with
+    private function create_or_update_parent_order($orderId, $newData){
+        $order = Order::where('id', $orderId)->get()[0];
+        $user = User::where('id', $order['user_id'])->get()[0];
+        $parent_user = User::where('id', $user['created_by_user_id'])->get()[0];
+        if($parent_user['type'] == 'agent'){
+            if($order['original_order_id']){
+                $parent_order = Order::find($order['original_order_id']);
+                $parent_order->fill($newData);
+                $parent_order->save();
+            }else{
+                $newData['user_id'] = $parent_user['id'];
+                $newData['original_order_id'] = $orderId;
+                Order::create($newData);
+            }
+        }
+    }
+
+    // Test if user' parent user is agent for making order with
+    private function create_parent_order_by_transfer_status($orderId, $newData){
+        $order = Order::where('id', $orderId)->get()[0];
+        $user = User::where('id', $order['user_id'])->get()[0];
+        $parent_user = User::where('id', $user['created_by_user_id'])->get()[0];
+        if($parent_user['type'] == 'agent'){
+            $newData['user_id'] = $parent_user['id'];
+            $newData['original_order_id'] = $orderId;
+            $newData['status'] = 'selecting_packet';
+            Order::create($newData);
+        }
+    }
+
+    private function send_result_to_parent_order($parentOrderId, $newData){
+        $parent_order = Order::where('id', $parentOrderId)->get()[0];
+        if($parent_order['original_order_id']){
+            $child_order = Order::where('id', $parent_order['original_order_id'])->get()[0];
+            $offers = Offer::select('packet_id')->where('order_id', $parent_order['id'])->get();
+            foreach ($offers as $offer) {
+                $newOffer['order_id'] = $child_order['id'];
+                $newOffer['packet_Id'] = $offer['packet_id'];
+                Offer::create($newOffer);
+            }
+
+            $updated_child_order = Order::find($child_order['id']);
+            $updated_child_order->fill($newData);
+            $updated_child_order->save();
+
+        }
     }
 }

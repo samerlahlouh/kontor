@@ -11,7 +11,7 @@ class Order extends Model
 {
     protected $table = 'orders';
     protected $fillable = [
-        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message'
+        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message', 'original_order_id'
     ];
 
     public function get_regular_orders_with_all_fields_table($user_id){
@@ -110,6 +110,7 @@ class Order extends Model
     public function get_admin_orders_table($status=[]){
         $orders = DB::table("orders")
             ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+            ->leftJoin('orders AS parent_orders', 'orders.id', '=', 'parent_orders.original_order_id')
             ->select('orders.id',
                     "users.name as name_of_user",
                     "orders.customer_name",
@@ -121,8 +122,10 @@ class Order extends Model
             )
             ->where("users.created_by_user_id", Auth::user()->id);
 
-        if($status)
-            $orders->whereIn("status", $status);
+        if(Auth::user()->type == 'agent')
+            $orders->where("orders.status", 'in_review')->where("parent_orders.status", 'selecting_packet');
+        elseif($status)
+            $orders->whereIn("orders.status", $status);
 
         return $orders->get();
     }

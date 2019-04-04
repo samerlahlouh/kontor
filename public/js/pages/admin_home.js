@@ -111,3 +111,22 @@ function hide_accept_btn(accept_btn){
         accept_btn.hide();
 
 }
+
+function make_packet_in_transfer_status($tr){
+    var order_id = $tr.children('td').eq(1).text();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/make_packet_in_transfer_status_for_regular',
+        type: 'POST',
+        data: {order_id: order_id},
+        dataType: 'JSON',
+        success: function(data) {
+            if(data['is_fail'])
+                Swal(data['message']);
+            else
+                window.location.href = '/'+data['toPage'];
+        }
+    });
+}

@@ -38,6 +38,7 @@ Route::post('/change_order_status_by_id','HomeController@change_order_status_by_
 Route::post('/change_charging_status_by_id','HomeController@change_charging_status_by_id')->middleware(AdminAndAgent::class);
 Route::post('/send_result_to_user','HomeController@send_result_to_user')->middleware(AdminAndAgent::class);
 Route::post('/get_unavailable_packets_by_user','HomeController@get_unavailable_packets_by_user')->middleware(AdminAndAgent::class);
+Route::post('/make_packet_in_transfer_status_for_regular', 'HomeController@make_packet_in_transfer_status_for_regular')->middleware(IsAgent::class);
 //------------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Current User -----------------------------------------------------//
