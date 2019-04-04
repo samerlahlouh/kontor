@@ -71,22 +71,22 @@ class HomeController extends Controller
                 __('home_lng.status'),
             ];
 
-            // Format chargings table
-            $chargings = $this->charging_model->get_admin_chargings_table(['in_waiting'])->toArray();
-            $chargings_cols = [
-                'id',
-                __('home_lng.user'),
-                __('home_lng.type'),
-                __('home_lng.amount'),
-                __('home_lng.balance_before'),
-                __('home_lng.balance_after'),
-                __('home_lng.notes'),
-                __('home_lng.request_date'),
-            ];
-
             // Format variables for send
             $packets = $this->get_packets_for_checkbox();
         }
+
+        // Format chargings table
+        $chargings = $this->charging_model->get_admin_chargings_table(['in_waiting'])->toArray();
+        $chargings_cols = [
+            'id',
+            __('home_lng.user'),
+            __('home_lng.type'),
+            __('home_lng.amount'),
+            __('home_lng.balance_before'),
+            __('home_lng.balance_after'),
+            __('home_lng.notes'),
+            __('home_lng.request_date'),
+        ];
 
 
         return view('home.admin.index', ['checking_orders'                  => $checking_orders,

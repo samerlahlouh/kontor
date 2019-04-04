@@ -40,6 +40,9 @@ class Order extends Model
                     )
             ->where("orders.user_id", $user_id);
 
+        if(Auth::user()->type == 'agent')
+            $orders->whereNull('orders.original_order_id');
+
         return $orders->get();
     }
 
