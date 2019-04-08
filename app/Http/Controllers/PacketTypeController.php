@@ -22,7 +22,7 @@ class PacketTypeController extends Controller
             array_push($packets_types, [$type_from_db => $type_from_db]);
             
         $packets_types_cols = [
-            __('packets_packets_types_lng.type'),
+            __('packets_types_lng.type'),
         ];
 
         return view('packets_types', [

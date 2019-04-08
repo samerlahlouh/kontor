@@ -59,10 +59,15 @@ function begin_incubated_child_card(){?>
 <?php
 }
 
-function begin_child_card($id, $title='', $showing_status=''){?>
+function begin_child_card($id, $title='', $showing_status='', $refresh_btn=false){?>
     <div id="accordion" role="tablist" aria-multiselectable="true">
         <div class="card card-child border-black-color">
                 <h6 class="card-header child-card-header-color" role="tab" id="heading_<?=$id?>">
+
+                    <?php if($refresh_btn){?>
+                    <i id="refresh_btn_<?=$id?>" class="fa fa-refresh pull-right refresh-btn"></i>
+                    <?php }?>
+
                     <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<?=$id?>" aria-expanded="true" aria-controls="collapse_<?=$id?>" class="d-block link-card child-card-header-text">
                         <i class="fa fa-chevron-down pull-right"></i>
                         <?= $title?>

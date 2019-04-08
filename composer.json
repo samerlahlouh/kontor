@@ -29,7 +29,8 @@
         },
         "files": [
             "public/DataTable/helper/datatable-creator.php",
-            "public/my-tools/helper/tools-creator.php"
+            "public/my-tools/helper/tools-creator.php",
+            "public/helper.php"
         ]
     },
     "autoload-dev": {

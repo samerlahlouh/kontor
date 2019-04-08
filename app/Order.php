@@ -11,7 +11,7 @@ class Order extends Model
 {
     protected $table = 'orders';
     protected $fillable = [
-        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message', 'original_order_id'
+        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message', 'original_order_id', 'type'
     ];
 
     public function get_regular_orders_with_all_fields_table($user_id){
@@ -111,6 +111,7 @@ class Order extends Model
     }
 
     public function get_admin_orders_table($status=[]){
+//        return $operators_that_have_api;
         $orders = DB::table("orders")
             ->leftJoin('users', 'users.id', '=', 'orders.user_id')
             ->leftJoin('orders AS parent_orders', 'orders.id', '=', 'parent_orders.original_order_id')
@@ -134,6 +135,7 @@ class Order extends Model
     }
 
     public function get_admin_orders_with_extra_culomns_table($status=[]){
+        $operators_that_have_api = get_operators_that_have_api();
         $orders = DB::table("orders")
                     ->leftJoin('packets', 'packets.id', '=', 'orders.selected_packet_id')
                     ->leftJoin('users', 'users.id', '=', 'orders.user_id')
@@ -156,7 +158,8 @@ class Order extends Model
                                 WHEN 'canceled' THEN '".__('home_lng.canceled')."' 
                             END) AS status")
                     )
-            ->where("users.created_by_user_id", Auth::user()->id);
+            ->where("users.created_by_user_id", Auth::user()->id)
+            ->whereNotIn("orders.operator", $operators_that_have_api);
 
         if($status)
             $orders->whereIn("status", $status);

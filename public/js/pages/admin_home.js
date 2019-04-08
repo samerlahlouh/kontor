@@ -2,6 +2,21 @@ $(document).ready(function(){
     $('.showHideCols_btn').hide();
     change_css();
     $('.accept').each(function(){ hide_accept_btn($(this)); });
+
+
+    setInterval(function(){
+        refresh_checking_orders_datatable($("#collapse_card_checking_orders table.table tbody"));
+    },4000);
+
+    if($('#user_type').val() == 'admin') {
+        setInterval(function () {
+            refresh_checking_transfers_datatable($("#collapse_card_checking_transfers table.table tbody"));
+        }, 4000);
+    }
+
+    $('#refresh_btn_card_chargings').click(function() {
+        refresh_chargings_datatable($("#collapse_card_chargings table.table tbody"));
+    });
 });
 
 function change_css(){
@@ -127,6 +142,118 @@ function make_packet_in_transfer_status($tr){
                 Swal(data['message']);
             else
                 window.location.href = '/'+data['toPage'];
+        }
+    });
+}
+
+function refresh_checking_orders_datatable(table_body){
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_checking_orders_table',
+        type: 'POST',
+        data: {},
+        dataType: 'JSON',
+        success: function(table){
+            table_body.empty();
+            var tr_class = '';
+            $.each(table, function(i, row) {
+                tr_class = i%2 == 0?'odd':'even';
+                table_body.append(
+                    "<tr  role='row' class='"+tr_class+"'>" +
+                        "<td>" + (i+1) + "</td>" +
+
+                        "<td style='display: none;' class='sorting_1'>" + row['id'] + "</td>" +
+                        "<td style='text-align:center;'>" + (row['name_of_user'] == null?'':row['name_of_user']) + "</td>" +
+                        "<td style='text-align:center;'>" + (row['customer_name'] == null?'':row['customer_name']) + "</td>" +
+                        "<td style='text-align:center;'>" + (row['mobile'] == null?'':row['mobile']) + "</td>" +
+                        "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
+                        "<td style='display: none;'>" + row['operator_hidden'] + "</td>" +
+                        "<td style='display: none;'>" + row['user_id'] + "</td>" +
+                        "<td style='text-align:center;'>" + (row['message'] == null?'':row['message']) + "</td>" +
+                        "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn1'] + "</td>" +
+                        "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn2'] + "</td>" +
+
+                    "</tr>"
+                );
+            });
+        }
+    });
+}
+
+function refresh_checking_transfers_datatable(table_body){
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_checking_transfers_table',
+        type: 'POST',
+        data: {},
+        dataType: 'JSON',
+        success: function(table){
+            table_body.empty();
+            var tr_class = '';
+            $.each(table, function(i, row) {
+                tr_class = i%2 == 0?'odd':'even';
+                table_body.append(
+                    "<tr  role='row' class='"+tr_class+"'>" +
+                    "<td>" + (i+1) + "</td>" +
+
+                    "<td style='display: none;' class='sorting_1'>" + row['id'] + "</td>" +
+                    "<td style='display: none;'>" + row['status_hidden'] + "</td>" +
+                    "<td style='text-align:center;'>" + (row['name_of_user'] == null?'':row['name_of_user']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['mobile'] == null?'':row['mobile']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['packet_name'] == null?'':row['packet_name']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['purchasing_price'] == null?'':row['purchasing_price']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['selling_price'] == null?'':row['selling_price']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['profit'] == null?'':row['profit']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['status'] == null?'':row['status']) + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn1'] + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn2'] + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn3'] + "</td>" +
+
+                    "</tr>"
+                );
+            });
+            $('.accept').each(function(){ hide_accept_btn($(this)); });
+        }
+    });
+}
+
+function refresh_chargings_datatable(table_body){
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_chargings_table',
+        type: 'POST',
+        data: {},
+        dataType: 'JSON',
+        success: function(table){
+            table_body.empty();
+            var tr_class = '';
+            $.each(table, function(i, row) {
+                tr_class = i%2 == 0?'odd':'even';
+                table_body.append(
+                    "<tr  role='row' class='"+tr_class+"'>" +
+                    "<td>" + (i+1) + "</td>" +
+
+                    "<td style='display: none;' class='sorting_1'>" + row['id'] + "</td>" +
+                    "<td style='text-align:center;'>" + (row['user'] == null?'':row['user']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['type'] == null?'':row['type']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['amount'] == null?'':row['amount']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['balance_before'] == null?'':row['balance_before']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['balance_after'] == null?'':row['balance_after']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['notes'] == null?'':row['notes']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn1'] + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn2'] + "</td>" +
+
+                    "</tr>"
+                );
+            });
         }
     });
 }

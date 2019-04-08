@@ -18,4 +18,12 @@ return [
     'no'                    => 'No',
     'teens'                 => 'Teens',
     'check'                 => 'Check',
+    'API_BAGLANTI_HATASI'                                               => 'Username or password is incorrect. Please try again with another values.',
+    'api aktif değilse'                                                 => 'Your account is not active to connect with API yet, please try again later.',
+    'KULLANICI API YETKISI,IP yada BAYIKODU SIFRE GECERSIZ'             => 'You are trying to connect with API by unknown IP, or may be your user name and password is not correct. Please try again with another values.',
+    'Aynı Numaraya Aynı Miktarda 10 Dakika İçinde İşlem Gerçekleşti'    => 'You transferred to this number recently. You have to wait at least 10 minutes between two transfers. Please try again later.',
+    'KULLANICI API YETKISI,IP yada BAYIKODU SIFRE GECERSIZ2'            => 'You are trying to connect with API by unknown IP, or may be your user name and password is not correct. Please try to submit with another values.',
+    'Bu İşlem Daha Önce Gönderildi.'                                    => 'Transfer id has to be different. Please try again with another values.',
+    'Aktif Kontor Turkcell3gCep55556'                                   => 'Kontor number or type that you sent are error. Please try again with another values.',
+    'telefon numarasi hatali'                                           => 'Mobile number is not correct. PPlease try again with another values.'
 ];

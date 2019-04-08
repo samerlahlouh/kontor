@@ -11,6 +11,7 @@ function add_click(){
 
     $('#id').val('');
     $('#name').val('');
+    $('#api_id').val('');
     $('#operator').val('turkcell');
     $('#sms').val('');
     $('#minutes').val('');
@@ -47,6 +48,7 @@ function edit_click(table){
 
                 $('#id').val(packet['id']);
                 $('#name').val(packet['name']);
+                $('#api_id').val(packet['api_id']);
                 $('#operator').val(packet['operator']);
                 $('#sms').val(packet['sms']);
                 $('#minutes').val(packet['minutes']);

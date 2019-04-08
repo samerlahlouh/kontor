@@ -107,7 +107,7 @@
     
     <!-- Sweet alert JavaScript-->
     <script src="{{ asset('my-tools/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
-    <script src="{{ asset('my-tools/sweetalert2/dist/promise-polyfill.js') }}"></script>
+    <script href="https://cdn.jsdelivr.net/npm/promise-polyfill@7/dist/polyfill.min.js"></script>
 
     <!-- Sweet modals JavaScript-->
     <script src="{{ asset('my-tools/sweet-modals/min/jquery.sweet-modal.min.js') }}"></script>
@@ -117,7 +117,9 @@
         <script src="{{ asset('js/pages/'.$page_js.'.js') }}"></script>
     @endif
 
+
     <!--___________________________________Special java script____________________________________-->
+
     <script src="{{ asset('js/pages/layout.js') }}" ></script>
     
     <script>

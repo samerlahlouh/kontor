@@ -31,11 +31,11 @@ class UserController extends Controller
         View::share('page_js', 'users');
         $users = $this->user_model->get_users_table_with_extra_column();
         $typesValues = $this->getEnumValues('users', 'type');
+        unset($typesValues['admin']);
 
         $types = array();
-        foreach ($typesValues as $typeValue) {
+        foreach ($typesValues as $typeValue)
             $types[$typeValue] =  __("main_lng.$typeValue");
-        }
 
         $groups = Group::select("id", 'name')->get();
         $select_groups = [];

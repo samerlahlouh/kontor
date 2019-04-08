@@ -12,6 +12,7 @@ return [
     'is_teens'      => 'هل هو شبابي',
     'packets'       => 'الباقات',
     'name'          => 'الاسم',
+    'api_id'        => 'الأيدي في API',
     'users'         => 'المستخدمين',
     'user'          => 'المستخدم',
     'packet_price'  => 'سعر الشراء',
@@ -23,6 +24,6 @@ return [
     'purchasing_price'=> 'سعر الشراء',
     'selling_price' => 'سعر المبيع',
     'notes'         => 'ملاحظات',
-    'is_available_for_all' => 'هل هي متاحة للجميع'
+    'is_available_for_all' => 'هل هي متاحة للجميع',
 
 ];

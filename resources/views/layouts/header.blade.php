@@ -16,20 +16,13 @@
         <link rel="dns-prefetch" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,600" rel="stylesheet" type="text/css">
 
-        <!-- Styles -->
-        <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
         <!-- Bootstrap core CSS -->
         <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
         <!-- Custom fonts for this template -->
-        <!-- <link href="{{ asset('vendor/font-awesome/css/fontawesome-all.min.css') }}" rel="stylesheet" type="text/css"> -->
         <link href="{{ asset('my-tools/fontawesome-free-5.2.0-web/css/all.min.css') }}" rel="stylesheet" type="text/css">
         <link href="{{ asset('my-tools/font-awesome-4.7.0/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('css/fonts/font1.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('css/fonts/font2.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('css/fonts/font3.css') }}" rel="stylesheet" type="text/css">
-        <link href="{{ asset('css/fonts/font4.css') }}" rel="stylesheet" type="text/css">
 
         <!-- Custom styles for this template -->
         <link href="{{ asset('css/agency-'.app()->getLocale().'.css') }}" rel="stylesheet">
@@ -49,9 +42,6 @@
 
         <!-- Sweet Modals Style -->
         <link href="{{ asset('my-tools/sweet-modals/dev/jquery.sweet-modal-'.app()->getLocale().'.css') }}" rel="stylesheet">
-
-        <!-- Tooltip style -->
-        <link href="{{ asset('my-tools/tooltips/css.css') }}" rel="stylesheet">
 
         <!--__________________________________Loading Page Style__________________________________-->
         <link href="{{ asset('my-tools/loading-page/css/style.css') }}" rel="stylesheet">

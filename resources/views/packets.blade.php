@@ -40,6 +40,9 @@ if(Auth::user()->type == 'admin'){
                 create_input_group('name', __('packets_lng.name'), 'fa fa-user', 'text');
             end_row();
             begin_row();
+                create_input_group('api_id', __('packets_lng.api_id'), 'fa fa-hashtag', 'number');
+            end_row();
+            begin_row();
                 create_input_group('operator', __('packets_lng.operator'), 'fa fa-user', 'select', $operators, [], 'turkcell');
             end_row();
             begin_row();

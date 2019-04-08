@@ -16,11 +16,15 @@ class CreatePacketsTable extends Migration
         Schema::create('packets', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable();
-            $table->enum('operator', ['turkcell', 'vodafone'])->nullable();
+            $table->enum('operator', ['turkcell', 'vodafone']);
+
+            $table->enum('type', ['internet', 'minutes', 'tl', 'combo', 'packet'])->nullable();
+            $table->integer('api_id');
+            $table->unique(['type', 'api_id']);
+
             $table->unsignedInteger('sms')->nullable();
             $table->unsignedInteger('minutes')->nullable();
             $table->unsignedInteger('internet')->nullable();
-            $table->enum('type', ['internet', 'minutes', 'tl', 'combo', 'packet'])->nullable();
             $table->double('price', 8, 2)->nullable();
             $table->boolean('is_global')->nullable()->default(true);
             $table->boolean('is_teens')->nullable()->default(false);

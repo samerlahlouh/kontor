@@ -14,7 +14,7 @@ echo Form::open(['id'=>'form_number_processes', 'action' => 'UserController@upda
     begin_incubated_child_card();
         begin_row();
             begin_row();
-                create_input_group('number', __('home_lng.number'), 'fas fa-mobile', 'number', [], ['oninput'=>"maxLengthCheck(this)", 'maxlength'=> '11']);
+                create_input_group('number', __('home_lng.number'), 'fas fa-mobile', 'number', [], ['oninput'=>"maxLengthCheck(this)", 'maxlength'=> '10']);
             end_row();
             begin_row();
                 create_input_group('selected_operator', __('home_lng.operator'), 'fa fa-building', 'select', $select_operators, [], 'turkcell');
@@ -35,7 +35,7 @@ begin_modal('modal_transfer');
     echo Form::open(['id'=>'form_transfer', 'action' => ['HomeController@transfer_packet'], 'method'=>'POST','enctype'=>'multipart/form-data']);
         echo Form::hidden ('mobile', '', ['id'=>'mobile']);
         echo Form::hidden ('customer', '', ['id'=>'customer']);
-        echo Form::hidden ('operator', '', ['id'=>'customer']);
+        echo Form::hidden ('operator', '', ['id'=>'operator']);
 
         begin_row();
             create_input_group('type', __('home_lng.type'), 'fa fa-sitemap', 'select', $select_types);

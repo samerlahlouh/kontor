@@ -14,7 +14,7 @@
             <?php end_child_card();
         }
 
-            begin_child_card('card_chargings', __('home_lng.chargings'), 'show');?>
+            begin_child_card('card_chargings', __('home_lng.chargings'), 'show', true);?>
                 @include('home.admin.chargings')
             <?php end_child_card();
     end_incubated_child_card();
@@ -53,5 +53,6 @@
         end_modal(['close', 'add'], 'form_send_result');
     }
 ?>
+<input type="hidden" id="user_type" value="<?=Auth::user()->type?>">
 </div>
 @endsection

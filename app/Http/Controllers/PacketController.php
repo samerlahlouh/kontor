@@ -20,15 +20,20 @@ class PacketController extends Controller
     //------------------------------------------------indexes-----------------------------------------------//
     public function index(){
         View::share('page_js', 'packets');
-        $packets = $this->packet_model->get_packets_table(); 
+        $packets = $this->packet_model->get_packets_table();
 
         $operators = $this->getEnumValues('packets', 'operator');
         $types = $this->getEnumValues('packets', 'type');
+
+        foreach ($types as $type)
+            $types[$type] = __($type);
+
         $is_global = ['1'=>__('main_lng.private'), '2'=>__('main_lng.global')];
         $is_teens = ['1'=>__('main_lng.no'), '2'=>__('main_lng.yes')];
         $cols = [
             'id',
             __('packets_lng.name'),
+            __('packets_lng.api_id'),
             __('packets_lng.operator'),
             __('packets_lng.sms'),
             __('packets_lng.minutes'),
@@ -199,6 +204,7 @@ class PacketController extends Controller
             'is_global' =>'required',
             'is_teens'  =>'required',
             'price'     =>'required',
+            'api_id'     =>'required',
         );
         $this->validate($request ,$rules);
     }

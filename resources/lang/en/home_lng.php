@@ -72,9 +72,12 @@ return [
     'select_packet'         => 'Select Packet',
     'offers'                => 'Offers',
     'all_packets'           => 'All Packets',
-    'operator'              => 'Operator',
     'message'               => 'Message',
-    'balance_is_not_enough_warning'        => 'Your balance is not enough to complete this process',
+    'select_packet_warning' => 'Please select a packet for transfer first.',
+    'disabled_cancel_warning'           => 'You can not cancel this order.',
+    'balance_is_not_enough_warning'     => 'Your balance is not enough to complete this process',
+    'refresh_is_working'                => 'Refresh table is working',
+    'refresh_is_stopped'                => 'Refresh table is stopped',
 
     // Home when is admin
     'name_of_user'          => 'User',

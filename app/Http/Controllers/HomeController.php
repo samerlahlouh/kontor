@@ -13,6 +13,7 @@ use Auth;
 use View;
 use Config;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -38,7 +39,7 @@ class HomeController extends Controller
         View::share('page_js', 'admin_home');
 
         // Format checking orders table
-        $checking_orders = $this->order_model->get_admin_orders_table(['check_pending']); 
+        $checking_orders = $this->order_model->get_admin_orders_table(['check_pending']);
         $checking_orders_cols = [
             'id',
             __('home_lng.name_of_user'),
@@ -52,8 +53,6 @@ class HomeController extends Controller
 
         $checking_transfers = [];
         $checking_transfers_cols = [];
-        $chargings = [];
-        $chargings_cols = [];
         $packets = [];
         if($user->type == 'admin'){
             // Format checking transfers table
@@ -104,9 +103,7 @@ class HomeController extends Controller
         $user_id = Auth::user()->id;
 
         // Format checking orders table
-        $incomplete_orders = [];
-        $completed_orders = [];
-        $checking_orders = $this->order_model->get_regular_orders_table($user_id, ['check_pending', 'selecting_packet'])->toArray(); 
+        $checking_orders = $this->order_model->get_regular_orders_table($user_id, ['check_pending', 'selecting_packet'])->toArray();
         $checking_orders_cols = [
             'id',
             'status_hidden',
@@ -128,9 +125,7 @@ class HomeController extends Controller
         ];
 
         // Format checking transfers table
-        $incomplete_orders = [];
-        $completed_orders = [];
-        $incomplete_orders = $this->order_model->get_regular_orders_with_extra_culomns_table($user_id, ['in_review', 'in_progress'])->toArray(); 
+        $incomplete_orders = $this->order_model->get_regular_orders_with_extra_culomns_table($user_id, ['in_review', 'in_progress'])->toArray();
         $completed_orders = $this->order_model->get_regular_orders_with_extra_culomns_table($user_id, ['rejected', 'completed', 'canceled'], true)->toArray(); 
         
         $checked_orders = array_merge($incomplete_orders, $completed_orders);
@@ -149,9 +144,10 @@ class HomeController extends Controller
         ];
 
         // Format variables for send
-        $lang = Config::get('app.locale');
         $select_operators = $this->getEnumValues('packets', 'operator');
         $select_types = $this->getEnumValues('packets', 'type');
+        $lang = Config::get('app.locale');
+        $pull = $lang == 'en'?'pull-right':'pull-left';
 
         return view('home.regular.regular_home', ['checking_orders'     => $checking_orders,
                                                 'checking_orders_cols'  => $checking_orders_cols,
@@ -160,7 +156,8 @@ class HomeController extends Controller
                                                 'checking_orders_extra_cols'=> $checking_orders_extra_cols,
                                                 'lang'                  => $lang,
                                                 'select_operators'      => $select_operators,
-                                                'select_types'          => $select_types
+                                                'select_types'          => $select_types,
+                                                'pull'                  => $pull
                                                 ]);
 
     }
@@ -169,6 +166,8 @@ class HomeController extends Controller
 //--------------------------------------------------- Actions ---------------------------------------------//
     // Regular
     public function check_number(Request $request){
+        $user = Auth::user();
+        $parent_user = User::find($user->created_by_user_id);
         $newData = [];
         $number         = $request->number;
         $customer_name  = $request->customer_name;
@@ -186,6 +185,17 @@ class HomeController extends Controller
 
         $this->create_or_update_parent_order($createdDate['id'], $newData);
 
+        if($parent_user->type != 'agent') {
+            $referenced_to_user = User::find($newData['user_id']);
+            $msg_title = 'يوجد طلب فحص رقم من :' . $referenced_to_user->name;
+            $msg_body = $newData['mobile'];
+            sendMessage($msg_title, $msg_body);
+        }else{
+            $msg_title = 'يوجد طلب فحص رقم من :' . $parent_user->name;
+            $msg_body = $newData['mobile'];
+            sendMessage($msg_title, $msg_body);
+        }
+
         $toPage = 'home';
         if(Auth::user()->type == 'agent')
             $toPage = 'agent_transfer';
@@ -193,18 +203,19 @@ class HomeController extends Controller
     }
 
     public function transfer_packet(Request $request){
-
         $this->is_regular_transfer_validate($request);
         $user = Auth::user();
+        $parent_user = User::find($user->created_by_user_id);
         $user_id = Auth::user()->id;
 
         $newData['user_id'] = $user_id;
         $newData['selected_packet_id'] = $request->input('packet');
+        $newData['operator'] = $request->input('operator');
         $newData['status'] = 'in_review';
 
         $newData['operator_price'] = Packet::where('id', $newData['selected_packet_id'])->select('price')->get()[0]['price'];
         $user_packet = User_Packet::where('user_id', $user_id)->where('packet_id', $newData['selected_packet_id'])->select('admin_price', 'user_price')->get()[0];
-        
+
         $newData['admin_price'] = $user_packet['admin_price'];
         $newData['user_price'] = $user_packet['user_price'];
         $newData['mobile'] = $request->input('mobile');
@@ -217,14 +228,31 @@ class HomeController extends Controller
 
         $user->save();
 
+        $createdData = Order::create($newData);
+
+        $this->create_parent_order_by_transfer_status($createdData['id'], $newData);
+
+        if($parent_user->type != 'agent' && $result = $this->transfer_by_api($createdData)){
+            $order = Charging::find($createdData['id']);
+
+            $user->balance += $order->admin_price;
+            $user->save();
+
+            $order->delete();
+
+            return redirect("/home")->with('error', $result);
+        }
+        if($parent_user->type != 'agent'){
+            $referenced_to_user = User::find($newData['user_id']);
+            $selected_packet = Packet::find($newData['selected_packet_id']);
+            $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user->name.' - '.$selected_packet->name;
+            $msg_body = $newData['mobile'];
+            sendMessage($msg_title, $msg_body);
+        }
+
         $toPage = 'home';
         if(Auth::user()->type == 'agent')
             $toPage = 'agent_transfer';
-
-        $createdDate = Order::create($newData);
-
-        $this->create_parent_order_by_transfer_status($createdDate['id'], $newData);
-
         return redirect("/$toPage");
     }
 
@@ -252,6 +280,21 @@ class HomeController extends Controller
         $order = Order::find($order_id);
 
         if($order->selected_packet_id != ''){
+            $operators_that_have_api = get_operators_that_have_api();
+            if (in_array($order->operator, $operators_that_have_api))
+            {
+                $toPage = 'home';
+                if(Auth::user()->type == 'agent')
+                    $toPage = 'agent_transfer';
+
+                $res = [
+                    'toPage' => $toPage,
+                    'fail'   => true,
+                    'message'=> __('home_lng.disabled_cancel_warning')
+                ];
+                return response()->json($res);
+            }
+
             $user->balance += $order->admin_price;
 
             if($parent_user->type == 'agent'){
@@ -277,11 +320,19 @@ class HomeController extends Controller
         if(Auth::user()->type == 'agent')
             $toPage = 'agent_transfer';
 
-        return response()->json($toPage);
+        return response()->json(['toPage'=>$toPage]);
     }
 
     public function make_packet_in_transfer_status(Request $request){
+        $is_fail = false;
+        $message = '';
+        if($request->selected_packet_id == ''){
+            $is_fail = true;
+            $message = __('home_lng.select_packet_warning');
+            goto endPoint;
+        }
         $user = Auth::user();
+        $parent_user = User::find($user->created_by_user_id);
         $user_id = Auth::user()->id;
         $order_id = $request->order_id;
         $selected_packet_id = $request->selected_packet_id;
@@ -295,19 +346,29 @@ class HomeController extends Controller
         $order->admin_price = $user_packets->admin_price;
         $order->user_price = $user_packets->user_price;
 
-        $is_fail = false;
-        $message = '';
         if($user->balance < $order->admin_price){
             $is_fail = true;
             $message = __('home_lng.balance_is_not_enough_warning');
+        }elseif($parent_user->type != 'agent' && $result = $this->transfer_by_api($order)){
+            $is_fail = true;
+            $message = $result;
         }else{
             $user->balance -= $order->admin_price;
 
             $user->save();
             $order->save();
-        }
 
-        $toPage = 'home';
+            if($parent_user->type != 'agent'){
+                $referenced_to_user = User::find($order->user_id);
+                $selected_packet = Packet::find($order->selected_packet_id);
+                $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user->name.' - '.$selected_packet->name;
+                $msg_body = $order->mobile;
+                sendMessage($msg_title, $msg_body);
+            }
+        }
+        goto endPoint;
+
+        endPoint:$toPage = 'home';
         if(Auth::user()->type == 'agent')
             $toPage = 'agent_transfer';
 
@@ -342,11 +403,20 @@ class HomeController extends Controller
         if($user->balance < $order->admin_price){
             $is_fail = true;
             $message = __('home_lng.balance_is_not_enough_warning');
+        }elseif($result = $this->transfer_by_api($order)){
+                $is_fail = true;
+                $message = $result;
         }else{
             $user->balance -= $order->admin_price;
 
             $user->save();
             $order->save();
+
+            $referenced_to_user = User::find($order->user_id);
+            $selected_packet = Packet::find($order->selected_packet_id);
+            $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user->name.' - '.$selected_packet->name;
+            $msg_body = $order->mobile;
+            sendMessage($msg_title, $msg_body);
         }
 
         $toPage = 'home';
@@ -354,6 +424,47 @@ class HomeController extends Controller
         $data['message'] = $message;
         $data['toPage'] = $toPage;
         return response()->json($data);
+    }
+
+    public function get_regular_checking_orders_table()
+    {
+        $user_id = Auth::user()->id;
+        $table = $this->order_model->get_regular_orders_table($user_id, ['check_pending', 'selecting_packet']);
+        $selects_html = $this->get_packet_select_html($table);
+
+        $checking_orders_btns = [
+            'btn1' => create_button('', '', 'btn btn-danger', '', 'fas fa-times', '', 'onclick="cancel_order(this.parentNode.parentNode, 2)"'),
+            'btn2' => create_button('', __('home_lng.transfer'), 'btn btn-success transfer', '', 'fa fa-rocket', '', 'onclick="make_packet_in_transfer_status($(this).parent().parent())"')
+        ];
+
+        foreach ($table as $key=>$row){
+            $row->btn1 = $checking_orders_btns['btn1'];
+            $row->btn2 = $checking_orders_btns['btn2'];
+            $row->selected_packet = $selects_html[$key];
+        }
+
+        return response()->json($table);
+    }
+
+    public function get_regular_checking_transfers_table()
+    {
+        $user_id = Auth::user()->id;
+
+        $this->check_transfer_status_in_api($user_id);
+
+        $incomplete_orders = $this->order_model->get_regular_orders_with_extra_culomns_table($user_id, ['in_review', 'in_progress'])->toArray();
+        $completed_orders = $this->order_model->get_regular_orders_with_extra_culomns_table($user_id, ['rejected', 'completed', 'canceled'], true)->toArray();
+
+        $table = array_merge($incomplete_orders, $completed_orders);
+
+        $checking_orders_btns = [
+            'btn' => create_button('', '', 'btn btn-danger cancel', '', 'fas fa-times', '', 'onclick="cancel_order(this.parentNode.parentNode, 1)"'),
+        ];
+
+        foreach ($table as $row)
+            $row->btn = $checking_orders_btns['btn'];
+
+        return response()->json($table);
     }
 
     // Admin
@@ -448,6 +559,66 @@ class HomeController extends Controller
         $user_id = $request->user_id;
         $packets = User_Packet::where('user_id', $user_id)->where('is_available', false)->select('packet_id')->get();
         return response()->json($packets);
+    }
+
+    public function get_checking_orders_table()
+    {
+        $table = $this->order_model->get_admin_orders_table(['check_pending']);
+
+        if(Auth::user()->type == 'admin'){
+            $checking_orders_btns = [
+                'btn1' => create_button('', __('home_lng.send_result'), 'btn btn-primary', '', 'fa fa-rocket', '', 'onclick="send_result(this.parentNode.parentNode)"'),
+                'btn2' => create_button('', __('home_lng.reject'), 'btn btn-danger', '', 'fas fa-times', '', 'onclick="change_status(this.parentNode.parentNode, \'rejected\')"'),
+            ];
+        }else{
+            $checking_orders_btns = [
+                create_button('', __('home_lng.transfer'), 'btn btn-success transfer', '', 'fa fa-rocket', '', 'onclick="make_packet_in_transfer_status($(this).parent().parent())"'),
+                create_button('', __('home_lng.reject'), 'btn btn-danger', '', 'fas fa-times', '', 'onclick="change_status(this.parentNode.parentNode, \'rejected\')"'),
+            ];
+        }
+
+        foreach ($table as $row){
+            $row->btn1 = $checking_orders_btns['btn1'];
+            $row->btn2 = $checking_orders_btns['btn2'];
+        }
+
+        return response()->json($table);
+    }
+
+    public function get_checking_transfers_table()
+    {
+        $table = $this->order_model->get_admin_orders_with_extra_culomns_table(['in_review', 'in_progress']);
+
+        $checking_transfers_btns = [
+            'btn1' => create_button('', __('home_lng.reject'), 'btn btn-danger', '', 'fas fa-times', '', 'onclick="change_status(this.parentNode.parentNode, \'rejected\')"'),
+            'btn2' => create_button('', __('home_lng.accept'), 'btn btn-primary accept', '', 'fa fa-check', '', 'onclick="change_status(this.parentNode.parentNode, \'in_progress\')"'),
+            'btn3' => create_button('', __('home_lng.transfer_done'), 'btn btn-success', '', 'fa fa-check-square-o', '', 'onclick="change_status(this.parentNode.parentNode, \'completed\')"')
+        ];
+
+        foreach ($table as $row){
+            $row->btn1 = $checking_transfers_btns['btn1'];
+            $row->btn2 = $checking_transfers_btns['btn2'];
+            $row->btn3 = $checking_transfers_btns['btn3'];
+        }
+
+        return response()->json($table);
+    }
+
+    public function get_chargings_table()
+    {
+        $table = $this->charging_model->get_admin_chargings_table(['in_waiting']);
+
+        $chargings_btns = [
+            'btn1' => create_button('', __('home_lng.reject'), 'btn btn-danger', '', 'fas fa-times', '', 'onclick="change_charging_status(this.parentNode.parentNode, \'rejected\')"'),
+            'btn2' => create_button('', __('home_lng.accept'), 'btn btn-success', '', 'fa fa-check', '', 'onclick="change_charging_status(this.parentNode.parentNode, \'accepted\')"'),
+        ];
+
+        foreach ($table as $row){
+            $row->btn1 = $chargings_btns['btn1'];
+            $row->btn2 = $chargings_btns['btn2'];
+        }
+
+        return response()->json($table);
     }
 //------------------------------------------------ Functions ---------------------------------------------//
     private function get_packet_select_html($checking_orders){
@@ -569,5 +740,108 @@ class HomeController extends Controller
             $updated_child_order->save();
 
         }
+    }
+
+    private function transfer_by_api($order){
+        $operator = $order->operator;
+        $operators_that_have_api = get_operators_that_have_api();
+
+        if (in_array($operator, $operators_that_have_api))
+        {
+            $packet = Packet::find($order->selected_packet_id);
+            $api_data['api_id']         = $packet->api_id;
+            $api_data['order_id']       = $order->id;
+            $api_data['operator']       = $order->operator;
+            $api_data['packet_type']    = $packet->type;
+            $api_data['mobile']         = $order->mobile;
+
+            return $this->api_check_number($api_data);
+        }
+        return [];
+    }
+
+    private function api_check_number($api_data){
+        $api_url_arr = get_api_data('user_status_check', $api_data);
+        $result = CallAPI( $api_url_arr['site_url'], $api_url_arr['api'], $api_url_arr['params_data']);
+        $result_arr = explode('|', $result);
+
+        if($result_arr[0] == 'NOK'){
+            return __("main_lng.".$result_arr[1]);
+        }elseif($result_arr[0] == 'OK'){
+            if(count($result_arr) == 4)
+                return __("main_lng.".$result_arr[2]);
+            else
+                return $this->api_transfer($api_data);
+        }else
+            return $result;
+    }
+
+    private function api_transfer($api_data){
+        $api_url_arr = get_api_data('send_num_for_transfer', $api_data);
+        $result = CallAPI( $api_url_arr['site_url'], $api_url_arr['api'], $api_url_arr['params_data']);
+        $result_arr = explode('|', $result);
+        if($result_arr[2] == 'Talebiniz İşleme Alınmıştır.')
+            return [];
+        else
+            return __("main_lng.".$result_arr[2]);
+    }
+
+    private function check_transfer_status_in_api($user_id){
+        $operators_that_have_api = get_operators_that_have_api();
+        $in_waiting_statuses = ['in_review', 'in_progress'];
+        $api_in_waiting_orders = Order::where('user_id', $user_id)->whereIn('operator', $operators_that_have_api)->whereIn('status', $in_waiting_statuses)->get();
+        foreach ($api_in_waiting_orders as $api_in_waiting_order){
+            $api_data['order_id']       = $api_in_waiting_order['id'];
+            $api_data['operator']       = $api_in_waiting_order['operator'];
+            $api_data['packet_type']    = $api_in_waiting_order['type'];
+            $api_data['mobile']         = $api_in_waiting_order['mobile'];
+            $api_url_arr = get_api_data('transfer_status_check', $api_data);
+            $result = CallAPI( $api_url_arr['site_url'], $api_url_arr['api'], $api_url_arr['params_data']);
+            $result_arr = explode(':', $result);
+
+            $order_id = $api_in_waiting_order['id'];
+            $status = '';
+            if($result_arr[0] == '1')
+                $status = 'completed';
+            elseif ($result_arr[0] == '3')
+                $status = 'rejected';
+
+            if($status != '')
+                $this->api_change_order_status_by_id($order_id, $status);
+        }
+    }
+
+    private function api_change_order_status_by_id($order_id, $status){
+
+        $order = Order::find($order_id);
+
+        $user_in_order = User::select('type')->where('id', $order->user_id)->get()[0];
+        if($user_in_order['type'] == 'agent' && $order->original_order_id != null){
+            $child_order = Order::find($order->original_order_id);
+            $child_order->status = $status;
+            $child_order->save();
+        }
+        $order->status = $status;
+
+        if($order->selected_packet_id != '' && $status == 'rejected'){
+            $user = User::find($order->user_id);
+            $user->balance += $order->admin_price;
+            $user->save();
+
+            if($user_in_order['type'] == 'agent' && $order->original_order_id != null){
+                $child_order = Order::find($order->original_order_id);
+                $child_user = User::find($child_order->user_id);
+                $child_user->balance += $child_order->admin_price;
+                $child_user->save();
+            }
+
+            if(Auth::user()->type == 'agent'){
+                $parent_order_id = Order::select('id')->where('original_order_id', $order_id)->get()[0]['id'];
+                $parent_order = Order::find($parent_order_id);
+                $parent_order->delete();
+            }
+        }
+        $order->save();
+        return;
     }
 }

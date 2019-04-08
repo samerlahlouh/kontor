@@ -71,9 +71,12 @@ return [
     'select_packet'         => 'اختر الباقة',
     'offers'                => 'العروض',
     'all_packets'           => 'كل الباقات',
-    'operator'              => 'الشركة',
     'message'               => 'رسالة',
+    'select_packet_warning' => 'من فضلك اختر باقة للتحويل أولا.',
+    'disabled_cancel_warning'           => 'لا يمكنك الغاء هذا الطلب.',
     'balance_is_not_enough_warning'        => 'رصيدك لايكفي لاتمام هذه العملية',
+    'refresh_is_working'                => 'تحديث الجدول يعمل',
+    'refresh_is_stopped'                => 'تحديث الجدول متوقف',
 
     // Home when is admin
     'name_of_user'          => 'المستخدم',

@@ -271,6 +271,4 @@ class GroupController extends Controller
             }
         }
     }
-
-
 }

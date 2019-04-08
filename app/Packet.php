@@ -11,13 +11,14 @@ class Packet extends Model
 {
     protected $table = 'packets';
     protected $fillable = [
-        'operator', 'sms', 'minutes', 'internet', 'type', 'price', 'is_global', 'is_teens', 'name', 'notes'
+        'operator', 'sms', 'minutes', 'internet', 'type', 'price', 'is_global', 'is_teens', 'name', 'notes', 'api_id'
     ];
 
     public function get_packets_table(){
         $allPackets = DB::table("packets")
             ->select('id',
                     "name",
+                    "api_id as api",
                     "operator",
                     "sms",
                     "minutes",

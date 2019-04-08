@@ -53,6 +53,8 @@ class RegisterController extends Controller
     public function showRegistrationForm()
     {
         $types = $this->getEnumValues('users', 'type');
+        unset($types['admin']);
+
         return view('auth.register', ['types'=>$types]);
     }
 

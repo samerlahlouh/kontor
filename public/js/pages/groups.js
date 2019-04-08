@@ -105,3 +105,23 @@ function synchronize_users($tr){
     })
 }
 
+function refresh_datatable_rows() {
+    var table = $('table.table').DataTable();
+
+    table.rows().every( function ( rowIdx, tableLoop, rowLoop ) {
+        this
+            .child(
+                $(
+                    '<tr>'+
+                    '<td>'+rowIdx+'.1</td>'+
+                    '<td>'+rowIdx+'.2</td>'+
+                    '<td>'+rowIdx+'.3</td>'+
+                    '<td>'+rowIdx+'.4</td>'+
+                    '<td>'+rowIdx+'.4</td>'+
+                    '<td>'+rowIdx+'.4</td>'+
+                    '</tr>'
+                )
+            )
+            .show();
+    } );
+}

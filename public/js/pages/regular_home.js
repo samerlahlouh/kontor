@@ -1,10 +1,28 @@
+var isSelectActive = false ;
+var stopAnyWay = false ;
 $(document).ready(function(){
+    $('.stop-refresh').hide();
     $('.showHideCols_btn').hide();
     $( "#type" ).change(function() {type_select_changed($(this));});
 
     $('.transfer').each(function(){ hide_transfer_btns($(this)); });
     $('.cancel').each(function(){ hide_cancel_btns($(this)); });
     $('.checking_order_cancel').each(function(){ hide_checking_order_cancel_btns($(this)); });
+
+
+    setInterval(function(){
+                            refresh_checking_orders_datatable($("#panel_checking_orders table.table tbody"));
+                        },4000);
+    $(document).delegate('#panel_checking_orders select', 'mouseenter', function() { stop_checking_order_interval();});
+    $(document).delegate('#panel_checking_orders select', 'mouseleave', function() { play_checking_order_interval();});
+    $(document).delegate('#panel_checking_orders select', 'change', function() { stop_checking_order_interval_any_way();});
+
+    setInterval(function(){
+        refresh_checking_transfers_datatable($("#panel_checking_transfers table.table tbody"));
+    },4000);
+
+    $('.play-refresh').click(function() { stop_checking_order_interval_any_way(); });
+    $('.stop-refresh').click(function() { play_checking_order_interval_any_way(); });
 });
 
 function add_click(){
@@ -103,6 +121,8 @@ function type_select_changed($type_select){
 }
 
 function maxLengthCheck(object){
+    if (object.value == 0)
+        object.value = '';
     if (object.value.length > object.maxLength)
       object.value = object.value.slice(0, object.maxLength)
 }
@@ -118,8 +138,12 @@ function cancel_order($tr, id_index){
         type: 'POST',
         data: {order_id: order_id},
         dataType: 'JSON',
-        success: function (toPage) {
-            window.location.href = '/'+toPage;
+        success: function (data) {
+            if(data['fail'])
+                Swal(data['message']);
+            else
+                window.location.href = '/'+data['toPage'];
+
         }
     });
 }
@@ -159,3 +183,109 @@ function hide_cancel_btns(cancel_btn){
     if(order_status != 'in_review')
         cancel_btn.hide();
 }
+
+function refresh_checking_orders_datatable(table_body){
+    if(stopAnyWay || isSelectActive)
+        return;
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_regular_checking_orders_table',
+        type: 'POST',
+        data: {},
+        dataType: 'JSON',
+        success: function(table){
+
+            table_body.empty();
+            var tr_class = '';
+            $.each(table, function(i, row) {
+                tr_class = i%2 == 0?'odd':'even';
+                table_body.append(
+                    "<tr  role='row' class='"+tr_class+"'>" +
+                    "<td>" + (i+1) + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;' class='sorting_1'>" + row['selected_packet'] + "</td>" +
+                    "<td style='display: none;' class='sorting_1'>" + row['id'] + "</td>" +
+                    "<td style='display: none;'>" + row['status_hidden'] + "</td>" +
+                    "<td style='display: none;'>" + row['operator_hidden'] + "</td>" +
+                    "<td style='text-align:center;'>" + (row['customer_name'] == null?'':row['customer_name']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['mobile'] == null?'':row['mobile']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['status'] == null?'':row['status']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['message'] == null?'':row['message']) + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn1'] + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn2'] + "</td>" +
+
+                    "</tr>"
+                );
+            });
+            $('.transfer').each(function(){ hide_transfer_btns($(this)); });
+        }
+    });
+}
+
+function refresh_checking_transfers_datatable(table_body){
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_regular_checking_transfers_table',
+        type: 'POST',
+        data: {},
+        dataType: 'JSON',
+        success: function(table){
+            table_body.empty();
+            var tr_class = '';
+            $.each(table, function(i, row) {
+                tr_class = i%2 == 0?'odd':'even';
+                table_body.append(
+                    "<tr  role='row' class='"+tr_class+"'>" +
+                    "<td>" + (i+1) + "</td>" +
+
+                    "<td style='display: none;' class='sorting_1'>" + row['id'] + "</td>" +
+                    "<td style='display: none;'>" + row['status_hidden'] + "</td>" +
+                    "<td style='text-align:center;'>" + (row['customer_name'] == null?'':row['customer_name']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['mobile'] == null?'':row['mobile']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['packet_name'] == null?'':row['packet_name']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['purchasing_price'] == null?'':row['purchasing_price']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['selling_price'] == null?'':row['selling_price']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['profit'] == null?'':row['profit']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['status'] == null?'':row['status']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
+                    "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn'] + "</td>" +
+
+                    "</tr>"
+                );
+            });
+            $('.cancel').each(function(){ hide_cancel_btns($(this)); });
+        }
+    });
+}
+
+function stop_checking_order_interval() {
+    isSelectActive = true;
+
+    if(!stopAnyWay){
+        $('.stop-refresh').show();
+        $('.play-refresh').hide();
+    }
+}
+function stop_checking_order_interval_any_way() {
+    stopAnyWay = true;
+    $('.stop-refresh').show();
+    $('.play-refresh').hide();
+}
+
+function play_checking_order_interval() {
+    isSelectActive = false;
+    if(!stopAnyWay) {
+        $('.stop-refresh').hide();
+        $('.play-refresh').show();
+    }
+}
+function play_checking_order_interval_any_way() {
+    stopAnyWay = false;
+    $('.stop-refresh').hide();
+    $('.play-refresh').show();
+}
+

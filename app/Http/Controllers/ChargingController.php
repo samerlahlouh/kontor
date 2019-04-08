@@ -131,12 +131,14 @@ class ChargingController extends Controller
     }
 
     public function store_regular_charing(Request $request){
+
         $this->is_regular_validate($request);
 
         $newData = $request->all();
         unset($newData['id'], $newData['_token']);
         $userId = Auth::user()->id;
         $user = User::find($userId);
+        $parent_user = User::find($user->created_by_user_id);
 
         $newData['user_id'] = $userId;
         $newData['status'] = 'in_waiting';
@@ -145,6 +147,12 @@ class ChargingController extends Controller
         $newData['request_date'] = Carbon::now();
 
         Charging::create($newData);
+
+        if($parent_user->type != 'agent'){
+            $msg_title = 'يوجد طلب تحويل مبلغ من :'.$user->name;
+            $msg_body = $newData['amount'];
+            sendMessage($msg_title, $msg_body);
+        }
 
         return redirect("/regular_chargings")->with('success', __('main_lng.done_successfully'));
     }

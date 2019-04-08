@@ -7,9 +7,17 @@ $checking_orders_btns = [
 
 <div class="page-header">
 <!-- START panel-->
-<div id="panelDemo9" class="panel panel-info">
+<div id="panel_checking_orders" class="panel panel-info">
     <div class="panel-heading bg-purple">
          {{__('home_lng.checking_orders') }}
+        <a class="{{$pull}} play-refresh">
+            {{__('home_lng.refresh_is_working') }}
+            <i class="fa fa-pause-circle refresh-btn"></i>
+        </a>
+        <a class="{{$pull}} stop-refresh">
+            {{__('home_lng.refresh_is_stopped') }}
+            <i class="fa fa-play-circle refresh-btn"></i>
+        </a>
     </div>
         <!-- Start body -->
         <div class="panel-body">

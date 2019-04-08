@@ -33,12 +33,19 @@ Route::post('/get_packets_by_operator_and_type','HomeController@get_packets_by_o
 Route::post('/cancel_order_by_id','HomeController@cancel_order_by_id')->middleware(AgentAndRegular::class);
 Route::post('/make_packet_in_transfer_status','HomeController@make_packet_in_transfer_status')->middleware(AgentAndRegular::class);
 
+Route::post('/get_regular_checking_orders_table','HomeController@get_regular_checking_orders_table')->middleware(AgentAndRegular::class);
+Route::post('/get_regular_checking_transfers_table','HomeController@get_regular_checking_transfers_table')->middleware(AgentAndRegular::class);
+
 // Admin
 Route::post('/change_order_status_by_id','HomeController@change_order_status_by_id')->middleware(AdminAndAgent::class);
 Route::post('/change_charging_status_by_id','HomeController@change_charging_status_by_id')->middleware(AdminAndAgent::class);
 Route::post('/send_result_to_user','HomeController@send_result_to_user')->middleware(AdminAndAgent::class);
 Route::post('/get_unavailable_packets_by_user','HomeController@get_unavailable_packets_by_user')->middleware(AdminAndAgent::class);
 Route::post('/make_packet_in_transfer_status_for_regular', 'HomeController@make_packet_in_transfer_status_for_regular')->middleware(IsAgent::class);
+
+Route::post('/get_checking_orders_table','HomeController@get_checking_orders_table')->middleware(AdminAndAgent::class);
+Route::post('/get_checking_transfers_table','HomeController@get_checking_transfers_table')->middleware(AdminAndAgent::class);
+Route::post('/get_chargings_table','HomeController@get_chargings_table')->middleware(AdminAndAgent::class);
 //------------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- Current User -----------------------------------------------------//
@@ -115,4 +122,3 @@ Route::post('/store_group_user','GroupController@store_group_user')->middleware(
 Route::delete('/group_users/{user_id}','GroupController@destroy_group_user')->middleware(IsAdmin::class);
 Route::post('synchronize_users', 'GroupController@synchronize_users')->middleware(IsAdmin::class);
 //---------------------------------------------------------------------------------------------------------//
-

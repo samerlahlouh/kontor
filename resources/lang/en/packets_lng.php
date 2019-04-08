@@ -12,6 +12,7 @@ return [
     'is_teens'      => 'Is Teens',
     'packets'       => 'Packets',
     'name'          => 'Name',
+    'api_id'        => 'Api Id',
     'users'         => 'Users',
     'user'          => 'User',
     'packet_price'  => 'Purchasing Price',
@@ -23,6 +24,6 @@ return [
     'purchasing_price'=> 'Purchasing Price',
     'selling_price' => 'Selling Price',
     'notes'         => 'Notes',
-    'is_available_for_all' => 'Is Available For All'
+    'is_available_for_all' => 'Is Available For All',
 
 ];

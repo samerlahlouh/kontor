@@ -78,6 +78,8 @@ function tableInit(){
 //Highlighting rows and columns
 function highlightingColsRows(table){
     $('table.table tbody').on( 'mouseenter', 'td', function () {
+        if(!table.cell(this).index())
+            return;
         var colIdx = table.cell(this).index().column;
 
         $( table.cells().nodes() ).removeClass( 'highlight' );
