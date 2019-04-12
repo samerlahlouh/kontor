@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Educators\Packet;
 use Educators\User;
 use Educators\User_Packet;
+use Educators\Group;
 use Auth;
 use View;
 
@@ -19,6 +20,20 @@ class PacketController extends Controller
 
     //------------------------------------------------indexes-----------------------------------------------//
     public function index(){
+
+//        $operators_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
+//        $data = file_get_contents ($operators_file_path);
+//        $json = json_decode($data, true);
+//
+//        $json['operators']['new_op']['kod'] = '555555555555555555555555555555555555';
+//
+//
+//        $formattedData = json_encode($json);
+//        $handle = fopen($operators_file_path,'w+');
+//        fwrite($handle,$formattedData);
+//        fclose($handle);
+//        return'ssssss';
+
         View::share('page_js', 'packets');
         $packets = $this->packet_model->get_packets_table();
 
@@ -135,6 +150,7 @@ class PacketController extends Controller
 
             $is_available_for_all = $request->input('is_available_for_all');
             $is_available_for_all = $is_available_for_all?true:false;
+            $this->creat_new_group_packets($newPacket->id, $newPacket->price);
             $this->creat_new_user_packets($newPacket->id, $is_available_for_all, $newPacket->price);
         }
 
@@ -204,7 +220,7 @@ class PacketController extends Controller
             'is_global' =>'required',
             'is_teens'  =>'required',
             'price'     =>'required',
-            'api_id'     =>'required',
+            'api_id'     =>'required|unique:packets',
         );
         $this->validate($request ,$rules);
     }
@@ -243,6 +259,18 @@ class PacketController extends Controller
             $newUserPacket['is_available'] = $is_available_for_all;
             $newUserPacket['admin_price'] = $packet_operator_price + 5;
             $newUserPacket['user_price'] = $packet_operator_price + 7;
+            User_Packet::create($newUserPacket);
+        }
+    }
+
+    private function creat_new_group_packets($packet_id, $packet_operator_price){
+        $groups = Group::all();
+        $newUserPacket = [];
+        foreach ($groups as $group) {
+            $newUserPacket['group_id'] = $group->id;
+            $newUserPacket['packet_id'] = $packet_id;
+            $newUserPacket['admin_price'] = $packet_operator_price + 3;
+            $newUserPacket['user_price'] = $packet_operator_price + 5;
             User_Packet::create($newUserPacket);
         }
     }

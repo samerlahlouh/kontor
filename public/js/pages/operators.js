@@ -3,15 +3,23 @@ $(document).ready(function(){
     $('#btn_add').on( 'click', function(){add_click();});
     $('#btn_edit').on( 'click', function(){edit_click(table);});
     $('#btn_del').on( 'click', function(){del_click(table);});
+
+    $('#submit_edit_btn').on('click', function(){
+        $("#operator").prop('disabled', false);
+    })
 });
 
 function add_click(){
     $('#submit_add_btn').show();
     $('#submit_edit_btn').hide();
 
+    $("#operator").prop('disabled', false);
     $('#operator').val('');
+    $('#user_name').val('');
+    $('#password').val('');
+    $('#api_operator').val('');
     $('#post_type').val('add');
-    
+
     $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
     $("#modal_addEdit").modal("show");
 }
@@ -21,17 +29,19 @@ function edit_click(table){
         Swal(LANGS['DATA_TABLE']['row_select_warning']);
     }else{
         operator = table.rows('.selected').data()[0][1];
-
-        if(operator == 'turkcell' || operator == 'vodafone'){
-            Swal(LANGS['DATA_TABLE']['protected_element_warning']);
-            return;
-        }
+        api_user_name = table.rows('.selected').data()[0][2];
+        api_password = table.rows('.selected').data()[0][3];
+        api_operator = table.rows('.selected').data()[0][4];
 
         $('#submit_add_btn').hide();
         $('#submit_edit_btn').show();
-    
+
+        $("#operator").prop('disabled', true);
         $('#old_operator').val(operator);
         $('#operator').val(operator);
+        $('#api_user_name').val(api_user_name);
+        $('#api_password').val(api_password);
+        $('#api_operator').val(api_operator);
         $('#post_type').val('edit');
 
         $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);

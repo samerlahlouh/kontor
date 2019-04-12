@@ -26,6 +26,15 @@ begin_modal('modal_addEdit');
         begin_row();
             create_input_group('operator', __('operators_lng.operator'), 'fa fa-building', 'text');
         end_row();
+        begin_row();
+            create_input_group('api_user_name', __('operators_lng.api_user_name'), 'fa fa-user', 'text');
+        end_row();
+        begin_row();
+            create_input_group('api_password', __('operators_lng.api_password'), 'fa fa-hashtag', 'text');
+        end_row();
+        begin_row();
+            create_input_group('api_operator', __('operators_lng.api_operator'), 'fa fa-building', 'text');
+        end_row();
     echo Form::close();
 end_modal(['close', 'add', 'edit'], 'form_addEdit');
 

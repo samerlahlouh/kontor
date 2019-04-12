@@ -3,13 +3,19 @@ $(document).ready(function(){
     $('#btn_add').on( 'click', function(){add_click();});
     $('#btn_edit').on( 'click', function(){edit_click(table);});
     $('#btn_del').on( 'click', function(){del_click(table);});
+
+    $('#submit_edit_btn').on('click', function(){
+        $("#type").prop('disabled', false);
+    })
 });
 
 function add_click(){
     $('#submit_add_btn').show();
     $('#submit_edit_btn').hide();
 
+    $("#type").prop('disabled', false);
     $('#type').val('');
+    $('#real_type_name').val('');
     $('#post_type').val('add');
     
     $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
@@ -21,17 +27,15 @@ function edit_click(table){
         Swal(LANGS['DATA_TABLE']['row_select_warning']);
     }else{
         type = table.rows('.selected').data()[0][1];
-
-        if(type == 'combo' || type == 'internet' || type == 'minutes' || type == 'packet' || type == 'tl'){
-            Swal(LANGS['DATA_TABLE']['protected_element_warning']);
-            return;
-        }
+        real_type_name = table.rows('.selected').data()[0][2];
 
         $('#submit_add_btn').hide();
         $('#submit_edit_btn').show();
-    
+
+        $("#type").prop('disabled', true);
         $('#old_type').val(type);
         $('#type').val(type);
+        $('#real_type_name').val(real_type_name);
         $('#post_type').val('edit');
 
         $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);

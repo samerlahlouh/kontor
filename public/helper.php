@@ -115,66 +115,19 @@ function get_transfer_status_check_api_data($data){
     return $api_data;
 }
 function get_operator_data($operator){
-     // You need real data here
-    $params_data = [];
-    switch ($operator) {
-        case 'turkcell':
-            {
-                $params_data = array(
-                    'kod'       => '5555555555',
-                    'sifre'     => '5555555555',
-                    'operator'  => 'Turkcell'
-                );
+    $operators_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
+    $data = file_get_contents ($operators_file_path);
+    $json = json_decode($data, true);
 
-            }
-            break;
-        case 'vodafone':
-            {
-                $params_data = array(
-                    'kod'       => '5555555555',
-                    'sifre'     => '5555555555',
-                    'operator'  => 'Vodafone'
-                );
+    return $json['operators'][$operator];
 
-            }
-            break;
-        case 'avia':
-            {
-                $params_data = array(
-                    'kod'       => '5555555555',
-                    'sifre'     => '5555555555',
-                    'operator'  => 'Avia'
-                );
-
-            }
-            break;
-    }
-
-    return $params_data;
 }
 function get_real_type_name($type){
-     // You need real data here
-    switch ($type) {
-        case 'internet':
-            $real_name = 'Internet';
-        break;
-        case 'minutes':
-            $real_name = 'Minutes';
-        break;
-        case 'tl':
-            $real_name = 'Tl';
-        break;
-        case 'combo':
-            $real_name = 'Combo';
-        break;
-        case 'packet':
-            $real_name = '3gCep';
-        break;
-        default:
-            $real_name = $type;
-    }
+    $operators_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
+    $data = file_get_contents ($operators_file_path);
+    $json = json_decode($data, true);
 
-    return $real_name;
+    return $json['types'][$type];
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------------//
 
@@ -217,5 +170,17 @@ function sendMessage($title, $message)
     curl_close($ch);
 
     return $response;
+}
+
+function recursive_change_key($arr, $set) { // $new_arr = recursive_change_key($old_arr, array('old_key1' => 'new_key1', 'old_key2' => 'new_key2'));
+    if (is_array($arr) && is_array($set)) {
+        $newArr = array();
+        foreach ($arr as $k => $v) {
+            $key = array_key_exists( $k, $set) ? $set[$k] : $k;
+            $newArr[$key] = is_array($v) ? recursive_change_key($v, $set) : $v;
+        }
+        return $newArr;
+    }
+    return $arr;
 }
 ?>

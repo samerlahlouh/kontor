@@ -26,6 +26,10 @@ begin_modal('modal_addEdit');
         begin_row();
             create_input_group('type', __('packets_types_lng.type'), 'fa fa-sitemap', 'text');
         end_row();
+
+        begin_row();
+            create_input_group('real_type_name', __('packets_types_lng.real_type_name'), 'fa fa-sitemap', 'text');
+        end_row();
     echo Form::close();
 end_modal(['close', 'add', 'edit'], 'form_addEdit');
 
