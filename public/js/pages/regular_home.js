@@ -120,11 +120,16 @@ function type_select_changed($type_select){
     });
 }
 
-function maxLengthCheck(object){
-    if (object.value == 0)
-        object.value = '';
-    if (object.value.length > object.maxLength)
-      object.value = object.value.slice(0, object.maxLength)
+function mobileFormat (object){
+    var mobile = object.value;
+    mobile = mobile.replace(/\s/g,'');
+    while(mobile[0] == '0')
+        mobile = mobile.slice(1);
+
+    if (mobile.length > object.maxLength)
+        mobile = mobile.slice(0, object.maxLength);
+
+    object.value = mobile;
 }
 
 function cancel_order($tr, id_index){

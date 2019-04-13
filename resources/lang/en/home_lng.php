@@ -52,7 +52,7 @@ return [
     'checking_orders'       => 'Checking Orders',
     'checked_orders'        => 'Checking Transfers',
     'number_processes'      => 'Number Processes',
-    'number'                => 'Number',
+    'number'                => 'Mobile',
     'check_number'          => 'Check Number',
     'transfer'              => 'Transfer',
     'customer_name'         => 'Customer',

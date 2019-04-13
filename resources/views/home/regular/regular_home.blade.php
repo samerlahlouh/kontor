@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-
 <?php
 $pull = $lang == 'en'? 'pull-right':'pull-left';
 $btns = [
@@ -14,7 +13,7 @@ echo Form::open(['id'=>'form_number_processes', 'action' => 'UserController@upda
     begin_incubated_child_card();
         begin_row();
             begin_row();
-                create_input_group('number', __('home_lng.number'), 'fas fa-mobile', 'number', [], ['oninput'=>"maxLengthCheck(this)", 'maxlength'=> '10']);
+                create_input_group('number', __('home_lng.number'), 'fas fa-mobile', 'number', [], ['oninput'=>"mobileFormat(this)", 'maxlength'=> '10']);
             end_row();
             begin_row();
                 create_input_group('selected_operator', __('home_lng.operator'), 'fa fa-building', 'select', $select_operators, [], 'turkcell');

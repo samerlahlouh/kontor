@@ -20,20 +20,6 @@ class PacketController extends Controller
 
     //------------------------------------------------indexes-----------------------------------------------//
     public function index(){
-
-//        $operators_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
-//        $data = file_get_contents ($operators_file_path);
-//        $json = json_decode($data, true);
-//
-//        $json['operators']['new_op']['kod'] = '555555555555555555555555555555555555';
-//
-//
-//        $formattedData = json_encode($json);
-//        $handle = fopen($operators_file_path,'w+');
-//        fwrite($handle,$formattedData);
-//        fclose($handle);
-//        return'ssssss';
-
         View::share('page_js', 'packets');
         $packets = $this->packet_model->get_packets_table();
 
