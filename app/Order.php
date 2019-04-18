@@ -115,8 +115,11 @@ class Order extends Model
         $orders = DB::table("orders")
             ->leftJoin('users', 'users.id', '=', 'orders.user_id')
             ->leftJoin('orders AS parent_orders', 'orders.id', '=', 'parent_orders.original_order_id')
+            ->leftJoin('orders AS child_orders', 'child_orders.id', '=', 'orders.original_order_id')
+            ->leftJoin('users AS child_users', 'child_users.id', '=', 'child_orders.user_id')
             ->select('orders.id',
                     "users.name as name_of_user",
+                    "child_users.name as name_of_child_user",
                     "orders.customer_name",
                     "orders.mobile",
                     "orders.created_at as request_date",
@@ -131,7 +134,15 @@ class Order extends Model
         elseif($status)
             $orders->whereIn("orders.status", $status);
 
-        return $orders->get();
+        $orders = $orders->get();
+
+        foreach ($orders as $order){
+            if($order->name_of_child_user)
+                $order->name_of_user .= ' - ' . $order->name_of_child_user;
+            unset($order->name_of_child_user);
+        }
+        
+        return $orders;
     }
 
     public function get_admin_orders_with_extra_culomns_table($status=[]){
@@ -139,9 +150,12 @@ class Order extends Model
         $orders = DB::table("orders")
                     ->leftJoin('packets', 'packets.id', '=', 'orders.selected_packet_id')
                     ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+                    ->leftJoin('orders AS child_orders', 'child_orders.id', '=', 'orders.original_order_id')
+                    ->leftJoin('users AS child_users', 'child_users.id', '=', 'child_orders.user_id')
             ->select('orders.id',
                     'orders.status as status_hidden',
                     'users.name as name_of_user',
+                    "child_users.name as name_of_child_user",
                     'orders.mobile',
                     'packets.name as packet_name',
                     "packets.price as purchasing_price",
@@ -162,7 +176,16 @@ class Order extends Model
             ->whereNotIn("orders.operator", $operators_that_have_api);
 
         if($status)
-            $orders->whereIn("status", $status);
-        return $orders->get();
+            $orders->whereIn("orders.status", $status);
+
+        $orders = $orders->get();
+
+        foreach ($orders as $order){
+            if($order->name_of_child_user)
+                $order->name_of_user .= ' - ' . $order->name_of_child_user;
+            unset($order->name_of_child_user);
+        }
+
+        return $orders;
     }
 }

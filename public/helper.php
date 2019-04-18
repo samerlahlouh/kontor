@@ -40,8 +40,7 @@ function get_operators_that_have_api(){
     $operators_arr=[];
     foreach ($operators as $key => $operator)
         if($operator['is_api'])
-            foreach ($operator as $operator_single_data)
-                $operators_arr[$key] = $operator_single_data;
+            $operators_arr[$key] = $key;
 
 
     return $operators_arr;
