@@ -37,12 +37,14 @@ function get_operators_that_have_api(){
     $variables = get_app_variables();
     $operators = $variables['operators'];
 
-    foreach ($operators as $key => $operator){
-        if(!$operator['is_api'])
-            unset($operators[$key]);
-    }
+    $operators_arr=[];
+    foreach ($operators as $key => $operator)
+        if($operator['is_api'])
+            foreach ($operator as $operator_single_data)
+                $operators_arr[$key] = $operator_single_data;
 
-    return $operators;
+
+    return $operators_arr;
 }
 
 function get_api_data($type, $data) // $data = ['order_id' => order_id, 'operator' => operator, 'packet_type' => packet_type, 'mobile' => mobile, 'api_id' => api_id] Chosen Columns

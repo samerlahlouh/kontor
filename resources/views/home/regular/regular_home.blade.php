@@ -9,7 +9,7 @@ $btns = [
 ];
 
 begin_card('fa fa-rocket', __('home_lng.number_processes') );
-echo Form::open(['id'=>'form_number_processes', 'action' => 'UserController@update_own_account', 'method'=>'POST','enctype'=>'multipart/form-data']) ;
+echo Form::open(['id'=>'form_number_processes', 'action' => 'HomeController@check_number', 'method'=>'POST','enctype'=>'multipart/form-data']) ;
     begin_incubated_child_card();
         begin_row();
             begin_row();
