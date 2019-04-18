@@ -40,25 +40,16 @@ return [
         ],
 
         'mysql' => [
-//                'host' =>  '127.0.0.1',
-//                'driver' => 'mysql',
-//                'database' => 'surat_kontor',
-//                'username' => 'root',
-//                'password' => '',
-//                'charset' => 'utf8',
-//                'collation' => 'utf8_unicode_ci',
-//                'prefix' => '',
-
-
-                 'driver' => 'mysql',
-                 'host' =>  'us-cdbr-iron-east-03.cleardb.net',
-                 'database' => 'heroku_302a0087085450f',
-                 'username' => 'b27b1058c6f81a',
-                 'password' => '1c273e12',
-                 'charset' => 'utf8mb4',
-                 'collation' => 'utf8mb4_unicode_ci',
-                 'prefix' => '',
-                 'strict' => false,
+            'driver' => 'mysql',
+            'host' =>  env('DB_HOST', 'us-cdbr-iron-east-03.cleardb.net'),
+            'database' => env('DB_DATABASE', 'heroku_302a0087085450f'),
+            'username' => env('DB_USERNAME', 'b27b1058c6f81a'),
+            'password' => env('DB_PASSWORD', '1c273e12'),
+            'charset' => env('DB_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_COLLECTION', 'utf8mb4_unicode_ci'),
+            'prefix' => '',
+            'strict' => env('DB_STRICT', false),
+            'port' => env('DB_PORT', '3306'),
         ],
 
         'pgsql' => [
