@@ -396,7 +396,12 @@ class HomeController extends Controller
         $order->status = 'in_review';
         $order->operator_price = $packet->price;
         $order->admin_price = $user_packets->admin_price;
-        $order->user_price = $user_packets->user_price;
+
+        $child_user = User::where('id', $child_order['user_id'])->get()[0];
+        $child_packet = Packet::where('id', $child_order['selected_packet_id'])->get()[0];
+        $child_user_packet = User_Packet::where('packet_id', $child_packet['id'])->where('user_id', $child_user['id'])->get()[0];
+
+        $order->user_price = $child_user_packet['admin_price'];
 
         $is_fail = false;
         $message = '';
@@ -408,6 +413,9 @@ class HomeController extends Controller
                 $message = $result;
         }else{
             $user->balance -= $order->admin_price;
+
+            if($user->type == 'agent')
+                $user->balance += $order->user_price;
 
             $user->save();
             $order->save();
@@ -488,6 +496,8 @@ class HomeController extends Controller
             $user->save();
 
             if($user_in_order['type'] == 'agent' && $order->original_order_id != null){
+                $user->balance -= $order->user_price;
+                $user->save();
                 $child_order = Order::find($order->original_order_id);
                 $child_user = User::find($child_order->user_id);
                 $child_user->balance += $child_order->admin_price;
@@ -716,10 +726,15 @@ class HomeController extends Controller
         $order = Order::where('id', $orderId)->get()[0];
         $user = User::where('id', $order['user_id'])->get()[0];
         $parent_user = User::where('id', $user['created_by_user_id'])->get()[0];
+        $packet = Packet::where('id', $order['selected_packet_id'])->get()[0];
+        $user_packet = User_Packet::where('packet_id', $packet['id'])->where('user_id', $user['id'])->get()[0];
+        $parent_user_packet = User_Packet::where('packet_id', $packet['id'])->where('user_id', $parent_user['id'])->get()[0];
         if($parent_user['type'] == 'agent'){
             $newData['user_id'] = $parent_user['id'];
             $newData['original_order_id'] = $orderId;
             $newData['status'] = 'selecting_packet';
+            $newData['admin_price'] = $parent_user_packet['admin_price'];
+            $newData['user_price'] = $user_packet['admin_price'];
             Order::create($newData);
         }
     }
