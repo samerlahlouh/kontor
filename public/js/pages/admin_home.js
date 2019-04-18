@@ -113,6 +113,7 @@ function unselect_all(){
 }
 
 function select_teen_packet(){
+    unselect_all();
     $('.operator_packets').each(function (){
         if($(this).is(':visible'))
             $(this).find(".teen_is_1").prop( "checked", true );
