@@ -2,7 +2,7 @@
     <div class="container">
         <div class="row  big-footer">
             <div class="col">
-                <span class="copyright">Copyright &copy; {{ __('layout_lng.edu_logo') }}</span>
+                <span class="copyright">Copyright &copy; {{ get_app_name() }}</span>
             </div>
             <div id="social-media" class="col">
                 <ul class="list-inline social-buttons">
@@ -38,7 +38,7 @@
         <div class="small-footer">
             <div class="row">
                 <div class="col">
-                    <span class="copyright">Copyright &copy; {{ __('layout_lng.edu_logo') }}</span>
+                    <span class="copyright">Copyright &copy; {{ get_app_name() }}</span>
                     <ul class="list-inline quicklinks">
                         <li class="list-inline-item">
                             <a id="lng_en" class="lang" val="en" href="">{{ __('layout_lng.en') }}</a>

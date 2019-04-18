@@ -7,6 +7,7 @@ return [
     'contact_us'        => 'اتصل بنا',
     'users'             => 'المستخدمين',
     'general_settings'  => 'إعدادات عامة',
+    'settings'          => 'الاعدادات',
     'packets'           => 'الباقات',
     'transfer'          => 'تحويل رصيد',
     'groups'            => 'المجموعات',

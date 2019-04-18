@@ -122,3 +122,8 @@ Route::post('/store_group_user','GroupController@store_group_user')->middleware(
 Route::delete('/group_users/{user_id}','GroupController@destroy_group_user')->middleware(IsAdmin::class);
 Route::post('synchronize_users', 'GroupController@synchronize_users')->middleware(IsAdmin::class);
 //---------------------------------------------------------------------------------------------------------//
+
+//----------------------------------------------- Groups --------------------------------------------------//
+Route::get('/app_settings', 'SettingsController@index')->middleware(IsAdmin::class);
+Route::post('', 'SettingsController@update')->middleware(IsAdmin::class);
+//---------------------------------------------------------------------------------------------------------//

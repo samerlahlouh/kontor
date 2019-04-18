@@ -9,7 +9,7 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{!! Session::token() !!}">
 
-        <title>{{ __('layout_lng.edu_logo') }}</title>
+        <title>{{ get_app_name() }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Fonts -->

@@ -35,6 +35,9 @@ begin_modal('modal_addEdit');
         begin_row();
             create_input_group('api_operator', __('operators_lng.api_operator'), 'fa fa-building', 'text');
         end_row();
+        begin_row();
+            echo create_checkbox('is_api', __('operators_lng.is_api'), '', 0);
+        end_row();
     echo Form::close();
 end_modal(['close', 'add', 'edit'], 'form_addEdit');
 

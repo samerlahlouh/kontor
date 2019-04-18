@@ -6,4 +6,5 @@ return [
     'api_user_name'             => 'اسم المتخدم',
     'api_password'              => 'كلمة السر',
     'api_operator'              => 'اسم الشركة الحقيقي',
+    'is_api'                    => 'هل هي API',
 ];

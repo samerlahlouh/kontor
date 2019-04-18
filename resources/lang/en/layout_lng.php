@@ -7,6 +7,7 @@ return [
     'contact_us'        => 'Contact Us',
     'users'             => 'Users',
     'general_settings'  => 'General Settings',
+    'settings'          => 'Setting',
     'packets'           => 'Packets',
     'chargings'         => 'Chargings',
     'my_chargings'      => 'My Chargings',

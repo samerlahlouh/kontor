@@ -34,17 +34,20 @@
 }
 
 function get_operators_that_have_api(){
-    // You need real data here
-     return [
-         // 'turkcell',
-         'vodafone',
-         'avia'
-     ];
+    $variables = get_app_variables();
+    $operators = $variables['operators'];
+
+    foreach ($operators as $key => $operator){
+        if(!$operator['is_api'])
+            unset($operators[$key]);
+    }
+
+    return $operators;
 }
 
 function get_api_data($type, $data) // $data = ['order_id' => order_id, 'operator' => operator, 'packet_type' => packet_type, 'mobile' => mobile, 'api_id' => api_id] Chosen Columns
 {
-    $site_url = 'http://bayi.heteb.com/servis';
+    $site_url = get_site_url();
     $api_data = [];
     if($type == 'user_status_check')
         $api_data = get_user_status_check_api_data($data); // $data = ['operator' => operator]
@@ -114,27 +117,39 @@ function get_transfer_status_check_api_data($data){
 
     return $api_data;
 }
-function get_operator_data($operator){
-    $operators_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
-    $data = file_get_contents ($operators_file_path);
-    $json = json_decode($data, true);
 
-    return $json['operators'][$operator];
+function get_operator_data($operator){
+    $variables = get_app_variables();
+    return $variables['operators'][$operator];
 
 }
 function get_real_type_name($type){
-    $operators_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
-    $data = file_get_contents ($operators_file_path);
+    $variables = get_app_variables();
+    return $variables['types'][$type];
+}
+
+function get_app_name(){
+    $variables = get_app_variables();
+    return $variables['app_title'];
+}
+function get_site_url(){
+    $variables = get_app_variables();
+        return $variables['site_url'];
+}
+function get_app_variables(){
+    $variables_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';
+    $data = file_get_contents ($variables_file_path);
     $json = json_decode($data, true);
 
-    return $json['types'][$type];
+    return $json;
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------------//
 
 function sendMessage($title, $message)
 {
-    $app_id = "c4b1a2cc-5d2e-4873-a348-a3c7b94c01b6";
-    $rest_api_key = "ZTY5ODYyOTQtZGZmMi00NmEwLTg2ODYtOWU3YmNlZDkwNWE4";
+    $variables = get_app_variables();
+    $app_id = $variables['send_notification_app_id'];
+    $rest_api_key = $variables['send_notification_rest_api_key'];
     $heading = array(
         "en" => $title
     );
@@ -151,8 +166,6 @@ function sendMessage($title, $message)
     );
 
     $fields = json_encode($fields);
-//        print("\nJSON sent:\n");
-//        print($fields);
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, "https://onesignal.com/api/v1/notifications");

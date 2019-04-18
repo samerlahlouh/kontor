@@ -1,1 +1,33 @@
-{"operators":{"turkcell":{"kod":"5555555555","sifre":"5555555555","operator":"Turkcell"},"vodafone":{"kod":"5555555555","sifre":"5555555555","operator":"Vodafone"},"avia":{"kod":"5555555555","sifre":"5555555555","operator":"Avia"}},"types":{"internet":"Internet","minutes":"Minutes","tl":"TL","combo":"Combo","packet":"3gCep"}}
+{
+  "operators": {
+    "turkcell": {
+      "kod": "5555555555",
+      "sifre": "5555555555",
+      "operator": "Turkcell",
+      "is_api": false
+    },
+    "vodafone": {
+      "kod": "5555555555",
+      "sifre": "5555555555",
+      "operator": "Vodafone",
+      "is_api": true
+    },
+    "avia": {
+      "kod": "5555555555",
+      "sifre": "5555555555",
+      "operator": "Avia",
+      "is_api": true
+    }
+  },
+  "types": {
+    "internet": "Internet",
+    "minutes": "Minutes",
+    "tl": "TL",
+    "combo": "Combo",
+    "packet": "3gCep"
+  },
+  "app_title": "Surat Kontor",
+  "site_url": "http:\/\/bayi.heteb.com\/servis",
+  "send_notification_app_id": "c4b1a2cc-5d2e-4873-a348-a3c7b94c01b6",
+  "send_notification_rest_api_key": "ZTY5ODYyOTQtZGZmMi00NmEwLTg2ODYtOWU3YmNlZDkwNWE4"
+}

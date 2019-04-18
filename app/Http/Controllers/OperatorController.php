@@ -22,6 +22,8 @@ class OperatorController extends Controller
             $operator_data = [];
             $operator_data[$operator_from_db] = $operator_from_db;
             $operator_data += get_operator_data($operator_from_db);
+            $operator_data['is_api_hidden'] = $operator_data['is_api'];
+            $operator_data['is_api'] = $operator_data['is_api']?__('main_lng.yes'):__('main_lng.no');
             array_push($operators,  $operator_data);
         }
 
@@ -30,6 +32,8 @@ class OperatorController extends Controller
             __('operators_lng.api_user_name'),
             __('operators_lng.api_password'),
             __('operators_lng.api_operator'),
+            'is_api_hidden',
+            __('operators_lng.is_api'),
         ];
 
         return view('operators', [
@@ -41,11 +45,13 @@ class OperatorController extends Controller
     public function store(Request $request){
         $this->is_validate($request);
 
+        $is_api = $request->input('is_api');
         $operator   = $request->input('operator');
         $post_type  = $request->input('post_type');
         $operator_data['api_user_name']  = $request->input('api_user_name');
         $operator_data['api_password']  = $request->input('api_password');
         $operator_data['api_operator']  = $request->input('api_operator');
+        $operator_data['is_api'] = isset($is_api);
 
         $operators = $this->getEnumValues('packets', 'operator');
         if($post_type == 'add'){
@@ -53,14 +59,11 @@ class OperatorController extends Controller
             $this->add_and_edit_operator_to_json_file($operator, $operator_data);
         }elseif($post_type == 'edit'){
             $old_operator   = $request->input('old_operator');
-            $packets = Packet::where('operator', $old_operator)->get();
-            if( count($packets) > 0 )
-                return redirect("/operators")->with('error', __('operators_lng.this_element_used_warning'));        
-            $operators[$old_operator] = $operator; 
+            $operators[$old_operator] = $operator;
             $this->operator_model->update_operators_field($operators);
             $this->add_and_edit_operator_to_json_file($old_operator, $operator_data);
         }
-        
+
         return redirect("/operators")->with('success', __('main_lng.done_successfully'));
     }
 

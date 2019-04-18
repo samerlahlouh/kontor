@@ -19,6 +19,7 @@ function add_click(){
     $('#password').val('');
     $('#api_operator').val('');
     $('#post_type').val('add');
+    $( "#is_api" ).prop( "checked", false );
 
     $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['add']);
     $("#modal_addEdit").modal("show");
@@ -32,6 +33,7 @@ function edit_click(table){
         api_user_name = table.rows('.selected').data()[0][2];
         api_password = table.rows('.selected').data()[0][3];
         api_operator = table.rows('.selected').data()[0][4];
+        is_api = table.rows('.selected').data()[0][6];
 
         $('#submit_add_btn').hide();
         $('#submit_edit_btn').show();
@@ -43,6 +45,7 @@ function edit_click(table){
         $('#api_password').val(api_password);
         $('#api_operator').val(api_operator);
         $('#post_type').val('edit');
+        $( "#is_api" ).prop( "checked", is_api );
 
         $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);
         $("#modal_addEdit").modal("show");

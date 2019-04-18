@@ -6,4 +6,5 @@ return [
     'api_user_name'             => 'API Uesr Name',
     'api_password'              => 'API Password',
     'api_operator'              => 'API Operator',
+    'is_api'                    => 'Is API',
 ];
