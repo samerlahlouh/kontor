@@ -16,12 +16,12 @@ class ChargingController extends Controller
     public function __construct(){
         $this->charging_model = new Charging();
     }
-    
+
     //------------------------------------------ Indexes --------------------------------------------//
     public function index(){
         View::share('page_js', 'chargings');
         $chargings = $this->charging_model->get_chargings_table();
-        
+
         $select_users       = [];
         $select_types       = [];
         $select_statuses    = [];
@@ -92,6 +92,8 @@ class ChargingController extends Controller
     public function store(Request $request){
         $current_user = Auth::user();
         $newData = $request->all();
+        if(!$newData['request_date'])
+            $newData['request_date'] = Carbon::now();
         $this->add_is_validate($request);
         unset($newData['id'], $newData['_token']);
         $user = User::find($newData['user_id']);
@@ -119,7 +121,7 @@ class ChargingController extends Controller
                 $current_user->balance += $newData['amount'];
         }
 
-        if($current_user->balance < 0){
+        if($current_user->type == 'agent' && $current_user->balance < 0){
             return redirect("/chargings")->with('error', __('chargings_lng.balance_is_not_enough_warning'));
         }
 
@@ -204,11 +206,10 @@ class ChargingController extends Controller
             'type'              =>'required',
             'status'            =>'required',
             'amount'            =>'required|not_in:0',
-            'request_date'      =>'required',
         );
         $this->validate($request ,$rules);
     }
-    
+
 
     public function edit_is_validate($request){
         $rules = array(
@@ -223,7 +224,7 @@ class ChargingController extends Controller
         $charging = Charging::where('id', $id)->select('*',
                                                         DB::raw('DATE(`request_date`) as request_date'),
                                                         DB::raw('DATE(`response_date`) as response_date'))->get()[0];
-        return response()->json($charging); 
+        return response()->json($charging);
     }
 
     public function delete_charging(Request $request){

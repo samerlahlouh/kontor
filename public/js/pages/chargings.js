@@ -27,7 +27,7 @@ function add_click(){
     $('#type').val(0);
     $('#status').val(0);
     $('#amount').val(0);
-    $('#request_date').val('');
+    set_date_to_be_today('request_date');
     $('#response_date').val('');
     $('#notes').val('');
     
@@ -83,4 +83,15 @@ function del_click(table){
             }
         })
     }
+}
+
+function set_date_to_be_today(input_element_id){
+    var now = new Date();
+
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+
+    $('#'+input_element_id).val(today);
 }
