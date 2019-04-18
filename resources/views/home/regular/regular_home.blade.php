@@ -22,7 +22,7 @@ echo Form::open(['id'=>'form_number_processes', 'action' => 'HomeController@chec
                 create_input_group('customer_name', __('home_lng.customer_name'), 'fa fa-user', 'text');
             end_row();    
         next_col();
-            create_input_group('message', __('home_lng.message'), 'fa fa-comment-o', 'textarea');
+            create_input_group('message', __('home_lng.message'), 'fa fa-comment-o', 'textarea', [], ['rows'=>5]);
         end_row();
     end_incubated_child_card();
 echo Form::close();
