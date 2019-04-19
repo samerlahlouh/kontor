@@ -119,3 +119,9 @@ function synchronize_user($tr){
         }
     })
 }
+
+function change_password($tr){
+    var $table = $('table.table').DataTable();
+    var user_id = $table.row($tr).data()[1];
+        window.location.href = '/change_user_password/'+user_id;
+}

@@ -93,6 +93,13 @@ class UserController extends Controller
                                     ]);
     }
 
+    public function index_change_user_password($user_id){
+        $user = User::find($user_id);
+        if($user->created_by_user_id != Auth::user()->id)
+            return redirect()->back();
+
+        return view('change_user_password', ['user_id'=>$user_id]);
+    }
 
     //------------------------------------------Actions--------------------------------------------//
     public function update_own_account(Request $request){
@@ -199,6 +206,20 @@ class UserController extends Controller
         return response()->json();
     }
 
+    public function update_user_password(Request $request){
+        $this->update_user_password_validator($request);
+        $this->test_update_user_password($request);
+
+        $user_id = $request->input('user_id');
+        $user = User::find($user_id);
+
+        $user->password = Hash::make($request->input('new_password'));
+
+        $user->save();
+
+        return redirect("/change_user_password/$user_id")->with('success', __('main_lng.done_successfully'));
+    }
+
 
     //------------------------------------------Functions--------------------------------------------//
     public function update_validator($request){
@@ -219,6 +240,15 @@ class UserController extends Controller
             $rules['new_password'] = 'required';
             $rules['confirm_password'] = 'required';
         }
+        $this->validate($request ,$rules);
+    }
+
+    public function update_user_password_validator($request){
+        $rules = array(
+            'new_password'              =>'required',
+            'confirm_password'         =>"required",
+        );
+
         $this->validate($request ,$rules);
     }
 
@@ -245,6 +275,20 @@ class UserController extends Controller
             throw new ValidationException($validator);
         }
         
+    }
+
+    private function test_update_user_password($request){
+        $new_password       = $request->input('new_password');
+        $confirm_password   = $request->input('confirm_password');
+
+        $isNewMatchOfConfirm = $new_password == $confirm_password;
+
+        $validator = Validator::make([], []);
+        if (!$isNewMatchOfConfirm) {
+            $validator->errors()->add('password', __('change_user_password_lng.confirm_password_error'));
+            throw new ValidationException($validator);
+        }
+
     }
 
     protected function create_validator($request){

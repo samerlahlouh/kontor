@@ -59,6 +59,8 @@ Route::get('/users', 'UserController@index_users')->middleware(AdminAndAgent::cl
 Route::post('deactivate_user', 'UserController@deactivate_user')->middleware(AdminAndAgent::class);
 Route::post('activate_user', 'UserController@activate_user')->middleware(AdminAndAgent::class);
 Route::post('synchronize_user', 'UserController@synchronize_user')->middleware(IsAdmin::class);
+Route::get('/change_user_password/{user_id}', 'UserController@index_change_user_password')->middleware(AdminAndAgent::class);
+Route::post('/update_user_password','UserController@update_user_password')->middleware(AdminAndAgent::class);
 
 // User packets
 Route::get('/user_packets/{user_id}', 'UserController@index_user_packets')->middleware(AdminAndAgent::class);

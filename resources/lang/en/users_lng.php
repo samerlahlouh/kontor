@@ -23,5 +23,6 @@ return [
     'user_packets'      => 'User Packets',
     'group'             => 'Group',
     'synchronize'       => 'Synchronize',
-    'group_name'        => 'group'
+    'group_name'        => 'group',
+    'password'          => 'Password'
 ];

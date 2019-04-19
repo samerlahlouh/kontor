@@ -23,5 +23,6 @@ return [
     'user_packets'      => 'باقات المستخدم',
     'group'             => 'المجموعة',
     'synchronize'       => 'مزامنة',
-    'group_name'        => 'المجموعة'
+    'group_name'        => 'المجموعة',
+    'password'          => 'كلمة السر'
 ];
