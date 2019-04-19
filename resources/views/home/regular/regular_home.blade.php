@@ -2,7 +2,7 @@
 
 @section('content')
 <?php
-$pull = $lang == 'en'? 'pull-right':'pull-left';
+$pull = $lang == 'ar'? 'pull-left':'pull-right';
 $btns = [
     create_button('', __('home_lng.check_number'), "btn btn-primary $pull", 'margin-left:2px;margin-right:2px;', 'fa fa-search', '', 'onclick="check_number()"'),
     create_button('btn_transfer', __('home_lng.transfer'), "btn btn-success $pull", 'margin-left:2px;margin-right:2px;', 'fa fa-rocket', '', 'onclick="add_click()"')

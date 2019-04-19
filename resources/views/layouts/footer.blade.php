@@ -29,6 +29,9 @@
                         <a id="lng_en" class="lang" val="en" href="">{{ __('layout_lng.en') }}</a>
                     </li>
                     <li  class="list-inline-item">
+                        <a id="lng_tr" class="lang" val="tr" href="">{{ __('layout_lng.tr') }}</a>
+                    </li>
+                    <li  class="list-inline-item">
                         <a id="lng_ar" class="lang" val="ar" href="">{{ __('layout_lng.ar') }}</a>
                     </li>
                 </ul>
@@ -42,6 +45,9 @@
                     <ul class="list-inline quicklinks">
                         <li class="list-inline-item">
                             <a id="lng_en" class="lang" val="en" href="">{{ __('layout_lng.en') }}</a>
+                        </li>
+                        <li  class="list-inline-item">
+                            <a id="lng_tr" class="lang" val="tr" href="">{{ __('layout_lng.tr') }}</a>
                         </li>
                         <li  class="list-inline-item">
                             <a id="lng_ar" class="lang" val="ar" href="">{{ __('layout_lng.ar') }}</a>
@@ -104,7 +110,7 @@
     <script src="{{ asset('DataTable/datatables.js') }}" ></script>
     <script src = "https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="{{ asset('js/pages/data_table.js') }}" ></script>
-    
+
     <!-- Sweet alert JavaScript-->
     <script src="{{ asset('my-tools/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <script href="https://cdn.jsdelivr.net/npm/promise-polyfill@7/dist/polyfill.min.js"></script>
@@ -121,7 +127,7 @@
     <!--___________________________________Special java script____________________________________-->
 
     <script src="{{ asset('js/pages/layout.js') }}" ></script>
-    
+
     <script>
         $(window).load(function () {
             $('.loading').hide();

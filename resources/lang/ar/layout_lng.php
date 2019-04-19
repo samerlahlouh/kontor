@@ -23,4 +23,5 @@ return [
     'logout'            => 'تسجيل الخروج',
     'en'                => 'English',
     'ar'                => 'العربية',
+    'tr'                => 'Türkçe',
 ];
