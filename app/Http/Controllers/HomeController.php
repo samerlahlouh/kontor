@@ -726,10 +726,10 @@ class HomeController extends Controller
         $order = Order::where('id', $orderId)->get()[0];
         $user = User::where('id', $order['user_id'])->get()[0];
         $parent_user = User::where('id', $user['created_by_user_id'])->get()[0];
-        $packet = Packet::where('id', $order['selected_packet_id'])->get()[0];
-        $user_packet = User_Packet::where('packet_id', $packet['id'])->where('user_id', $user['id'])->get()[0];
-        $parent_user_packet = User_Packet::where('packet_id', $packet['id'])->where('user_id', $parent_user['id'])->get()[0];
         if($parent_user['type'] == 'agent'){
+            $packet = Packet::where('id', $order['selected_packet_id'])->get()[0];
+            $user_packet = User_Packet::where('packet_id', $packet['id'])->where('user_id', $user['id'])->get()[0];
+            $parent_user_packet = User_Packet::where('packet_id', $packet['id'])->where('user_id', $parent_user['id'])->get()[0];
             $newData['user_id'] = $parent_user['id'];
             $newData['original_order_id'] = $orderId;
             $newData['status'] = 'selecting_packet';
