@@ -203,6 +203,10 @@ class HomeController extends Controller
     }
 
     public function transfer_packet(Request $request){
+        $toPage = 'home';
+        if(Auth::user()->type == 'agent')
+            $toPage = 'agent_transfer';
+
         $this->is_regular_transfer_validate($request);
         $user = Auth::user();
         $parent_user = User::find($user->created_by_user_id);
@@ -222,15 +226,13 @@ class HomeController extends Controller
         $newData['customer_name'] = $request->input('customer');
 
         if($user->balance < $newData['admin_price'])
-            return redirect("/home")->with('error', __('home_lng.balance_is_not_enough_warning'));
+            return redirect("/$toPage")->with('error', __('home_lng.balance_is_not_enough_warning'));
 
         $user->balance -= $newData['admin_price'];
 
         $user->save();
 
         $createdData = Order::create($newData);
-
-        $this->create_parent_order_by_transfer_status($createdData['id'], $newData);
 
         if($parent_user->type != 'agent' && $result = $this->transfer_by_api($createdData)){
             $order = Charging::find($createdData['id']);
@@ -241,18 +243,28 @@ class HomeController extends Controller
             $order->delete();
 
             return redirect("/home")->with('error', $result);
-        }
-        if($parent_user->type != 'agent'){
+        }elseif($parent_user->type != 'agent'){
             $referenced_to_user = User::find($newData['user_id']);
             $selected_packet = Packet::find($newData['selected_packet_id']);
             $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user->name.' - '.$selected_packet->name;
             $msg_body = $newData['mobile'];
             sendMessage($msg_title, $msg_body);
+        }else{
+            $this->create_parent_order_by_transfer_status($createdData['id'], $newData);
+            $data = $this->make_order_in_transfer_status_in_agent($createdData['id']);
+
+            if($data['is_fail']){
+                $order = Charging::find($createdData['id']);
+
+                $user->balance += $order->admin_price;
+                $user->save();
+
+                $order->delete();
+
+                return redirect("/home")->with('error', $data['message']);
+            }
         }
 
-        $toPage = 'home';
-        if(Auth::user()->type == 'agent')
-            $toPage = 'agent_transfer';
         return redirect("/$toPage");
     }
 
@@ -332,6 +344,7 @@ class HomeController extends Controller
             goto endPoint;
         }
         $user = Auth::user();
+        $old_user = $user->replicate();
         $parent_user = User::find($user->created_by_user_id);
         $user_id = Auth::user()->id;
         $order_id = $request->order_id;
@@ -340,6 +353,7 @@ class HomeController extends Controller
         $user_packets = User_Packet::where('user_id', $user_id)->where('packet_id', $selected_packet_id)->select('admin_price', 'user_price')->get()[0];
 
         $order = Order::find($order_id);
+        $old_order = $order->replicate();
         $order->selected_packet_id = $selected_packet_id;
         $order->status = 'in_review';
         $order->operator_price = $packet->price;
@@ -354,16 +368,33 @@ class HomeController extends Controller
             $message = $result;
         }else{
             $user->balance -= $order->admin_price;
-
             $user->save();
             $order->save();
-
             if($parent_user->type != 'agent'){
                 $referenced_to_user = User::find($order->user_id);
                 $selected_packet = Packet::find($order->selected_packet_id);
                 $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user->name.' - '.$selected_packet->name;
                 $msg_body = $order->mobile;
                 sendMessage($msg_title, $msg_body);
+            }else{
+                $returned_data = $this->make_order_in_transfer_status_in_agent($order_id);
+
+                if($returned_data['is_fail']){
+                    $user->balance = $old_user->balance;
+
+                    $order->selected_packet_id  = $old_order->selected_packet_id;
+                    $order->status              = $old_order->status;
+                    $order->operator_price      = $old_order->operator_price;
+                    $order->admin_price         = $old_order->admin_price;
+                    $order->user_price          = $old_order->user_price;
+
+                    $user->save();
+                    $order->save();
+
+                    $is_fail = $returned_data['is_fail'];
+                    $message = $returned_data['message'];
+                    goto endPoint;
+                }
             }
         }
         goto endPoint;
@@ -378,61 +409,7 @@ class HomeController extends Controller
         return response()->json($data);
     }
 
-    public function make_packet_in_transfer_status_for_regular(Request $request){
-        $user = Auth::user();
-        $child_order_id = $request->order_id;
-
-        $parent_order = Order::where('original_order_id', $child_order_id)->get()[0];
-        $child_order = Order::where('id', $child_order_id)->get()[0];
-
-        $order_id = $parent_order['id'];
-        $selected_packet_id = $child_order['selected_packet_id'];
-
-        $packet = Packet::find($selected_packet_id);
-        $user_packets = User_Packet::where('user_id', $user->id)->where('packet_id', $selected_packet_id)->select('admin_price', 'user_price')->get()[0];
-
-        $order = Order::find($order_id);
-        $order->selected_packet_id = $selected_packet_id;
-        $order->status = 'in_review';
-        $order->operator_price = $packet->price;
-        $order->admin_price = $user_packets->admin_price;
-
-        $child_user = User::where('id', $child_order['user_id'])->get()[0];
-        $child_packet = Packet::where('id', $child_order['selected_packet_id'])->get()[0];
-        $child_user_packet = User_Packet::where('packet_id', $child_packet['id'])->where('user_id', $child_user['id'])->get()[0];
-
-        $order->user_price = $child_user_packet['admin_price'];
-
-        $is_fail = false;
-        $message = '';
-        if($user->balance < $order->admin_price){
-            $is_fail = true;
-            $message = __('home_lng.balance_is_not_enough_warning');
-        }elseif($result = $this->transfer_by_api($order)){
-                $is_fail = true;
-                $message = $result;
-        }else{
-            $user->balance -= $order->admin_price;
-
-            if($user->type == 'agent')
-                $user->balance += $order->user_price;
-
-            $user->save();
-            $order->save();
-
-            $referenced_to_user = User::find($order->user_id);
-            $selected_packet = Packet::find($order->selected_packet_id);
-            $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user->name.' - '.$selected_packet->name;
-            $msg_body = $order->mobile;
-            sendMessage($msg_title, $msg_body);
-        }
-
-        $toPage = 'home';
-        $data['is_fail'] = $is_fail;
-        $data['message'] = $message;
-        $data['toPage'] = $toPage;
-        return response()->json($data);
-    }
+    public  function make_packet_in_transfer_status_for_regular(Request $request){     }
 
     public function get_regular_checking_orders_table()
     {
@@ -737,6 +714,51 @@ class HomeController extends Controller
             $newData['user_price'] = $user_packet['admin_price'];
             Order::create($newData);
         }
+    }
+
+    private function make_order_in_transfer_status_in_agent($order_id){
+        $regular_order_id = $order_id;
+        $agent_order_id = Order::where('original_order_id', $regular_order_id)->get()[0]['id'];
+
+        $agent_order = Order::find($agent_order_id);
+        $regular_order = Order::where('id', $regular_order_id)->get()[0];
+        $agent_user = User::find($agent_order['user_id']);
+        $regular_user = User::find($regular_order['user_id']);
+
+        $packet = Packet::find($regular_order['selected_packet_id']);
+        $user_packets = User_Packet::where('user_id', $agent_user->id)->where('packet_id', $regular_order['selected_packet_id'])->select('admin_price', 'user_price')->get()[0];
+
+        $agent_order->selected_packet_id = $regular_order['selected_packet_id'];
+        $agent_order->status = 'in_review';
+        $agent_order->operator_price = $packet->price;
+        $agent_order->admin_price = $user_packets->admin_price;
+
+        $regular_user_packet = User_Packet::where('packet_id', $packet->id)->where('user_id', $regular_user->id)->get()[0];
+
+        $agent_order->user_price = $regular_user_packet['admin_price'];
+
+        $is_fail = false;
+        $message = '';
+        if($result = $this->transfer_by_api($agent_order)){
+            $is_fail = true;
+            $message = $result;
+        }else{
+            $agent_user->balance = $agent_user->balance - $agent_order->admin_price + $agent_order->user_price;
+
+            $agent_user->save();
+            $agent_order->save();
+
+            $referenced_to_user_name = $agent_user->name. ' - '. $regular_user->name;
+            $selected_packet = Packet::find($agent_order->selected_packet_id);
+            $msg_title = 'يوجد طلب تحويل من :'.$referenced_to_user_name.' - '.$selected_packet->name;
+            $msg_body = $agent_order->mobile;
+            sendMessage($msg_title, $msg_body);
+        }
+
+        $data['is_fail'] = $is_fail;
+        $data['message'] = $message;
+
+        return $data;
     }
 
     private function send_result_to_parent_order($parentOrderId, $newData){

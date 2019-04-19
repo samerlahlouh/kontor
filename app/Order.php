@@ -11,7 +11,7 @@ class Order extends Model
 {
     protected $table = 'orders';
     protected $fillable = [
-        'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message', 'original_order_id', 'type'
+        'id', 'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message', 'original_order_id', 'type'
     ];
 
     public function get_regular_orders_with_all_fields_table($user_id){
