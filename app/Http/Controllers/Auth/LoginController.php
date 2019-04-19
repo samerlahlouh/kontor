@@ -28,6 +28,8 @@ class LoginController extends Controller
      * @var string
      */
     protected $redirectTo = '/home';
+//    protected $maxAttempts = 3;
+//    protected $decayMinutes = 1;
 
     /**
      * Create a new controller instance.
@@ -43,6 +45,13 @@ class LoginController extends Controller
         return array_merge($request->only($this->username(), 'password'), ['is_active' => 1]);
     }
 
+    protected function authenticated(Request $request, User $user){
+        $user->pass_error_counter = 0;
+        $user->save();
+
+        return redirect()->intended($this->redirectPath());
+    }
+
     /**
      * Get the failed login response instance.
      *
@@ -56,6 +65,13 @@ class LoginController extends Controller
         // Load user from database
         $user = User::where($this->username(), $request->{$this->username()})->first();
 
+        if($user->type != 'admin' && $user->is_active && $user && !\Hash::check($request->password, $user->password)){
+            if(++ $user->pass_error_counter == 3){
+                $user->pass_error_counter = 0;
+                $user->is_active = 0;
+            }
+            $user->save();
+        }
         // Check if user was successfully loaded, that the password matches
         // and active is not 1. If so, override the default error message.
         if ($user && \Hash::check($request->password, $user->password) && $user->active != 1) {

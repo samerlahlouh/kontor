@@ -118,6 +118,7 @@ class UserController extends Controller
 
         $user = User::find($user_id);
         $user->is_active = false;
+        $user->pass_error_counter = 0;
         $user->save();
 
         return response()->json();
@@ -128,6 +129,7 @@ class UserController extends Controller
 
         $user = User::find($user_id);
         $user->is_active = true;
+        $user->pass_error_counter = 0;
         $user->save();
 
         return response()->json();
