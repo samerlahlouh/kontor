@@ -24,5 +24,6 @@ return [
     'group'             => 'Group',
     'synchronize'       => 'Synchronize',
     'group_name'        => 'group',
-    'password'          => 'Password'
+    'password'          => 'Password',
+    'checking'          => 'Checking'
 ];

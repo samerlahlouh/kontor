@@ -24,5 +24,6 @@ return [
     'group'             => 'المجموعة',
     'synchronize'       => 'مزامنة',
     'group_name'        => 'المجموعة',
-    'password'          => 'كلمة السر'
+    'password'          => 'كلمة السر',
+    'checking'          => 'الفحص'
 ];

@@ -10,6 +10,7 @@ use Educators\User_Packet;
 use Educators\Charging;
 use Educators\Offer;
 use Auth;
+use Illuminate\Validation\ValidationException;
 use View;
 use Config;
 use Carbon\Carbon;
@@ -167,6 +168,15 @@ class HomeController extends Controller
     // Regular
     public function check_number(Request $request){
         $user = Auth::user();
+
+        if(!$user->is_checking_free && $user->balance < 1){
+            $returnData = array(__('home_lng.balance_is_not_enough_warning'));
+            return response()->json($returnData, 500);
+        }elseif(!$user->is_checking_free){
+            $user->balance--;
+            $user->save();
+        }
+
         $parent_user = User::find($user->created_by_user_id);
         $newData = [];
         $number         = $request->number;
@@ -181,6 +191,7 @@ class HomeController extends Controller
         $newData['customer_name']   = $customer_name;
         $newData['created_at']      = Carbon::now();
         $newData['message']         = $message;
+        $newData['is_number_checked']= '1';
         $createdDate = Order::create($newData);
 
         $this->create_or_update_parent_order($createdDate['id'], $newData);
@@ -286,10 +297,16 @@ class HomeController extends Controller
 
     public function cancel_order_by_id(Request $request){
         $user = Auth::user();
+
         $order_id = $request->order_id;
         $parent_user = User::find($user->created_by_user_id);
 
         $order = Order::find($order_id);
+
+        if($order->is_number_checked && !$user->is_checking_free){
+            $user->balance++;
+            $user->save();
+        }
 
         if($order->selected_packet_id != ''){
             $operators_that_have_api = get_operators_that_have_api();
@@ -309,6 +326,7 @@ class HomeController extends Controller
 
             $user->balance += $order->admin_price;
 
+            $user->save();
             if($parent_user->type == 'agent'){
                 $parent_order_id = Order::where('original_order_id', $order_id)->get()[0]['id'];
                 $parent_order = Order::find($parent_order_id);
@@ -467,8 +485,14 @@ class HomeController extends Controller
         }
         $order->status = $status;
 
+        $user = User::find($order->user_id);
+
+        if($status == 'rejected' && $order->is_number_checked &&  !$user->is_checking_free){
+            $user->balance++;
+            $user->save();
+        }
+
         if($order->selected_packet_id != '' && $status == 'rejected'){
-            $user = User::find($order->user_id);
             $user->balance += $order->admin_price;
             $user->save();
 

@@ -94,5 +94,6 @@ return [
     'unselect_all'          => 'Unselect All',
     'teen_packet'           => 'Teen Packets',
     'accept'                => 'Accept',
-    'transfer_done'         => 'Done'
+    'transfer_done'         => 'Done',
+    'created_by_user_name'  => 'Created By User'
 ];

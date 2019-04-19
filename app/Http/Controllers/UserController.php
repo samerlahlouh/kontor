@@ -51,7 +51,8 @@ class UserController extends Controller
             __('users_lng.type'),
             __('users_lng.group_name'),
             __('users_lng.balance'),
-            __('users_lng.credit')
+            __('users_lng.credit'),
+            'is_checking_free_hidden',
         ];
         return view('users', ['users'         => $users,
                                     'cols'          => $cols,
@@ -101,6 +102,26 @@ class UserController extends Controller
         return view('change_user_password', ['user_id'=>$user_id]);
     }
 
+    public function index_all_users(){
+        View::share('page_js', 'all_users');
+        $users = $this->user_model->get_all_users_table_with_extra_column();
+        $cols = [
+            'id',
+            'is_active_hidden',
+            __('users_lng.name'),
+            __('users_lng.created_by_user_name'),
+            __('users_lng.email'),
+            __('users_lng.mobile'),
+            __('users_lng.type'),
+            __('users_lng.balance'),
+            __('users_lng.credit'),
+            'is_checking_free_hidden',
+        ];
+        return view('all_users', ['users'         => $users,
+                                        'cols'          => $cols,
+        ]);
+    }
+
     //------------------------------------------Actions--------------------------------------------//
     public function update_own_account(Request $request){
         $this->update_validator($request);
@@ -137,6 +158,26 @@ class UserController extends Controller
         $user = User::find($user_id);
         $user->is_active = true;
         $user->pass_error_counter = 0;
+        $user->save();
+
+        return response()->json();
+    }
+
+    public function make_checking_paid(Request $request){
+        $user_id = $request->input('user_id');
+
+        $user = User::find($user_id);
+        $user->is_checking_free = false;
+        $user->save();
+
+        return response()->json();
+    }
+
+    public function make_checking_free(Request $request){
+        $user_id = $request->input('user_id');
+
+        $user = User::find($user_id);
+        $user->is_checking_free = true;
         $user->save();
 
         return response()->json();

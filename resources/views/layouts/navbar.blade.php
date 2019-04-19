@@ -83,15 +83,28 @@
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/groups">{{ __('layout_lng.groups') }}</a>
                     </li>
-                @endIf
-
-                @if(Auth::user() && (Auth::user()->type == 'admin' || Auth::user()->type == 'agent'))
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/users">{{ __('layout_lng.users') }}</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="usersDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('layout_lng.users') }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="usersDropdown">
+                            <a class="dropdown-item" href="/users">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                {{ __('layout_lng.settings') }}
+                            </a>
+                            <a class="dropdown-item" href="/all_users">
+                                <i class="fa fa-users" aria-hidden="true"></i>
+                                {{ __('layout_lng.all_users') }}
+                            </a>
+                        </div>
                     </li>
                 @endIf
 
-                @if(Auth::user() && (Auth::user()->type == 'agent'))
+                @if(Auth::user() && Auth::user()->type == 'agent')
+                    <li class="nav-item">
+                        <a class="nav-link js-scroll-trigger" href="/users">{{ __('layout_lng.users') }}</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/packets">{{ __('layout_lng.packets') }}</a>
                     </li>

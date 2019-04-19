@@ -4,9 +4,10 @@
 <?php
 $btns = [
     create_button('', __('users_lng.synchronize'), 'btn btn-success', '', 'fa fa-retweet', '', 'onclick="synchronize_user(this.parentNode.parentNode)"'),
-    create_button('', '', 'btn activator'),
+//    create_button('', '', 'btn activator'),
     create_button('', __('users_lng.password'), 'btn btn-info', '', 'fa fa-lock', '', 'onclick="change_password(this.parentNode.parentNode)"'),
-    create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"')
+    create_button('', __('users_lng.packets'), 'btn btn-primary', '', 'fas fa-box-open', '', 'onclick="show_packets(this.parentNode.parentNode)"'),
+//    create_button('', '', 'btn is_checking_free')
 ];
 
 

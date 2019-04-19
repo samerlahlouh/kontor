@@ -93,5 +93,6 @@ return [
     'unselect_all'          => 'الغاء تحديد الكل',
     'teen_packet'           => 'تحديد باقات الشباب',
     'accept'                => 'قبول',
-    'transfer_done'         => 'تم التحويل'
+    'transfer_done'         => 'تم التحويل',
+    'created_by_user_name'  => 'المستخدم المنشئ'
 ];

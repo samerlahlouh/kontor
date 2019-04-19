@@ -6,6 +6,7 @@ return [
     'about_us'          => 'About Us',
     'contact_us'        => 'Contact Us',
     'users'             => 'Users',
+    'all_users'         => 'All Users',
     'general_settings'  => 'General Settings',
     'settings'          => 'Setting',
     'packets'           => 'Packets',

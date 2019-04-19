@@ -6,6 +6,7 @@ return [
     'about_us'          => 'عنا',
     'contact_us'        => 'اتصل بنا',
     'users'             => 'المستخدمين',
+    'all_users'         => 'كل المستخدمين',
     'general_settings'  => 'إعدادات عامة',
     'settings'          => 'الاعدادات',
     'packets'           => 'الباقات',

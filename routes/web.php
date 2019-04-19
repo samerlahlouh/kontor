@@ -61,6 +61,9 @@ Route::post('activate_user', 'UserController@activate_user')->middleware(AdminAn
 Route::post('synchronize_user', 'UserController@synchronize_user')->middleware(IsAdmin::class);
 Route::get('/change_user_password/{user_id}', 'UserController@index_change_user_password')->middleware(AdminAndAgent::class);
 Route::post('/update_user_password','UserController@update_user_password')->middleware(AdminAndAgent::class);
+Route::post('make_checking_paid', 'UserController@make_checking_paid')->middleware(AdminAndAgent::class);
+Route::post('make_checking_free', 'UserController@make_checking_free')->middleware(AdminAndAgent::class);
+Route::get('/all_users', 'UserController@index_all_users')->middleware(IsAdmin::class);
 
 // User packets
 Route::get('/user_packets/{user_id}', 'UserController@index_user_packets')->middleware(AdminAndAgent::class);

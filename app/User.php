@@ -65,13 +65,34 @@ class User extends Authenticatable
                 "users.type",
                 "groups.name as group_name",
                 "users.balance",
-                "users.credit")
+                "users.credit",
+                "users.is_checking_free as is_checking_free_hidden")
             ->where("users.created_by_user_id", Auth::user()->id);
 
         if($group_id)
             $users->where("group_id", $group_id);
 
         $users->orderBy('is_active');
+
+        return $users->get();
+    }
+
+    public function get_all_users_table_with_extra_column(){
+        $users = DB::table("users")
+            ->leftJoin('users as created_by_users', 'created_by_users.id', '=', 'users.created_by_user_id')
+            ->select('users.id',
+                "users.is_active as is_active_hidden",
+                "users.name",
+                "created_by_users.name as created_by_user_name",
+                "users.email",
+                "users.mobile",
+                "users.type",
+                "users.balance",
+                "users.credit",
+                "users.is_checking_free as is_checking_free_hidden")
+            ->where("users.type", '<>', 'admin');
+
+        $users->orderBy('users.is_active');
 
         return $users->get();
     }

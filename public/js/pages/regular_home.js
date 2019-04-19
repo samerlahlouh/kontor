@@ -89,6 +89,10 @@ function check_number(){
             dataType: 'JSON',
             success: function (to_page) {
                 window.location.href = '/'+to_page;
+            },
+            error: function (data) {
+                var errors = data.responseJSON;
+                Swal(errors[0]);
             }
         });
         
