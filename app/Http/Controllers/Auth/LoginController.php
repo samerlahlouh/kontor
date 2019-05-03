@@ -67,7 +67,7 @@ class LoginController extends Controller
         // Load user from database
         $user = User::where($this->username(), $request->{$this->username()})->first();
 
-        if($user->type != 'admin' && $user->is_active && $user && !\Hash::check($request->password, $user->password)){
+        if($user && $user->type != 'admin' && $user->is_active && !\Hash::check($request->password, $user->password)){
             if(++ $user->pass_error_counter == 3){
                 $user->pass_error_counter = 0;
                 $user->is_active = 0;
