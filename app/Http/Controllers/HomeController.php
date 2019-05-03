@@ -142,6 +142,7 @@ class HomeController extends Controller
             __('home_lng.profit'),
             __('home_lng.status'),
             __('home_lng.request_date'),
+            __('home_lng.response_date'),
         ];
 
         // Format variables for send

@@ -78,6 +78,7 @@ return [
     'balance_is_not_enough_warning'     => 'Your balance is not enough to complete this process',
     'refresh_is_working'                => 'Refresh table is working',
     'refresh_is_stopped'                => 'Refresh table is stopped',
+    'response_date'         => 'Response Date',
 
     // Home when is admin
     'name_of_user'          => 'User',

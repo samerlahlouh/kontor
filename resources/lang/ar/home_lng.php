@@ -77,6 +77,7 @@ return [
     'balance_is_not_enough_warning'        => 'رصيدك لايكفي لاتمام هذه العملية',
     'refresh_is_working'                => 'تحديث الجدول يعمل',
     'refresh_is_stopped'                => 'تحديث الجدول متوقف',
+    'response_date'         => 'تاريخ الرد',
 
     // Home when is admin
     'name_of_user'          => 'المستخدم',

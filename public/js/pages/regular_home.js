@@ -261,6 +261,7 @@ function refresh_checking_transfers_datatable(table_body){
                     "<td style='text-align:center;'>" + (row['profit'] == null?'':row['profit']) + "</td>" +
                     "<td style='text-align:center;'>" + (row['status'] == null?'':row['status']) + "</td>" +
                     "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['response_date'] == null?'':row['response_date']) + "</td>" +
                     "<td style='text-align:center; padding-right: 4px ; padding-left: 4px;'>" + row['btn'] + "</td>" +
 
                     "</tr>"

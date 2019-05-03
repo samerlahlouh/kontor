@@ -97,7 +97,8 @@ class Order extends Model
                                 WHEN 'completed' THEN '".__('home_lng.completed')."'
                                 WHEN 'canceled' THEN '".__('home_lng.canceled')."' 
                             END) AS status"),
-                    "orders.created_at as request_date"
+                    "orders.created_at as request_date",
+                    "orders.updated_at as response_date"
                     )
             ->where("orders.user_id", $user_id)
             ->whereIn("orders.status", $status);
