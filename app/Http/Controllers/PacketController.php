@@ -24,10 +24,7 @@ class PacketController extends Controller
         $packets = $this->packet_model->get_packets_table();
 
         $operators = $this->getEnumValues('packets', 'operator');
-        $types = $this->getEnumValues('packets', 'type');
-
-        foreach ($types as $type)
-            $types[$type] = __($type);
+        $types = $this->get_types_for_select('turkcell');
 
         $is_global = ['1'=>__('main_lng.private'), '2'=>__('main_lng.global')];
         $is_teens = ['1'=>__('main_lng.no'), '2'=>__('main_lng.yes')];
@@ -197,6 +194,11 @@ class PacketController extends Controller
         return redirect("/packets")->with('success',  __('main_lng.done_successfully'));
     }
 
+    public function get_types_by_operator(Request $request){
+        $operator = $request->operator;
+        $select_types = $this->get_types_for_select($operator);
+        return response()->json($select_types);
+    }
 
     //------------------------------------------ Functions --------------------------------------------//
     public function is_validate($request){
@@ -222,7 +224,11 @@ class PacketController extends Controller
     public function get_packet(Request $request){
         $id = $request->id;
         $packet = Packet::where('id', $id)->get()[0];
-        return response()->json($packet); 
+        $select_types = $this->get_types_for_select($packet['operator']);
+
+        $response['packet'] = $packet;
+        $response['select_types'] = $select_types;
+        return response()->json($response);
     }
 
     private function creat_new_user_packets($packet_id, $is_available_for_all, $packet_operator_price){
@@ -284,5 +290,15 @@ class PacketController extends Controller
         $packet_id = $request->packet_id;
         $notes = Packet::where('id', $packet_id)->get()[0]['notes'];
         return response()->json($notes); 
+    }
+
+    private function  get_types_for_select($operator){
+        $types = get_operator_types($operator);
+
+        $select_types = [];
+        foreach ($types as $key=>$type)
+            $select_types[$key] = __($key);
+
+        return $select_types;
     }
 }

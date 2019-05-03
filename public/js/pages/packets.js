@@ -3,6 +3,7 @@ $(document).ready(function(){
     $('#btn_add').on( 'click', function(){add_click();});
     $('#btn_edit').on( 'click', function(){edit_click(table);});
     $('#btn_del').on( 'click', function(){del_click(table);});
+    $( "#operator" ).change(function() {operator_select_changed($(this));});
 });
 
 function add_click(){
@@ -42,22 +43,24 @@ function edit_click(table){
             type: 'POST',
             data: {id: id},
             dataType: 'JSON',
-            success: function (packet) { 
+            success: function (res) {
+                change_type_select_options(res['select_types']);
+
                 $('#submit_edit_btn').show();
                 $('#submit_add_btn').hide();
 
-                $('#id').val(packet['id']);
-                $('#name').val(packet['name']);
-                $('#api_id').val(packet['api_id']);
-                $('#operator').val(packet['operator']);
-                $('#sms').val(packet['sms']);
-                $('#minutes').val(packet['minutes']);
-                $('#internet').val(packet['internet']);
-                $('#type').val(packet['type']);
-                $('#price').val(packet['price']);
-                $('#is_global').val(packet['is_global']+1);
-                $('#is_teens').val(packet['is_teens']+1);
-                $('#notes').val(packet['notes']);
+                $('#id').val(res['packet']['id']);
+                $('#name').val(res['packet']['name']);
+                $('#api_id').val(res['packet']['api_id']);
+                $('#operator').val(res['packet']['operator']);
+                $('#sms').val(res['packet']['sms']);
+                $('#minutes').val(res['packet']['minutes']);
+                $('#internet').val(res['packet']['internet']);
+                $('#type').val(res['packet']['type']);
+                $('#price').val(res['packet']['price']);
+                $('#is_global').val(res['packet']['is_global']+1);
+                $('#is_teens').val(res['packet']['is_teens']+1);
+                $('#notes').val(res['packet']['notes']);
 
                 $('#modal_addEditLabel').text(LANGS['DATA_TABLE']['edit']);
                 $('.row_is_available_for_all').hide();
@@ -124,4 +127,30 @@ function show_notes($tr){
             });
         }
     });
+}
+
+function operator_select_changed($operator_select){
+    $('#type').val(0);
+    var operator = $operator_select.val();
+    $.ajax({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        url: '/get_types_by_operator',
+        type: 'POST',
+        data: {operator : operator},
+        dataType: 'JSON',
+        success: function (types) {
+            change_type_select_options(types);
+        }
+    });
+}
+
+function change_type_select_options(types) {
+    var output = [];
+    output.push('<option value="0" hidden disabled selected>'+ LANGS['PACKETS']['type'] +'</option>');
+    $.each(types, function(key, value){
+        output.push('<option value="'+ key +'">'+ value +'</option>');
+    });
+    $('#type').html(output.join(''));
 }

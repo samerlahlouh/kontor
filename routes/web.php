@@ -74,6 +74,7 @@ Route::post('/store_user_packets','UserController@store_user_packets')->middlewa
 Route::resource('packets', 'PacketController', ['only' => ['index', 'store', 'destroy'] ])->middleware(AdminAndAgent::class);
 Route::post('/get_packet','PacketController@get_packet')->middleware(AdminAndAgent::class);
 Route::post('/get_notes_of_packet','PacketController@get_notes_of_packet')->middleware('auth');
+Route::post('/get_types_by_operator','PacketController@get_types_by_operator')->middleware(IsAdmin::class);
 
 // Packet users
 Route::get('/packet_users/{packet_id}', 'PacketController@index_packet_users')->middleware(AdminAndAgent::class);
