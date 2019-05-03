@@ -42,6 +42,8 @@ class LoginController extends Controller
     }
 
     protected function credentials(Request $request) {
+        if(is_numeric($request->get('email')))
+            return array_merge(['mobile'=>$request->get('email'),'password'=>$request->get('password')], ['is_active' => 1]);
         return array_merge($request->only($this->username(), 'password'), ['is_active' => 1]);
     }
 
