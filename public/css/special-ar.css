@@ -371,3 +371,9 @@ and (max-width : 600px){
     margin-top: -4px;
     border-radius: 4px;
 }
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
