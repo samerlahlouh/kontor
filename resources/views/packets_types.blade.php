@@ -10,7 +10,7 @@
     </div>
         <!-- Start body -->
         <div class="panel-body">
-                {{createTable($packets_types_cols, $packets_types, [], ['add', 'edit', 'del']) }}
+                {{createTable($packets_types_cols, $packets_types, [], ['add', 'edit']) }}
         </div>
         <!-- End body -->
     </div>

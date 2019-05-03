@@ -11,7 +11,7 @@
             </div>
             <!-- Start body -->
             <div class="panel-body">
-                {{ createTable($cols, $users, [], ['add', 'del']) }}
+                {{ createTable($cols, $users, [], ['add']) }}
             </div>
             <!-- End body -->
         </div>

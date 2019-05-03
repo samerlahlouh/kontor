@@ -15,7 +15,7 @@
     </div>
         <!-- Start body -->
         <div class="panel-body">
-                {{createTable($operators_cols, $operators, $btns, ['add', 'edit', 'del']) }}
+                {{createTable($operators_cols, $operators, $btns, ['add', 'edit']) }}
         </div>
         <!-- End body -->
     </div>

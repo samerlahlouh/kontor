@@ -12,7 +12,7 @@ $btns = [
 
 $controlBtns = [];
 if(Auth::user()->type == 'admin')
-    $controlBtns = ['add', 'edit', 'del'];
+    $controlBtns = ['add', 'edit'];
 ?>
 
 <div class="page-header">
