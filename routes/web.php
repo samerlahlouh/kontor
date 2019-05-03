@@ -50,7 +50,7 @@ Route::post('/get_chargings_table','HomeController@get_chargings_table')->middle
 
 //---------------------------------------------- Current User -----------------------------------------------------//
 Route::get('/user_settings', 'UserController@index_settings')->middleware('auth');
-Route::post('', 'UserController@update_own_account')->middleware('auth');
+Route::post('/user_settings', 'UserController@update_own_account')->middleware('auth');
 //---------------------------------------------------------------------------------------------------------//
 
 //---------------------------------------------- All Users -----------------------------------------------------//
