@@ -58,7 +58,7 @@ if(Auth::user()->type == 'admin'){
                 create_input_group('type', __('packets_lng.type'), 'fa fa-sitemap', 'select', $types);
             end_row();
             begin_row();
-                create_input_group('price', __('packets_lng.price'), 'fa fa-money', 'number');
+                create_input_group('price', __('packets_lng.price'), 'fa fa-money', 'number', [], ['step'=> 'any']);
             end_row();
             begin_row();
                 create_input_group('is_global', __('packets_lng.is_global'), 'fa fa-users', 'select', $is_global, [], 'global');
