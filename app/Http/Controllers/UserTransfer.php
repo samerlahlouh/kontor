@@ -39,6 +39,7 @@ class UserTransfer extends Controller
             __('home_lng.mobile'),
             __('home_lng.status'),
             __('home_lng.request_date'),
+            __('home_lng.response_date'),
             __('home_lng.message'),
         ];
 

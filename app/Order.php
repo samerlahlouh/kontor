@@ -63,6 +63,7 @@ class Order extends Model
                                 WHEN 'canceled' THEN '".__('home_lng.canceled')."' 
                             END) AS status"),
                     "created_at as request_date",
+                    "updated_at as response_date",
                     "message"
                     )
             ->where("user_id", $user_id)
