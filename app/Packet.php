@@ -53,6 +53,7 @@ class Packet extends Model
             ->leftJoin('packets', 'packets.id', '=', 'user_packets.packet_id')
             ->select('user_packets.id',
                     "packets.name as packet_name",
+                    "packets.operator",
                     "user_packets.admin_price as purchasing_price",
                     "user_packets.user_price as selling_price",
                     'packets.id as packet_id'

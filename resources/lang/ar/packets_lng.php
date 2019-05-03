@@ -25,5 +25,6 @@ return [
     'selling_price' => 'سعر المبيع',
     'notes'         => 'ملاحظات',
     'is_available_for_all' => 'هل هي متاحة للجميع',
+    'packet'        => 'الباقة',
 
 ];

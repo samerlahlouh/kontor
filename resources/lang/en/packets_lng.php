@@ -25,5 +25,6 @@ return [
     'selling_price' => 'Selling Price',
     'notes'         => 'Notes',
     'is_available_for_all' => 'Is Available For All',
+    'packet'        => 'Packet',
 
 ];

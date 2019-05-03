@@ -89,7 +89,8 @@ class PacketController extends Controller
 
         $cols = [
             'id',
-            __('packets_lng.packet_name'),
+            __('packets_lng.packet'),
+            __('packets_lng.operator'),
             __('packets_lng.purchasing_price'),
             __('packets_lng.selling_price'),
             'packet_id',
