@@ -536,6 +536,11 @@ class HomeController extends Controller
 
         $charging = Charging::find($charging_id);
 
+        if($status == 'accepted' && $current_user->type == 'agent' && $current_user->balance < $charging->amount){
+            $is_fail = true;
+            $message = __('home_lng.balance_is_not_enough_warning');
+        }
+
         $user = User::find($charging->user_id);
         if($status == 'accepted'){
             $current_user->balance -= $charging->amount;
@@ -543,17 +548,11 @@ class HomeController extends Controller
             if($charging['type'] == 'credit')
                 $user->credit += $charging->amount;
         }
-
         $charging->status = $status;
 
-        if($status == 'accepted' && $current_user->type == 'agent' && $current_user->balance < $charging->amount){
-            $is_fail = true;
-            $message = __('home_lng.balance_is_not_enough_warning');
-        }else{
-            $current_user->save();
-            $user->save();
-            $charging->save();
-        }
+        $current_user->save();
+        $user->save();
+        $charging->save();
 
         $res_data['is_fail'] = $is_fail;
         $res_data['message'] = $message;
