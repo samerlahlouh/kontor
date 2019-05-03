@@ -536,6 +536,8 @@ class HomeController extends Controller
         if($status == 'accepted'){
             $current_user->balance -= $charging->amount;
             $user->balance += $charging->amount;
+            if($charging['type'] == 'credit')
+                $user->credit += $charging->amount;
         }
 
         $charging->status = $status;
