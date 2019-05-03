@@ -116,9 +116,6 @@ class ChargingController extends Controller
             $newData['balance_after'] = $user->balance;
 
             $user->credit -= $newData['amount'];
-
-            if($current_user->type == 'agent')
-                $current_user->balance += $newData['amount'];
         }
 
         if($current_user->type == 'agent' && $current_user->balance < 0){
