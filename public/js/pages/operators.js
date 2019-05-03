@@ -78,3 +78,9 @@ function del_click(table){
         })
     }
 }
+
+function show_operator_types($tr){
+    var $table = $('table.table').DataTable();
+    var operator = $table.row($tr).data()[1];
+    window.location.href = '/operator_types/'+operator;
+}

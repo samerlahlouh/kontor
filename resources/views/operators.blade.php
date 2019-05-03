@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<?php
+    $btns = [
+        create_button('', __('operators_lng.types'), 'btn btn-primary', '', 'fa fa-sitemap', '', 'onclick="show_operator_types(this.parentNode.parentNode)"'),
+    ];
+?>
 <div class="page-header">
 
  <!-- START panel-->
@@ -10,7 +15,7 @@
     </div>
         <!-- Start body -->
         <div class="panel-body">
-                {{createTable($operators_cols, $operators, [], ['add', 'edit', 'del']) }}
+                {{createTable($operators_cols, $operators, $btns, ['add', 'edit', 'del']) }}
         </div>
         <!-- End body -->
     </div>

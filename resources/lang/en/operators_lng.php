@@ -7,4 +7,7 @@ return [
     'api_password'              => 'API Password',
     'api_operator'              => 'API Operator',
     'is_api'                    => 'Is API',
+    'types'                     => 'Types',
+    'type'                      => 'Type',
+    'real_type_name'            => 'Real Type Name',
 ];

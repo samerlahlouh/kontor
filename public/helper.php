@@ -121,8 +121,17 @@ function get_transfer_status_check_api_data($data){
 
 function get_operator_data($operator){
     $variables = get_app_variables();
+    unset($variables['operators'][$operator]['types']);
     return $variables['operators'][$operator];
 
+}
+function get_operator_types($operator){
+    $variables = get_app_variables();
+    return $variables['operators'][$operator]['types'];
+}
+function get_all_types(){
+    $variables = get_app_variables();
+    return $variables['types'];
 }
 function get_real_type_name($type){
     $variables = get_app_variables();

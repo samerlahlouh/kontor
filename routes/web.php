@@ -104,6 +104,10 @@ Route::get('/regular_orders', 'OrderController@index')->middleware(AgentAndRegul
 Route::get('/operators', 'OperatorController@index')->middleware(IsAdmin::class);
 Route::post('/store','OperatorController@store')->middleware(IsAdmin::class);
 Route::delete('/operators/{operator}', 'OperatorController@destroy')->middleware(IsAdmin::class);
+
+Route::get('/operator_types/{operator}', 'OperatorController@index_types')->middleware(IsAdmin::class);
+Route::post('/store_operator_type','OperatorController@store_operator_type')->middleware(IsAdmin::class);
+Route::delete('/operator_types/{operator}', 'OperatorController@destroy_operator_type')->middleware(IsAdmin::class);
 //---------------------------------------------------------------------------------------------------------//
 
 //----------------------------------------------- Packets Types --------------------------------------------------//

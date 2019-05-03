@@ -7,4 +7,7 @@ return [
     'api_password'              => 'كلمة السر',
     'api_operator'              => 'اسم الشركة الحقيقي',
     'is_api'                    => 'هل هي API',
+    'types'                     => 'الانواع',
+    'type'                      => 'النوع',
+    'real_type_name'            => 'اسم النوع الحقيقي',
 ];

@@ -4,19 +4,37 @@
       "kod": "5555555555",
       "sifre": "5555555555",
       "operator": "Turkcell",
-      "is_api": false
+      "is_api": false,
+      "types": {
+        "internet": "Internet",
+        "minutes": "Minutes",
+        "tl": "TL",
+        "combo": "Combo",
+        "packet": "3gCep"
+      }
     },
     "vodafone": {
       "kod": "5555555555",
       "sifre": "5555555555",
       "operator": "Vodafone",
-      "is_api": true
+      "is_api": true,
+      "types": {
+        "internet": "Internet",
+        "minutes": "Minutes",
+        "tl": "TL",
+        "packet": "3gCep"
+      }
     },
     "avia": {
       "kod": "5555555555",
       "sifre": "5555555555",
       "operator": "Avia",
-      "is_api": true
+      "is_api": true,
+      "types": {
+        "internet": "Internet",
+        "minutes": "Minutes",
+        "tl": "TL"
+      }
     }
   },
   "types": {
