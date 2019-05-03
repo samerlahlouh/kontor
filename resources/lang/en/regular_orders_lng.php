@@ -1,6 +1,7 @@
 <?php
 return [
     'mobile'                => 'Mobile',
+    'operator'              => 'Operator',
     'customer_name'         => 'Customer',
     'packet'                => 'Packet',
     'packet_type'           => 'Packet Type',

@@ -21,6 +21,7 @@ class OrderController extends Controller
             'status_hidden',
             __('regular_orders_lng.customer_name'),
             __('regular_orders_lng.mobile'),
+            __('regular_orders_lng.operator'),
             __('regular_orders_lng.packet'),
             __('regular_orders_lng.packet_type'),
             __('regular_orders_lng.purchasing_price'),

@@ -169,6 +169,7 @@ function refresh_checking_orders_datatable(table_body){
                         "<td style='text-align:center;'>" + (row['name_of_user'] == null?'':row['name_of_user']) + "</td>" +
                         "<td style='text-align:center;'>" + (row['customer_name'] == null?'':row['customer_name']) + "</td>" +
                         "<td style='text-align:center;'>" + (row['mobile'] == null?'':row['mobile']) + "</td>" +
+                        "<td style='text-align:center;'>" + (row['operator'] == null?'':row['operator']) + "</td>" +
                         "<td style='text-align:center;'>" + (row['request_date'] == null?'':row['request_date']) + "</td>" +
                         "<td style='display: none;'>" + row['operator_hidden'] + "</td>" +
                         "<td style='display: none;'>" + row['user_id'] + "</td>" +
@@ -205,6 +206,7 @@ function refresh_checking_transfers_datatable(table_body){
                     "<td style='display: none;'>" + row['status_hidden'] + "</td>" +
                     "<td style='text-align:center;'>" + (row['name_of_user'] == null?'':row['name_of_user']) + "</td>" +
                     "<td style='text-align:center;'>" + (row['mobile'] == null?'':row['mobile']) + "</td>" +
+                    "<td style='text-align:center;'>" + (row['operator'] == null?'':row['operator']) + "</td>" +
                     "<td style='text-align:center;'>" + (row['packet_name'] == null?'':row['packet_name']) + "</td>" +
                     "<td style='text-align:center;'>" + (row['purchasing_price'] == null?'':row['purchasing_price']) + "</td>" +
                     "<td style='text-align:center;'>" + (row['selling_price'] == null?'':row['selling_price']) + "</td>" +

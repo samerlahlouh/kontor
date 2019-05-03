@@ -21,6 +21,7 @@ class Order extends Model
                     'orders.status as status_hidden',
                     "orders.customer_name",
                     "orders.mobile",
+                    "orders.operator",
                     'packets.name as packet_name',
                     'packets.name as type packet_type',
                     'orders.admin_price as purchasing_price',
@@ -53,6 +54,7 @@ class Order extends Model
                     "operator as operator_hidden",
                     "customer_name",
                     "mobile",
+                    "operator",
                     DB::raw("(CASE status 
                                 WHEN 'check_pending' THEN '".__('orders_lng.check_pending')."' 
                                 WHEN 'selecting_packet' THEN '".__('orders_lng.selecting_packet')."' 
@@ -85,6 +87,7 @@ class Order extends Model
                     'orders.status as status_hidden',
                     "orders.customer_name",
                     "orders.mobile",
+                    "orders.operator",
                     'packets.name as packet_name',
                     'orders.admin_price as purchasing_price',
                     'orders.user_price as selling_price',
@@ -124,6 +127,7 @@ class Order extends Model
                     "child_users.name as name_of_child_user",
                     "orders.customer_name",
                     "orders.mobile",
+                    "orders.operator",
                     "orders.created_at as request_date",
                     'orders.operator as operator_hidden',
                     'users.id as user_id',
@@ -159,6 +163,7 @@ class Order extends Model
                     'users.name as name_of_user',
                     "child_users.name as name_of_child_user",
                     'orders.mobile',
+                    'orders.operator',
                     'packets.name as packet_name',
                     "packets.price as purchasing_price",
                     "orders.admin_price as selling_price",

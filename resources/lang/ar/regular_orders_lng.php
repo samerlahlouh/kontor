@@ -1,6 +1,7 @@
 <?php
 return [
     'mobile'                => 'الموبايل',
+    'operator'              => 'الشركة',
     'customer_name'         => 'الزبون',
     'packet'                => 'الباقة',
     'packet_type'           => 'نوع الباقة',
