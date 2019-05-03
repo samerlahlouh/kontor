@@ -7,4 +7,5 @@ LANGS['HOME'] = {
     'number_correctly_warning'  :'يرجى التأكد من إدخال الرقم بشكل صحيح.',
     'checking_offers_model_label':'اختيار العروض المتاحة للرقم',
     'send'                      :'ارسال',
+    'type'                      :'النوع',
  }

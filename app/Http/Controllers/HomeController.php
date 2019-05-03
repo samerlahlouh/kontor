@@ -294,7 +294,12 @@ class HomeController extends Controller
         foreach ($packets as $packet)
             $select_packets[$packet->id] = $packet->name;
 
-        return response()->json($select_packets);
+        $select_types = $this->get_types_for_select($operator);
+
+        $res['packets'] = $select_packets;
+        $res['types'] = $select_types;
+
+        return response()->json($res);
     }
 
     public function cancel_order_by_id(Request $request){
@@ -906,5 +911,15 @@ class HomeController extends Controller
         }
         $order->save();
         return;
+    }
+
+    private function  get_types_for_select($operator){
+        $types = get_operator_types($operator);
+
+        $select_types = [];
+        foreach ($types as $key=>$type)
+            $select_types[$key] = __($key);
+
+        return $select_types;
     }
 }

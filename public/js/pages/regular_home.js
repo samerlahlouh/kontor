@@ -43,13 +43,20 @@ function add_click(){
                     operator    : operator,
                     is_global   : 1},
             dataType: 'JSON',
-            success: function (packets) { 
+            success: function ($res) {
                 var output = [];
                 output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['packet'] +'</option>');
-                $.each(packets, function(key, value){
+                $.each($res['packets'], function(key, value){
                     output.push('<option value="'+ key +'">'+ value +'</option>');
                 });
                 $('#packet').html(output.join(''));
+
+                output = [];
+                output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['type'] +'</option>');
+                $.each($res['types'], function(key, value){
+                    output.push('<option value="'+ key +'">'+ value +'</option>');
+                });
+                $('#type').html(output.join(''));
 
                 $('#operator').val(operator);
                 $('#type').val(0);
@@ -113,10 +120,10 @@ function type_select_changed($type_select){
         data: {operator : operator,
                 type    : type},
         dataType: 'JSON',
-        success: function (packets) {
+        success: function (res) {
             var output = [];
             output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['packet'] +'</option>');
-            $.each(packets, function(key, value){
+            $.each(res['packets'], function(key, value){
                 output.push('<option value="'+ key +'">'+ value +'</option>');
             });
             $('#packet').html(output.join(''));
