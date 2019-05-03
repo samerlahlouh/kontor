@@ -8,8 +8,6 @@
                 begin_child_card('card_info', __('settings_lng.info'), 'show');
                     begin_row();
                         create_input_group('app_title', __('settings_lng.app_title'), 'fa fa-ravelry', 'text', [], [], $app_title);
-                    next_col();
-                        create_input_group('site_url', __('settings_lng.api_site_url'), 'fa fa-globe', 'text', [], [], $site_url);
                     end_row();
                 end_child_card();
 

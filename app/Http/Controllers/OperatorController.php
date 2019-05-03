@@ -35,6 +35,7 @@ class OperatorController extends Controller
             __('operators_lng.api_operator'),
             'is_api_hidden',
             __('operators_lng.is_api'),
+            __('operators_lng.site_url'),
         ];
 
         return view('operators', [
@@ -81,6 +82,7 @@ class OperatorController extends Controller
         $operator_data['api_password']  = $request->input('api_password');
         $operator_data['api_operator']  = $request->input('api_operator');
         $operator_data['is_api'] = isset($is_api);
+        $operator_data['site_url'] = $request->input('site_url');
         $operator_data['types'] = [];
 
         $operators = $this->getEnumValues('packets', 'operator');
@@ -138,6 +140,7 @@ class OperatorController extends Controller
             'api_user_name' =>'required',
             'api_password'  =>'required',
             'api_operator'  =>'required',
+            'site_url'      =>'required',
         );
         $this->validate($request ,$rules);
     }

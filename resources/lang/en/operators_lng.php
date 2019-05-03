@@ -10,4 +10,5 @@ return [
     'types'                     => 'Types',
     'type'                      => 'Type',
     'real_type_name'            => 'Real Type Name',
+    'site_url'                  => 'Site Url',
 ];

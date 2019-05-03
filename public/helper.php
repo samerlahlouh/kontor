@@ -48,7 +48,7 @@ function get_operators_that_have_api(){
 
 function get_api_data($type, $data) // $data = ['order_id' => order_id, 'operator' => operator, 'packet_type' => packet_type, 'mobile' => mobile, 'api_id' => api_id] Chosen Columns
 {
-    $site_url = get_site_url();
+    $site_url = get_site_url($data['operator']);
     $api_data = [];
     if($type == 'user_status_check')
         $api_data = get_user_status_check_api_data($data); // $data = ['operator' => operator]
@@ -142,9 +142,9 @@ function get_app_name(){
     $variables = get_app_variables();
     return $variables['app_title'];
 }
-function get_site_url(){
+function get_site_url($operator){
     $variables = get_app_variables();
-        return $variables['site_url'];
+        return $variables['operators'][$operator]['site_url'];
 }
 function get_app_variables(){
     $variables_file_path = public_path() . DIRECTORY_SEPARATOR . 'variables.json';

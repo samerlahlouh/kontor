@@ -10,4 +10,5 @@ return [
     'types'                     => 'الانواع',
     'type'                      => 'النوع',
     'real_type_name'            => 'اسم النوع الحقيقي',
+    'site_url'                  => 'Site Url',
 ];

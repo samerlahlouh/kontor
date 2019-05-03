@@ -11,14 +11,12 @@ class SettingsController extends Controller
         $all_variables = get_app_variables();
 
         $app_title = $all_variables['app_title'];
-        $site_url = $all_variables['site_url'];
 
         $send_notification_app_id = $all_variables['send_notification_app_id'];
         $send_notification_rest_api_key = $all_variables['send_notification_rest_api_key'];
 
         return view('settings', [
             'app_title'                         => $app_title,
-            'site_url'                          => $site_url,
             'send_notification_app_id'          => $send_notification_app_id,
             'send_notification_rest_api_key'    => $send_notification_rest_api_key
         ]);
@@ -29,12 +27,11 @@ class SettingsController extends Controller
         $this->validator($request);
 
         $app_title = $request->input('app_title');
-        $site_url = $request->input('site_url');
         $send_notification_app_id = $request->input('send_notification_app_id');
         $send_notification_rest_api_key = $request->input('send_notification_rest_api_key');
 
-        $this->update_variables_in_json_file(['app_title', 'site_url', 'send_notification_app_id', 'send_notification_rest_api_key'],
-                                             [$app_title, $site_url, $send_notification_app_id, $send_notification_rest_api_key]);
+        $this->update_variables_in_json_file(['app_title', 'send_notification_app_id', 'send_notification_rest_api_key'],
+                                             [$app_title, $send_notification_app_id, $send_notification_rest_api_key]);
 
         return redirect('/app_settings')->with('success', __('main_lng.done_successfully'));
     }
@@ -43,7 +40,8 @@ class SettingsController extends Controller
     {
         $rules = array(
             'app_title' => 'required',
-            'site_url' => 'required',
+            'send_notification_app_id' => 'required',
+            'send_notification_rest_api_key' => 'required',
         );
         $this->validate($request, $rules);
     }

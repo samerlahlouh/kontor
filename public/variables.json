@@ -5,6 +5,7 @@
       "sifre": "5555555555",
       "operator": "Turkcell",
       "is_api": false,
+      "site_url": "http:\/\/bayi.heteb.com",
       "types": {
         "internet": "Internet",
         "minutes": "Minutes",
@@ -18,22 +19,12 @@
       "sifre": "5555555555",
       "operator": "Vodafone",
       "is_api": true,
+      "site_url": "http:\/\/bayi.heteb.com",
       "types": {
         "internet": "Internet",
         "minutes": "Minutes",
         "tl": "TL",
         "packet": "3gCep"
-      }
-    },
-    "avia": {
-      "kod": "5555555555",
-      "sifre": "5555555555",
-      "operator": "Avia",
-      "is_api": true,
-      "types": {
-        "internet": "Internet",
-        "minutes": "Minutes",
-        "tl": "TL"
       }
     }
   },
