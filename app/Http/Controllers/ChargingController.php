@@ -227,7 +227,11 @@ class ChargingController extends Controller
     public function delete_charging(Request $request){
         $charging_id = $request->charging_id;
         $charging = Charging::find($charging_id);
+        if($charging->status !== 'in_waiting'){
+            return response()->json('error');
+        }
         $charging->delete();
+        return response()->json('success');
     }
 
     public function is_regular_validate($request){

@@ -26,9 +26,11 @@ function charging_cancel($tr){
         url: '/delete_charging',
         type: 'POST',
         data: {charging_id: charging_id},
-        dataType: 'JSON'
+        dataType: 'JSON',
+        success: function(){
+            window.location.href = '/regular_chargings';
+        }
     });
-    window.location.href = '/regular_chargings';
 }
 
 function hide_cancel_btn(btn){
