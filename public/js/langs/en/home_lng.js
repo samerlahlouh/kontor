@@ -8,4 +8,6 @@ LANGS['HOME'] = {
     'checking_offers_model_label':'Choosing the available offers for the number',
     'send'                      :'Send',
     'type'                      :'Type',
+    'offers'                    :'Offers',
+    'all_packets'               :'All Packets',
  }

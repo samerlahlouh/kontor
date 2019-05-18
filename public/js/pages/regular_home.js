@@ -32,6 +32,7 @@ function add_click(){
         Swal(LANGS['HOME']['number_correctly_warning']);
     else{
         var operator = $('#selected_operator').val();
+        var mobile = $('#number').val();
 
         $.ajax({
             headers: {
@@ -41,14 +42,30 @@ function add_click(){
             type: 'POST',
             data: {
                     operator    : operator,
-                    is_global   : 1},
+                    is_global   : 1,
+                    mobile: mobile
+            },
             dataType: 'JSON',
             success: function ($res) {
                 var output = [];
                 output.push('<option value="0" hidden disabled selected>'+ LANGS['HOME']['packet'] +'</option>');
-                $.each($res['packets'], function(key, value){
-                    output.push('<option value="'+ key +'">'+ value +'</option>');
-                });
+
+                if($res['offer_packets'].length > 0){
+                    output.push('<optgroup label="'+LANGS['HOME']['offers']+'">');
+                    $res['offer_packets'].forEach(function(value){
+                        output.push('<option value="'+ value.id +'">'+ value.name +'</option>');
+                    })
+                    output.push('</optgroup>');
+                }
+
+                if($res['packets']) {
+                    output.push('<optgroup label="'+LANGS['HOME']['all_packets']+'">');
+                    $.each($res['packets'], function (key, value) {
+                        output.push('<option value="' + key + '">' + value + '</option>');
+                    });
+                    output.push('</optgroup>');
+                }
+
                 $('#packet').html(output.join(''));
 
                 output = [];

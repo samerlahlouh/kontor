@@ -8,4 +8,6 @@ LANGS['HOME'] = {
     'checking_offers_model_label':'اختيار العروض المتاحة للرقم',
     'send'                      :'ارسال',
     'type'                      :'النوع',
+    'offers'                    :'العروض',
+    'all_packets'               :'كل الباقات',
  }

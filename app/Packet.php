@@ -86,4 +86,23 @@ class Packet extends Model
 
         return $packets->get();
     }
+
+    public function get_offer_packets_by_mobile($mobile){
+        $packets = DB::table("offers")
+            ->leftJoin('orders', 'orders.id', '=', 'offers.order_id')
+            ->leftJoin('packets', 'packets.id', '=', 'offers.packet_id')
+            ->leftJoin('user_packets', function($join)
+            {
+                $user_id = Auth::user()->id;
+                $join->on('user_packets.packet_id', '=', 'packets.id');
+                $join->on('user_packets.user_id', '=', DB::raw("'$user_id'"));
+            })
+            ->select('packets.id',
+                DB::raw("CONCAT(packets.name,' (',user_packets.user_price, ' TL)') as name")
+            )
+            ->where("orders.mobile", $mobile)
+            ->groupBy('offers.packet_id');
+
+        return $packets->get();
+    }
 }

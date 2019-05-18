@@ -288,11 +288,13 @@ class HomeController extends Controller
     public function get_packets_by_operator_and_type(Request $request){
         $operator = $request->operator;
         $type = $request->type;
+        $mobile = $request->mobile;
 
         $is_global = 'none';
         if(isset($request->is_global))
             $is_global = $request->is_global;
         $packets = $this->packet_model->get_packets_by_operator_and_type($operator, $type, $is_global)->toArray();
+        $offer_packets = $this->packet_model->get_offer_packets_by_mobile($mobile)->toArray();
 
         $select_packets = [];
         foreach ($packets as $packet)
@@ -300,6 +302,7 @@ class HomeController extends Controller
 
         $select_types = $this->get_types_for_select($operator);
 
+        $res['offer_packets'] = $offer_packets;
         $res['packets'] = $select_packets;
         $res['types'] = $select_types;
 
