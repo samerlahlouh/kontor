@@ -41,7 +41,7 @@ function send_result($tr){
             var order_id = $tr.getElementsByTagName('td')[1].textContent;
             var customer_name = $tr.getElementsByTagName('td')[3].textContent;
             var mobile = $tr.getElementsByTagName('td')[4].textContent;
-            var operator = $tr.getElementsByTagName('td')[6].textContent;
+            var operator = $tr.getElementsByTagName('td')[5].textContent;
         
             $('#id').val(order_id);
             $('#customer_name').val(customer_name);
