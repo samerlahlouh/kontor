@@ -539,6 +539,9 @@ class HomeController extends Controller
         if($status == 'accepted' && $current_user->type == 'agent' && $current_user->balance < $charging->amount){
             $is_fail = true;
             $message = __('home_lng.balance_is_not_enough_warning');
+            $res_data['is_fail'] = $is_fail;
+            $res_data['message'] = $message;
+            return response()->json($res_data);
         }
 
         $user = User::find($charging->user_id);
