@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\ChargingStoreRequest;
 use Educators\Charging;
 use Educators\User;
+use Illuminate\Validation\ValidationException;
 use View;
 use Auth;
 use Carbon\Carbon;
@@ -115,6 +116,12 @@ class ChargingController extends Controller
             $newData['balance_before'] = $user->balance;
             $newData['balance_after'] = $user->balance;
 
+            if($newData['amount'] > $user->credit){
+                $error = ValidationException::withMessages([
+                    'amount' => __("chargings_lng.pay_off_more_than_balance_warning")
+                ]);
+                throw $error;
+            }
             $user->credit -= $newData['amount'];
         }
 

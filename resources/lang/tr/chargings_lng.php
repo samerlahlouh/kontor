@@ -20,6 +20,7 @@ return [
     'accepted'      => 'Accepted',
     'rejected'      => 'Rejected',
     'cancel'        => 'Cancel',
+    'pay_off_more_than_balance_warning'        => 'The credit that you have put more than user\'s credit',
     'balance_is_not_enough_warning'        => 'Your balance is not enough to complete this process',
 
 ];

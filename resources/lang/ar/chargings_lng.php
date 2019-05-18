@@ -20,6 +20,7 @@ return [
     'accepted'      => 'تم القبول',
     'rejected'      => 'تم الرفض',
     'cancel'        => 'الغاء',
+    'pay_off_more_than_balance_warning'        => 'قيمة الدين الذي ادخلته اكبر من قيمة دين المستخدم',
     'balance_is_not_enough_warning'        => 'رصيدك لايكفي لاتمام هذه العملية',
 
 ];
