@@ -115,9 +115,10 @@ class PacketController extends Controller
 
     //------------------------------------------ Actions --------------------------------------------//
     public function store(Request $request){
-        $this->is_validate($request);
-
         $id = $request->input('id');
+
+        $this->is_validate($request, $id);
+
 
         $data = $request->all();
         unset($data['id'], $data['_token']);
@@ -202,15 +203,19 @@ class PacketController extends Controller
     }
 
     //------------------------------------------ Functions --------------------------------------------//
-    public function is_validate($request){
+    public function is_validate($request, $id=''){
         $rules = array(
             'operator'  =>'required',
             'type'      =>'required',
             'is_global' =>'required',
             'is_teens'  =>'required',
             'price'     =>'required',
-            'api_id'     =>'required|unique:packets',
         );
+        if($id){
+            $rules['api_id'] = "required|unique:packets,api_id,$id";
+        }else{
+            $rules['api_id'] = "required|unique:packets";
+        }
         $this->validate($request ,$rules);
     }
 
