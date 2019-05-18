@@ -88,6 +88,7 @@ class GroupController extends Controller
         ];
 
         $allUsers = User::select("id", 'name')->where('created_by_user_id', Auth::user()->id)->whereNull('group_id')->get();
+        $select_users = [];
         foreach ($allUsers as $user)
             $select_users[$user['id']] = $user["name"];
 
