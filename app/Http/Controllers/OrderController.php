@@ -38,11 +38,12 @@ class OrderController extends Controller
     }
 
     public function admin_index(){
-        $orders = $this->order_model->get_regular_orders_with_all_fields_table();
+        $orders = $this->order_model->get_admin_orders_with_all_fields_table();
 
         $orders_cols = [
             'id',
             'status_hidden',
+            __('regular_orders_lng.user'),
             __('regular_orders_lng.customer_name'),
             __('regular_orders_lng.mobile'),
             __('regular_orders_lng.operator'),

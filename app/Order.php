@@ -49,6 +49,47 @@ class Order extends Model
         return $orders->get();
     }
 
+    public function get_admin_orders_with_all_fields_table(){
+        $orders = DB::table("orders")
+                    ->leftJoin('packets', 'packets.id', '=', 'orders.selected_packet_id')
+                    ->leftJoin('users', 'users.id', '=', 'orders.user_id')
+            ->select('orders.id',
+                    'orders.status as status_hidden',
+                    'users.name as user',
+                    "orders.customer_name",
+                    "orders.mobile",
+                    "orders.operator",
+                    'packets.name as packet_name',
+                    'packets.name as type packet_type',
+                    'orders.admin_price as purchasing_price',
+                    'orders.user_price as selling_price',
+                    DB::raw('(orders.user_price - orders.admin_price) as profit'),
+                    DB::raw("(CASE orders.status 
+                                WHEN 'check_pending' THEN '".__('home_lng.check_pending')."' 
+                                WHEN 'selecting_packet' THEN '".__('home_lng.selecting_packet')."' 
+                                WHEN 'in_review' THEN '".__('home_lng.in_review')."' 
+                                WHEN 'in_progress' THEN '".__('home_lng.in_progress')."' 
+                                WHEN 'rejected' THEN '".__('home_lng.rejected')."' 
+                                WHEN 'completed' THEN '".__('home_lng.completed')."'
+                                WHEN 'canceled' THEN '".__('home_lng.canceled')."' 
+                            END) AS status"),
+                    "orders.created_at as request_date",
+                    "orders.updated_at as response_date"
+                    );
+
+        if(Auth::user()->type === 'agent') {
+            $son_users = User::select('id')->where('created_by_user_id', Auth::user()->id)->get();
+            $son_users_ids = [];
+            foreach ($son_users as $son_user)
+                array_push($son_users_ids, $son_user->id);
+            $orders->whereIn("orders.user_id", $son_users_ids);
+        } else { // is admin
+            $orders->whereNull('orders.original_order_id');
+        }
+
+        return $orders->get();
+    }
+
     public function get_regular_orders_table($user_id, $status=[], $is_for_today=false){
         $orders = DB::table("orders")
             ->select('id',
@@ -149,7 +190,7 @@ class Order extends Model
                 $order->name_of_user .= ' - ' . $order->name_of_child_user;
             unset($order->name_of_child_user);
         }
-        
+
         return $orders;
     }
 

@@ -99,7 +99,7 @@ Route::post('/store_regular_charing','ChargingController@store_regular_charing')
 
 //----------------------------------------------- Orders --------------------------------------------------//
 Route::get('/regular_orders', 'OrderController@index')->middleware(AgentAndRegular::class);
-Route::get('/all_orders', 'OrderController@admin_index')->middleware(IsAdmin::class);
+Route::get('/all_orders', 'OrderController@admin_index')->middleware(AdminAndAgent::class);
 //---------------------------------------------------------------------------------------------------------//
 
 //----------------------------------------------- Operators --------------------------------------------------//

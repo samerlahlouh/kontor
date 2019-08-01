@@ -12,4 +12,5 @@ return [
     'status'                => 'Status',
     'orders'                => 'Orders',
     'response_date'         => 'Response Date',
+    'user'                  => 'User',
 ];

@@ -127,8 +127,21 @@
                             </a>
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/regular_orders">{{ __('layout_lng.orders') }}</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="agentChargingsDropdown" role="button"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ __('layout_lng.orders') }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="agentChargingsDropdown">
+                            <a class="dropdown-item" href="/regular_orders">
+                                <i class="fa fa-th" aria-hidden="true"></i>
+                                {{ __('layout_lng.my_orders') }}
+                            </a>
+                            <a class="dropdown-item" href="/all_orders">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                {{ __('layout_lng.users') }}
+                            </a>
+                        </div>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link js-scroll-trigger" href="/agent_transfer">{{ __('layout_lng.transfer') }}</a>

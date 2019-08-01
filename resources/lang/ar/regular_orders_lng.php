@@ -12,4 +12,5 @@ return [
     'status'                => 'الحالة',
     'orders'                => 'الطلبات',
     'response_date'         => 'تاريخ الرد',
+    'user'                  => 'المستخدم',
 ];

@@ -18,6 +18,7 @@ return [
     'balance'           => 'Balance',
     'credit'            => 'Credit',
     'orders'            => 'Orders',
+    'my_orders'         => 'My Orders',
     'types'             => 'Types',
     'login'             => 'Login',
     'add_user'          => 'Add User',
