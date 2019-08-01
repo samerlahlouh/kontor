@@ -14,7 +14,7 @@ class Order extends Model
         'id', 'mobile', 'status', 'user_id', 'selected_packet_id', 'operator_price', 'admin_price', 'user_price', 'customer_name', 'operator', 'created_at', 'message', 'original_order_id', 'type', 'is_number_checked'
     ];
 
-    public function get_regular_orders_with_all_fields_table($user_id){
+    public function get_regular_orders_with_all_fields_table($user_id=''){
         $orders = DB::table("orders")
                     ->leftJoin('packets', 'packets.id', '=', 'orders.selected_packet_id')
             ->select('orders.id',
@@ -38,8 +38,10 @@ class Order extends Model
                             END) AS status"),
                     "orders.created_at as request_date",
                     "orders.updated_at as response_date"
-                    )
-            ->where("orders.user_id", $user_id);
+                    );
+
+        if($user_id)
+            $orders->where("orders.user_id", $user_id);
 
         if(Auth::user()->type == 'agent')
             $orders->whereNull('orders.original_order_id');
