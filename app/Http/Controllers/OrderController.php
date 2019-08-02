@@ -15,6 +15,8 @@ class OrderController extends Controller
     }
 
     public function index(){
+        View::share('page_js', 'regular_orders');
+        $lang = Config::get('app.locale');
         $user_id = Auth::user()->id;
         $orders = $this->order_model->get_regular_orders_with_all_fields_table($user_id); 
 
@@ -36,7 +38,8 @@ class OrderController extends Controller
 
         return view('regular_orders', ['orders' => $orders,
                                         'orders_cols' => $orders_cols,
-                                        'is_parent' => false
+                                        'is_parent' => false,
+                                        'lang' => $lang
                                         ]);
     }
 
@@ -74,6 +77,16 @@ class OrderController extends Controller
         $to_date = $request->to_date;
 
         $filtered_orders = $this->order_model->get_admin_orders_with_all_fields_table($from_date, $to_date);
+
+        return response()->json($filtered_orders);
+    }
+
+    public function get_filtered_regular_orders_table(Request $request){
+        $user_id = Auth::user()->id;
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+
+        $filtered_orders = $this->order_model->get_regular_orders_with_all_fields_table($user_id, $from_date, $to_date);
 
         return response()->json($filtered_orders);
     }
