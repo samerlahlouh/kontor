@@ -13,4 +13,8 @@ return [
     'orders'                => 'Orders',
     'response_date'         => 'Response Date',
     'user'                  => 'User',
+    'search'                => 'Search',
+    'filter'                => 'Filter',
+    'from_date'             => 'From',
+    'to_date'               => 'To',
 ];

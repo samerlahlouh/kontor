@@ -100,6 +100,7 @@ Route::post('/store_regular_charing','ChargingController@store_regular_charing')
 //----------------------------------------------- Orders --------------------------------------------------//
 Route::get('/regular_orders', 'OrderController@index')->middleware(AgentAndRegular::class);
 Route::get('/all_orders', 'OrderController@admin_index')->middleware(AdminAndAgent::class);
+Route::post('/get_filtered_admin_orders_table','OrderController@get_filtered_admin_orders_table')->middleware(AdminAndAgent::class);
 //---------------------------------------------------------------------------------------------------------//
 
 //----------------------------------------------- Operators --------------------------------------------------//

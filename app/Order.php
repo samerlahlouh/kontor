@@ -49,7 +49,7 @@ class Order extends Model
         return $orders->get();
     }
 
-    public function get_admin_orders_with_all_fields_table(){
+    public function get_admin_orders_with_all_fields_table($from_date = '', $to_date = ''){
         $orders = DB::table("orders")
                     ->leftJoin('packets', 'packets.id', '=', 'orders.selected_packet_id')
                     ->leftJoin('users', 'users.id', '=', 'orders.user_id')
@@ -86,6 +86,11 @@ class Order extends Model
         } else { // is admin
             $orders->whereNull('orders.original_order_id');
         }
+
+        if($from_date)
+            $orders->where('orders.created_at', '>=', $from_date . ' 00:00:00');
+        if($to_date)
+            $orders->where('orders.created_at', '<=', $to_date . ' 23:59:59');
 
         return $orders->get();
     }

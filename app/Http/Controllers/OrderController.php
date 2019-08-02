@@ -5,6 +5,8 @@ namespace Educators\Http\Controllers;
 use Illuminate\Http\Request;
 use Educators\Order;
 use Auth;
+use Config;
+use View;
 
 class OrderController extends Controller
 {
@@ -34,10 +36,13 @@ class OrderController extends Controller
 
         return view('regular_orders', ['orders' => $orders,
                                         'orders_cols' => $orders_cols,
+                                        'is_parent' => false
                                         ]);
     }
 
     public function admin_index(){
+        View::share('page_js', 'regular_orders');
+        $lang = Config::get('app.locale');
         $orders = $this->order_model->get_admin_orders_with_all_fields_table();
 
         $orders_cols = [
@@ -59,6 +64,17 @@ class OrderController extends Controller
 
         return view('regular_orders', ['orders' => $orders,
                                         'orders_cols' => $orders_cols,
+                                        'is_parent' => true,
+                                        'lang' => $lang
                                         ]);
+    }
+
+    public function get_filtered_admin_orders_table(Request $request){
+        $from_date = $request->from_date;
+        $to_date = $request->to_date;
+
+        $filtered_orders = $this->order_model->get_admin_orders_with_all_fields_table($from_date, $to_date);
+
+        return response()->json($filtered_orders);
     }
 }

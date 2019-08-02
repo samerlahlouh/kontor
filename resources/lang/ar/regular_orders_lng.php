@@ -13,4 +13,9 @@ return [
     'orders'                => 'الطلبات',
     'response_date'         => 'تاريخ الرد',
     'user'                  => 'المستخدم',
+    'search'                => 'بحث',
+    'filter'                => 'فلترة',
+    'day'                   => 'اليوم',
+    'from_date'             => 'من',
+    'to_date'               => 'الى',
 ];
